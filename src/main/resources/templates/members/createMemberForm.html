@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+ .fieldError {
+ border-color: #bd2130;
+ }
+</style>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <form role="form" action="/members/new" th:object="${memberForm}" method="post">
+        <div class="form-group">
+            <label>실명</label>
+            <input type="text" th:field="*{realName}" class="form-control" placeholder="실명을 입력하세요"
+                   th:class="${#fields.hasErrors('realName')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('realName')}" th:errors="*{realName}"style="color:red;"/>
+        </div>
+        <div class="form-group">
+            <label>나이</label>
+            <input type="number" th:field="*{age}" class="form-control" placeholder="나이를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label>회원명</label>
+            <input type="text" th:field="*{userName}" class="form-control" placeholder="회원명을 입력하세요"
+                   th:class="${#fields.hasErrors('userName')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color:red;"/>
+        </div>
+        <div class="form-group">
+            <label>기본주소</label>
+            <input type="text" th:field="*{address1}" class="form-control" placeholder="기본주소를 입력하세요"
+                   th:class="${#fields.hasErrors('address1')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}" style="color:red;"/>
+        </div>
+        <div class="form-group">
+            <label>상세주소</label>
+            <input type="text" th:field="*{address2}" class="form-control" placeholder="상세주소를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label>우편번호</label>
+            <input type="number" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요">
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br/>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>
