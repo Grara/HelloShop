@@ -28,7 +28,7 @@ public class MemberTest {
 
     @Test
     public void joinTest(){
-        Member member1 = new Member("member1", new PersonalInfo("노민준", 28, Sex.M));
+        Member member1 = new Member("member1", "1234");
         memberService.join(member1);
         em.flush();
         em.clear();
@@ -39,8 +39,8 @@ public class MemberTest {
 
     @Test()
     public void duplicateTest(){
-        Member member1 = new Member("member1", new PersonalInfo("노민준", 28, Sex.M));
-        Member member2 = new Member("member1", new PersonalInfo("노민준", 28, Sex.M));
+        Member member1 = new Member("member1","1234");
+        Member member2 = new Member("member2","1234");
         memberService.join(member1);
         em.flush();
         em.clear();

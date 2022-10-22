@@ -33,7 +33,7 @@ public class OrderTest {
     public void before(){
         item1 = new Item("item1", 10000, 100);
         item2 = new Item("item2", 12000, 100);
-        member1 = new Member("member1", new PersonalInfo("노민준", 28, Sex.M));
+        member1 = new Member("member1", "1234");
         em.persist(item1);
         em.persist(item2);
         em.persist(member1);
@@ -47,14 +47,14 @@ public class OrderTest {
     @Test
     public void 장바구니주문(){
         Address address = new Address("서울", "신림", 1010);
-        Member findMember = memberRepository.findMemberByUserName("member1").get(0);
+        Member findMember = memberRepository.findByUserName("member1").get();
         orderService.orderByCart(findMember, address);
     }
 
     @Test
     public void 일반주문(){
         Address address = new Address("서울", "신림", 1010);
-        Member findMember = memberRepository.findMemberByUserName("member1").get(0);
+        Member findMember = memberRepository.findByUserName("member1").get();
 
         OrderItem orderItem = new OrderItem(item1, 3);
         orderService.order(findMember, address, orderItem);

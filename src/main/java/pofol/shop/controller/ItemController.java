@@ -49,8 +49,8 @@ public class ItemController {
     }
 
     @GetMapping("/items/edit")
-    public String editForm(@RequestParam("id") Long itemId, Model model){
-        Item item = itemService.findOne(itemId);
+    public String editForm(@RequestParam Long id, Model model){
+        Item item = itemService.findOne(id);
 
         ItemForm form = new ItemForm();
         form.setId(item.getId());
@@ -66,6 +66,7 @@ public class ItemController {
 
     @PostMapping("/items/edit")
     public String edit (@Valid ItemForm form,BindingResult result){
+        System.out.println(form);
         if(result.hasErrors()){
             return "/items/updateItemForm";
         }

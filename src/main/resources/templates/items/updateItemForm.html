@@ -11,7 +11,6 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <form role="form" action="/items/edit" th:object="${itemForm}" method="post">
         <input type="hidden" th:field="*{id}" />
-
         <div class="form-group">
             <label>상품명</label>
             <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"

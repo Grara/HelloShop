@@ -28,6 +28,7 @@ public class Item {
 
     public Item(String itemName, int price, int quantity) {
         this.itemName = itemName;
+        this.author = "짬뽕먹고싶다";
         this.price = price;
         this.quantity = quantity;
     }
