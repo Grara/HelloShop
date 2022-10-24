@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "orders")
 @Data
 @NoArgsConstructor
-public class Order {
+public class Order extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "order_id")
     private Long id;
@@ -26,7 +26,7 @@ public class Order {
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     private int itemKind;

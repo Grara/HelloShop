@@ -12,6 +12,7 @@ import pofol.shop.controller.form.MemberForm;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;
+import pofol.shop.domain.enums.Role;
 import pofol.shop.service.MemberService;
 
 import javax.validation.Valid;
@@ -54,6 +55,7 @@ public class MemberController {
         member.setPassword(passwordEncoder.encode(form.getPassword()));
         member.setAddress(address);
         member.setPersonalInfo(personalInfo);
+        member.setRole(Role.ROLE_USER);
 
         memberService.join(member);
         return "redirect:/";

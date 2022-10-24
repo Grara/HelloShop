@@ -5,11 +5,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pofol.shop.controller.form.CommentForm;
 import pofol.shop.controller.form.ItemForm;
+import pofol.shop.domain.Comment;
 import pofol.shop.domain.Item;
+import pofol.shop.repository.CommentRepository;
 import pofol.shop.service.ItemService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -17,6 +21,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final CommentRepository commentRepository;
 
     @GetMapping("/items")
     //아이템 리스트
@@ -27,12 +32,14 @@ public class ItemController {
     }
 
     @GetMapping("/items/new")
+    //아이템 등록폼 화면
     public String createForm(Model model){
         model.addAttribute("itemForm", new ItemForm());
         return "items/createItemForm";
     }
 
     @PostMapping("/items/new")
+    //아이템 등록 실행
     public String create(@Valid ItemForm form, BindingResult result){
         if(result.hasErrors()){
             return "items/createItemForm";
@@ -49,6 +56,7 @@ public class ItemController {
     }
 
     @GetMapping("/items/edit")
+    //아이템 수정 폼 화면
     public String editForm(@RequestParam Long id, Model model){
         Item item = itemService.findOne(id);
 
@@ -65,6 +73,7 @@ public class ItemController {
     }
 
     @PostMapping("/items/edit")
+    //아이템 수정 실행
     public String edit (@Valid ItemForm form,BindingResult result){
         System.out.println(form);
         if(result.hasErrors()){
@@ -73,4 +82,26 @@ public class ItemController {
         itemService.updateItem(form.getId(), form.getItemName(), form.getPrice(), form.getQuantity());
         return "redirect:/items";
     }
+
+    @GetMapping("/items/{itemId}")
+    public String item(@PathVariable("itemId") Long id, Model model, Principal principal){
+        Item item = itemService.findOne(id);
+        ItemForm itemForm = new ItemForm();
+
+        itemForm.setItemName(item.getItemName());
+        itemForm.setAuthor(item.getAuthor());
+        itemForm.setDescription(item.getDescription());
+        itemForm.setPrice(item.getPrice());
+        itemForm.setQuantity(item.getQuantity());
+        model.addAttribute("itemForm", itemForm);
+
+        String userName = principal != null ? principal.getName() : "Guest";
+        model.addAttribute("userName", userName);
+
+        CommentForm commentForm = new CommentForm();
+        commentForm.setCreateUserName(userName);
+        model.addAttribute("commentForm", commentForm);
+        return "/items/item";
+    }
+
 }

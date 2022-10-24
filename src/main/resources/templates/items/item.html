@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <p th:text="'현재유저 : ' + ${userName}">없어용</p>
+    <p th:text="'상품명 : ' + ${itemForm.itemName}"></p>
+    <p th:text="'저자 : ' + ${itemForm.author}"></p>
+    <p th:text="'설명 : ' + ${itemForm.description}"></p>
+    <p th:text="'가격 : ' + ${itemForm.price}"></p>
+    <form role="form" action="/items/createComment" th:object="${commentForm}" method="post">
+        <div class="form-group">
+            <label>댓글 쓰기</label>
+            <input type="hidden" th:field="*{createdUserName}">
+            <input type="text" th:field="*{content}" class="form-control" placeholder="내용을 입력하세요">
+<!--                   th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">-->
+<!--            <p th:if="${#fields.hasErrors(('content')}" th:errors="*{content}" style="color:red;"/>-->
+        </div>
+        <button type="submit" class="btn btn-primary">작성</button>
+    </form>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+</html>
