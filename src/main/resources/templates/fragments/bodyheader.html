@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div class="header" th:fragment="bodyHeader">
   <ul class="nav nav-pills pull-right">
     <li>
-      <a href="/">Home</a>
-      <a href="/logout">Logout</a>
-      <a href="/login">Login</a>
+      <a href="/">Home  /</a>
+      <a sec:authorize="isAuthenticated()" href="/logout">Logout  /</a>
+      <a sec:authorize="isAuthenticated()" href="/mypage">MyPage</a>
+      <a sec:authorize="!isAuthenticated()" href="/login">Login</a>
     </li>
   </ul>
   <a href="/"><h3 class="text-muted">HELLO SHOP</h3></a>

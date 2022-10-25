@@ -19,7 +19,6 @@ public class Comment extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Item item;
-
     @PrePersist
     public void Setting(){
         this.lastModifiedDate = LocalDate.now();

@@ -88,6 +88,7 @@ public class ItemController {
         Item item = itemService.findOne(id);
         ItemForm itemForm = new ItemForm();
 
+        itemForm.setId(item.getId());
         itemForm.setItemName(item.getItemName());
         itemForm.setAuthor(item.getAuthor());
         itemForm.setDescription(item.getDescription());
@@ -99,9 +100,21 @@ public class ItemController {
         model.addAttribute("userName", userName);
 
         CommentForm commentForm = new CommentForm();
-        commentForm.setCreateUserName(userName);
+        commentForm.setItemId(id);
+        commentForm.setCreatedUserName(userName);
         model.addAttribute("commentForm", commentForm);
+        model.addAttribute("comments", item.getComments());
         return "/items/item";
     }
 
+    @PostMapping("/items/createComment")
+    public String createComment(@Valid CommentForm form){
+        Comment comment = new Comment();
+        Item item = itemService.findOne(form.getItemId());
+        comment.setItem(item);
+        comment.setCreatedUserName(form.getCreatedUserName());
+        comment.setContent(form.getContent());
+        commentRepository.save(comment);
+        return "redirect:/items/" + form.getItemId();
+    }
 }
