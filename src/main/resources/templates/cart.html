@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+  <title>Hello</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <a href="javascript:buy();">주문으로</a>
+  <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+<script>
+  function buy(){
+    var form = document.createElement("form");
+    form.setAttribute("method", "get");
+    form.setAttribute("action", "/orders/new");
+
+    var hiddenField1 = document.createElement("input");
+    hiddenField1.setAttribute("type", "hidden");
+    hiddenField1.setAttribute("name", "itemId");
+    hiddenField1.setAttribute("value", 1);
+    form.appendChild(hiddenField1);
+
+    var hiddenField2 = document.createElement("input");
+    hiddenField2.setAttribute("type", "hidden");
+    hiddenField2.setAttribute("name", "orderType");
+    hiddenField2.setAttribute("value", "cart");
+    form.appendChild(hiddenField2);
+
+    var hiddenField3 = document.createElement("input");
+    hiddenField3.setAttribute("type", "hidden");
+    hiddenField3.setAttribute("name", "count");
+    hiddenField3.setAttribute("value", 1);
+    form.appendChild(hiddenField3);
+
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+</html>

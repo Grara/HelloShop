@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
-import pofol.shop.repository.CartItemRepository;
+import pofol.shop.repository.CartRepository;
 import pofol.shop.repository.MemberRepository;
 import pofol.shop.repository.OrderItemRepository;
 import pofol.shop.repository.OrderRepository;
@@ -20,17 +20,17 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
-    private final CartItemRepository cartItemRepository;
+    private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
 
     public long orderByCart(Member member, Address address){
-        List<CartItem> findCart = cartItemRepository.findByMember(member);
+        List<Cart> findCart = cartRepository.findByMember(member);
         List<OrderItem> orderItems = new ArrayList<>();
-        for (CartItem cartItem : findCart) {
-            OrderItem orderItem = new OrderItem(cartItem);
+        for (Cart cart : findCart) {
+            OrderItem orderItem = new OrderItem(cart);
             orderItems.add(orderItem);
             orderItemRepository.save(orderItem);
-            cartItemRepository.delete(cartItem);
+            cartRepository.delete(cart);
         }
         Order order = Order.createOrder(member, address, orderItems);
         orderRepository.save(order);

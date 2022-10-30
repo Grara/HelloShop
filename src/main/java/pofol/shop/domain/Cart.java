@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @NoArgsConstructor
-public class CartItem extends BaseEntity{
+public class Cart extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "cartitem_id")
     private Long id;
@@ -26,7 +26,7 @@ public class CartItem extends BaseEntity{
 
     private int itemsTotalPrice;
 
-    public CartItem(Member member, Item item, int count) {
+    public Cart(Member member, Item item, int count) {
         this.member = member;
         this.item = item;
         this.count = count;

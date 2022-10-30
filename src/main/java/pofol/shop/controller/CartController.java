@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class CartController {
 
+    @GetMapping("/cart")
+    public String cart(){
+        return "cart";
+    }
+
     @GetMapping("/cart/new")
     public String addItemToCart(@RequestParam("itemId")Long itemId,
                        @RequestParam("count")Integer count,
@@ -14,4 +19,6 @@ public class CartController {
 
         return "hello";
     }
+
+
 }

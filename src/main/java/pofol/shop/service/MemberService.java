@@ -37,6 +37,14 @@ public class MemberService implements UserDetailsService{
         return memberRepository.findAll();
     }
 
+    public Member findMemberByName(String name){
+        return memberRepository.findByUserName(name).get();
+    }
+
+    public Member findMemberById(Long id){
+        return memberRepository.findById(id).get();
+    }
+
     public Long join(Member member){
         duplicateCheck(member);
         memberRepository.save(member);

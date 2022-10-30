@@ -22,7 +22,9 @@ public class SecurityConfig {
         //시큐리티 적용url, 로그인, 로그아웃 커스텀
         return http.authorizeRequests()
                 .antMatchers("/members").hasRole("ADMIN")
-                .anyRequest().permitAll().and()
+                .antMatchers("/orders/new", "/cart/new").hasAnyRole("ADMIN", "USER")
+                .anyRequest().permitAll()
+                .and()
                 .formLogin().and()
                 .logout().logoutSuccessUrl("/").and()
                 .csrf().disable()

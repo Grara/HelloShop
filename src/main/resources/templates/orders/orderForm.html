@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+.fieldError {
+border-color: #bd2130;
+}
+.form-group .form-control {
+width: 30%;
+}
+.inputs{
+display: flex;
+}
+.inputs .firstbox {
+width: 10%;
+}
+.inputs .secondbox {
+width: 90%;
+}
+</style>
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div>
+        <span><h3>배송정보 입력</h3></span>
+    </div>
+
+    <div>
+    <form role="form" action="/orders/new" th:object="${orderForm}" method="post">
+        <input type="hidden" th:field="*{count}">
+        <input type="hidden" th:field="*{itemId}">
+        <input type="hidden" th:field="*{orderType}">
+        <input type="hidden" th:field="*{orderItems}">
+
+        <div class="form-group">
+            <label>받는분 성함</label>
+            <input type="text" th:field="*{realName}" class="form-control" placeholder="받는분 성함을 입력하세요"/>
+<!--                   th:class="${#fields.hasErrors('realName')}? 'form-control fieldError' : 'form-control'">-->
+<!--            <p th:if="${#fields.hasErrors('realName')}" th:errors="*{realName}" style="color:red;"/>-->
+        </div>
+        <div class="form-group">
+            <label>기본주소</label>
+            <input type="text" th:field="*{address1}" class="form-control" placeholder="기본주소를 입력하세요"/>
+<!--                   th:class="${#fields.hasErrors('address1')}? 'form-control fieldError' : 'form-control'">-->
+<!--            <p th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}" style="color:red;"/>-->
+        </div>
+        <div class="form-group">
+            <label>상세주소</label>
+            <input type="text" th:field="*{address2}" class="form-control" placeholder="상세주소를 입력하세요"/>
+<!--                   th:class="${#fields.hasErrors('address2')}? 'form-control fieldError' : 'form-control'">-->
+<!--            <p th:if="${#fields.hasErrors('address2')}" th:errors="*{address2}" style="color:red;"/>-->
+        </div>
+        <div class="form-group">
+            <label>우편번호</label>
+            <input type="text" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요"/>
+<!--                   th:class="${#fields.hasErrors('zipcode')}? 'form-control fieldError' : 'form-control'">-->
+<!--            <p th:if="${#fields.hasErrors('zipcode')}" th:errors="*{zipcode}" style="color:red;"/>-->
+        </div>
+
+        <div th:each="item : ${orderForm.orderItems}" style="border:1px solid gold;">
+            <div class="inputs">
+                <div class="firstbox">
+                    <label>상품명</label>
+                </div>
+                <div class="secondbox">
+                    <input type="text" th:value="${item.itemName}" readonly/>
+                </div>
+            </div>
+
+            <div class="inputs">
+                <div class="firstbox">
+                    <label>가격</label>
+                </div>
+                <div class="secondbox">
+                    <input type="number" th:value="${item.price}" readonly/>
+                </div>
+            </div>
+
+            <div class="inputs">
+                <div class="firstbox">
+                    <label>수량</label>
+                </div>
+                <div class="secondbox">
+                    <input type="number" th:value="${item.count}" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="inputs">
+            <div class="firstbox">
+                <label>총 결제금액</label>
+            </div>
+            <div class="secondbox">
+                <input type="number" th:value="*{totalPrice}" readonly/>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">주문</button>
+    </form>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

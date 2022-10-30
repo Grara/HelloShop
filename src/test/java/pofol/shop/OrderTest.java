@@ -8,15 +8,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
-import pofol.shop.domain.embedded.PersonalInfo;
-import pofol.shop.domain.enums.Sex;
-import pofol.shop.repository.ItemRepository;
 import pofol.shop.repository.MemberRepository;
-import pofol.shop.service.MemberService;
 import pofol.shop.service.OrderService;
 
 import javax.persistence.EntityManager;
-import java.util.List;
 
 @SpringBootTest
 @Transactional
@@ -38,10 +33,10 @@ public class OrderTest {
         em.persist(item2);
         em.persist(member1);
 
-        CartItem cartItem1 = new CartItem(member1, item1, 2);
-        CartItem cartItem2 = new CartItem(member1, item2, 3);
-        em.persist(cartItem1);
-        em.persist(cartItem2);
+        Cart cart1 = new Cart(member1, item1, 2);
+        Cart cart2 = new Cart(member1, item2, 3);
+        em.persist(cart1);
+        em.persist(cart2);
     }
 
     @Test
