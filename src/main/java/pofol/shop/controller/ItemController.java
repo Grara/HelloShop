@@ -26,7 +26,7 @@ public class ItemController {
     @GetMapping("/items")
     //아이템 리스트
     public String list(Model model){
-        List<Item> items = itemService.findItems();
+        List<Item> items = itemService.findList();
         model.addAttribute("items", items);
         return "items/itemList";
     }
@@ -51,7 +51,7 @@ public class ItemController {
         item.setDescription(form.getDescription());
         item.setPrice(form.getPrice());
         item.setQuantity(form.getQuantity());
-        itemService.saveItem(item);
+        itemService.save(item);
         return "redirect:/items";
     }
 
@@ -79,7 +79,7 @@ public class ItemController {
         if(result.hasErrors()){
             return "/items/updateItemForm";
         }
-        itemService.updateItem(form.getId(), form.getItemName(), form.getPrice(), form.getQuantity());
+        itemService.edit(form.getId(), form.getItemName(), form.getPrice(), form.getQuantity());
         return "redirect:/items";
     }
 

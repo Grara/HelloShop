@@ -24,18 +24,18 @@ public class OrderItem extends BaseEntity{
 
     private int count;
 
-    private int itemsTotalPrice;
+    private int totalPrice;
 
     public OrderItem(Cart cart){
         this.item = cart.getItem();
         this.count = cart.getCount();
-        this.itemsTotalPrice = cart.getItemsTotalPrice();
+        this.totalPrice = cart.getTotalPrice();
     }
 
     public OrderItem(Item item, int count) {
         this.item = item;
         this.count = count;
-        this.itemsTotalPrice = item.getPrice() * count;
+        this.totalPrice = item.getPrice() * count;
     }
 
 

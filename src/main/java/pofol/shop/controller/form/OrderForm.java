@@ -22,6 +22,7 @@ public class OrderForm {
     private int count;
 
     public void addOrderItem(OrderItemDto orderItem){
+        //orderItems에 주문아이템DTO 추가하고 총 주문금액에
         orderItems.add(orderItem);
         this.totalPrice += orderItem.getPrice() * orderItem.getCount();
     }

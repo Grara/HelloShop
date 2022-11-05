@@ -27,11 +27,8 @@ width: 90%;
     </div>
 
     <div>
-    <form role="form" action="/orders/new" th:object="${orderForm}" method="post">
-        <input type="hidden" th:field="*{count}">
-        <input type="hidden" th:field="*{itemId}">
+    <form action="#" th:action="@{/orders/new}" th:object="${orderForm}" method="post">
         <input type="hidden" th:field="*{orderType}">
-        <input type="hidden" th:field="*{orderItems}">
 
         <div class="form-group">
             <label>받는분 성함</label>
@@ -58,13 +55,13 @@ width: 90%;
 <!--            <p th:if="${#fields.hasErrors('zipcode')}" th:errors="*{zipcode}" style="color:red;"/>-->
         </div>
 
-        <div th:each="item : ${orderForm.orderItems}" style="border:1px solid gold;">
+        <div th:each="item, iterStat : *{orderItems}" style="border:5px solid gold">
             <div class="inputs">
                 <div class="firstbox">
                     <label>상품명</label>
                 </div>
                 <div class="secondbox">
-                    <input type="text" th:value="${item.itemName}" readonly/>
+                    <input th:field="*{orderItems[__${iterStat.index}__].itemName}" readonly/>
                 </div>
             </div>
 
@@ -73,7 +70,7 @@ width: 90%;
                     <label>가격</label>
                 </div>
                 <div class="secondbox">
-                    <input type="number" th:value="${item.price}" readonly/>
+                    <input th:field="*{orderItems[__${iterStat.index}__].price}" readonly/>
                 </div>
             </div>
 
@@ -82,7 +79,7 @@ width: 90%;
                     <label>수량</label>
                 </div>
                 <div class="secondbox">
-                    <input type="number" th:value="${item.count}" readonly/>
+                    <input th:field="*{orderItems[__${iterStat.index}__].count}" readonly/>
                 </div>
             </div>
         </div>

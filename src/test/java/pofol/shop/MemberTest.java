@@ -29,7 +29,7 @@ public class MemberTest {
     @Test
     public void joinTest(){
         Member member1 = new Member("member1", "1234");
-        memberService.join(member1);
+        memberService.signUp(member1);
         em.flush();
         em.clear();
 
@@ -41,9 +41,9 @@ public class MemberTest {
     public void duplicateTest(){
         Member member1 = new Member("member1","1234");
         Member member2 = new Member("member2","1234");
-        memberService.join(member1);
+        memberService.signUp(member1);
         em.flush();
         em.clear();
-        assertThatThrownBy(() -> memberService.join(member2)).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> memberService.signUp(member2)).isInstanceOf(IllegalStateException.class);
     }
 }

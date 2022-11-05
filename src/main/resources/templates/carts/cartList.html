@@ -7,6 +7,20 @@
 <body>
 <div class="container">
   <div th:replace="fragments/bodyHeader :: bodyHeader" />
+  <table class="table table-striped">
+    <tr class="table-primary">
+      <th>상품명</th>
+      <th>개당 가격</th>
+      <th>수량</th>
+      <th>총 가격</th>
+    </tr>
+    <tr th:each="cart : ${carts}">
+      <td th:text="${cart.item.itemName}"></td>
+      <td th:text="${cart.item.price}"></td>
+      <td th:text="${cart.count}"></td>
+      <td th:text="${cart.totalPrice}"></td>
+    </tr>
+  </table>
     <a href="javascript:buy();">주문으로</a>
   <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->

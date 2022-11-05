@@ -33,19 +33,18 @@ public class MemberService implements UserDetailsService{
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public List<Member> findMembers(){
+    public List<Member> findList(){
         return memberRepository.findAll();
     }
-
-    public Member findMemberByName(String name){
+    public Member findOne(Long id){
+        return memberRepository.findById(id).get();
+    }
+    public Member findOneByName(String name){
         return memberRepository.findByUserName(name).get();
     }
 
-    public Member findMemberById(Long id){
-        return memberRepository.findById(id).get();
-    }
 
-    public Long join(Member member){
+    public Long signUp(Member member){
         duplicateCheck(member);
         memberRepository.save(member);
         return member.getId();
@@ -58,7 +57,7 @@ public class MemberService implements UserDetailsService{
         }
     }
 
-    public void delete(Member member){
+    public void signOut(Member member){
         memberRepository.delete(member);
     }
 

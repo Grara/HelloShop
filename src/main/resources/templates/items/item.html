@@ -76,7 +76,7 @@ function buy(itemId){
 
 function addItemToCart(username, itemId) {
     var form = document.createElement("form");
-    form.setAttribute("method", "get");
+    form.setAttribute("method", "post");
     form.setAttribute("action", "/cart/new");
 
     var hiddenField1 = document.createElement("input");

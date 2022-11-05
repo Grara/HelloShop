@@ -25,7 +25,7 @@ public class MemberController {
 
     @GetMapping("/members")
     public String list(Model model){
-        model.addAttribute("members", memberService.findMembers());
+        model.addAttribute("members", memberService.findList());
         return "members/memberList";
     }
 
@@ -57,7 +57,7 @@ public class MemberController {
         member.setPersonalInfo(personalInfo);
         member.setRole(Role.ROLE_USER);
 
-        memberService.join(member);
+        memberService.signUp(member);
         return "redirect:/";
     }
 }

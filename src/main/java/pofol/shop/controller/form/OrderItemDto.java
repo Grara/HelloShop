@@ -1,10 +1,12 @@
 package pofol.shop.controller.form;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pofol.shop.domain.Cart;
 import pofol.shop.domain.Item;
 
 @Data
+@NoArgsConstructor
 public class OrderItemDto {
     private Long cartId;
     private Long itemId;

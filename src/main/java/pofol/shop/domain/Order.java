@@ -50,7 +50,7 @@ public class Order extends BaseEntity{
         int totalPrice = 0;
         int kind = 0;
         for(OrderItem item : orderItems){
-            totalPrice += item.getItemsTotalPrice();
+            totalPrice += item.getTotalPrice();
             kind++;
             order.addOrderItem(item);
         }

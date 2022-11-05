@@ -24,12 +24,16 @@ public class Cart extends BaseEntity{
 
     private int count;
 
-    private int itemsTotalPrice;
+    private int totalPrice;
 
     public Cart(Member member, Item item, int count) {
         this.member = member;
         this.item = item;
         this.count = count;
-        this.itemsTotalPrice = item.getPrice() * count;
+        this.totalPrice = item.getPrice() * count;
+    }
+
+    public void addCount(int count){
+        this.count += count;
     }
 }

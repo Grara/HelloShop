@@ -15,23 +15,16 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
 
-    public void saveItem(Item item) {
+    public List<Item> findList(){ return itemRepository.findAll(); }
+    public Item findOne(Long itemId) { return itemRepository.findById(itemId).get(); }
+    public void save(Item item) {
         itemRepository.save(item);
     }
 
-    public void updateItem(Long itemId, String name, int price, int qty){
+    public void edit(Long itemId, String name, int price, int qty){
         Item findItem = itemRepository.findById(itemId).get();
         findItem.setItemName(name);
         findItem.setPrice(price);
         findItem.setQuantity(qty);
     }
-
-    public List<Item> findItems(){
-        return itemRepository.findAll();
-    }
-
-    public Item findOne(Long itemId){
-        return itemRepository.findById(itemId).get();
-    }
-
 }

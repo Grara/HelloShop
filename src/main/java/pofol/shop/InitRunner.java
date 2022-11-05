@@ -29,17 +29,17 @@ public class InitRunner implements ApplicationRunner {
         Item item1 = new Item("JAVA", 10000, 100);
         Item item2 = new Item("SPRING", 12000, 100);
         Item item3 = new Item("JPA", 15000, 100);
-        itemService.saveItem(item1);
-        itemService.saveItem(item2);
-        itemService.saveItem(item3);
+        itemService.save(item1);
+        itemService.save(item2);
+        itemService.save(item3);
 
-        Member findMember = memberService.findMemberById(userId);
+        Member findMember = memberService.findOne(userId);
 
         Cart cart1 = new Cart(findMember, item1, 1);
         Cart cart2 = new Cart(findMember, item2, 2);
         Cart cart3 = new Cart(findMember, item3, 3);
-        cartService.saveCart(cart1);
-        cartService.saveCart(cart2);
-        cartService.saveCart(cart3);
+        cartService.add(cart1);
+        cartService.add(cart2);
+        cartService.add(cart3);
     }
 }
