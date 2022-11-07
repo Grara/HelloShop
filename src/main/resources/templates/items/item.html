@@ -85,12 +85,6 @@ function addItemToCart(username, itemId) {
     hiddenField1.setAttribute("value", itemId);
     form.appendChild(hiddenField1);
 
-    var hiddenField2 = document.createElement("input");
-    hiddenField2.setAttribute("type", "hidden");
-    hiddenField2.setAttribute("name", "userName");
-    hiddenField2.setAttribute("value", username);
-    form.appendChild(hiddenField2);
-
     var count = document.getElementById("count").value;
     var hiddenField3 = document.createElement("input");
     hiddenField3.setAttribute("type", "hidden");

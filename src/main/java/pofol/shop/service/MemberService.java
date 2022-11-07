@@ -1,23 +1,17 @@
 package pofol.shop.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.Member;
-import pofol.shop.domain.embedded.Address;
-import pofol.shop.domain.embedded.PersonalInfo;
 import pofol.shop.domain.enums.Role;
-import pofol.shop.repository.MemberRepository;
 import pofol.shop.repository.MemberRepository;
 
 import java.util.Arrays;
@@ -33,23 +27,47 @@ public class MemberService implements UserDetailsService{
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * 전체 Member목록을 반환합니다.
+     * @return 전체 Member목록
+     */
     public List<Member> findList(){
         return memberRepository.findAll();
     }
+
+    /**
+     * id를 통해 Member를 찾고 반환합니다.
+     * @param id 찾을 Member의 id
+     * @return 찾아낸 Member
+     */
     public Member findOne(Long id){
         return memberRepository.findById(id).get();
     }
+
+    /**
+     * 유저명을 통해 Member를 찾고 반환합니다.
+     * @param name 찾을 Member의 유저명
+     * @return 찾아낸 Member
+     */
     public Member findOneByName(String name){
         return memberRepository.findByUserName(name).get();
     }
 
-
+    /**
+     * Member를 새로 가입시킵니다.
+     * @param member 가입시킬 Member
+     * @return 가입시킨 Member의 id
+     */
     public Long signUp(Member member){
         duplicateCheck(member);
         memberRepository.save(member);
         return member.getId();
     }
 
+    /**
+     * 인자로 들어온 Member의 유저명과 같은 Member가 있는지 중복체크합니다.
+     * @param member 중복체크할 Member
+     */
     public void duplicateCheck(Member member){
         List<Member> findMembers = memberRepository.findListByUserName(member.getUserName());
         if(!findMembers.isEmpty()){
@@ -57,11 +75,22 @@ public class MemberService implements UserDetailsService{
         }
     }
 
+    /**
+     * Member를 회원탈퇴시킵니다.
+     * @param member 탈퇴시킬 Member
+     */
     public void signOut(Member member){
         memberRepository.delete(member);
     }
 
-    public Long createMember(String username, String password, Role role){
+    /**
+     * 테스트용 초기 Member를 생성합니다.
+     * @param username 유저명
+     * @param password 패스워드
+     * @param role 권한
+     * @return 생성한 Member의 id
+     */
+    public Long createInitMember(String username, String password, Role role){
         //패스워드 값을 인코더로 인코딩해서 넣음
         Member member = new Member(username, passwordEncoder.encode(password), role);
         memberRepository.save(member);
@@ -78,8 +107,8 @@ public class MemberService implements UserDetailsService{
         return new User(findMember.getUserName(), findMember.getPassword(), createAuthorities(findMember.getRole().toString()));
     }
 
+    //인가정보 생성
     private Collection<? extends GrantedAuthority> createAuthorities(String role) {
-        //인가 정보가 필요함
         return Arrays.asList(new SimpleGrantedAuthority(role));
     }
 }

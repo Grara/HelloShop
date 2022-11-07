@@ -13,6 +13,7 @@ import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +26,9 @@ public class CartController {
     private final ItemService itemService;
 
     @GetMapping("/cart")
-    public String cart(Model model){
-        List<Cart> carts = cartService.findListFetchItem();
+    public String cart(Model model, Principal principal){
+        Member findMember = memberService.findOneByName(principal.getName());
+        List<Cart> carts = cartService.findListByMemberFetchItem(findMember);
         model.addAttribute("carts", carts);
         return "carts/cartList";
     }
@@ -34,26 +36,27 @@ public class CartController {
     @PostMapping("/cart/new")
     public String addItemToCart(@RequestParam("itemId")Long itemId,
                                 @RequestParam("count")Integer count,
-                                @RequestParam("userName") String userName,
+                                Principal principal,
                                 Model model){
 
-        Member member = memberService.findOneByName(userName);
+        Member member = memberService.findOneByName(principal.getName());
         Item item = itemService.findOne(itemId);
-        Optional<Cart> findCart = cartService.findOneByItem(item);
+        Optional<Long> existingCartId = cartService.duplicateCheck(member, item);
+
 
         //장바구니에 현재 추가하는 아이템과 같은 아이템이 없으면 새로 추가
-        if(!findCart.isPresent()){
+        if(!existingCartId.isPresent()){
             Cart newCart = new Cart(member, item, count);
             cartService.add(newCart);
         }
         //있으면 기존 장바구니 아이템에 수량만 추가
         else{
-            Cart existingCart = findCart.get();
+            Cart existingCart = cartService.findOne(existingCartId.get()).get();
             existingCart.addCount(count);
             cartService.add(existingCart);
         }
 
-        List<Cart> carts = cartService.findListFetchItem();
+        List<Cart> carts = cartService.findListByMemberFetchItem(member);
         model.addAttribute("carts", carts);
 
         return "carts/cartList";

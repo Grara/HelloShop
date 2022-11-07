@@ -23,8 +23,8 @@ public class InitRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Long userId = memberService.createMember("user", "1234", Role.ROLE_USER);
-        memberService.createMember("admin", "1234", Role.ROLE_ADMIN);
+        Long userId = memberService.createInitMember("user", "1234", Role.ROLE_USER);
+        memberService.createInitMember("admin", "1234", Role.ROLE_ADMIN);
 
         Item item1 = new Item("JAVA", 10000, 100);
         Item item2 = new Item("SPRING", 12000, 100);
