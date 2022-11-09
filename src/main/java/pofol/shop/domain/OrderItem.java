@@ -2,7 +2,6 @@ package pofol.shop.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pofol.shop.controller.form.OrderItemDto;
 
 import javax.persistence.*;
 

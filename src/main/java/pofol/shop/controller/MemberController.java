@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import pofol.shop.controller.form.MemberForm;
+import pofol.shop.formAndDto.MemberForm;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;

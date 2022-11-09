@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head th:replace="fragments/header :: header"/>
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
@@ -17,12 +17,12 @@
         <div style="float: left; width: 50%; padding:10px;" align="right">
             <a href="#" th:data-id="${itemForm.id}"
                th:onClick="buy(this.getAttribute('data-id'))"
-            class = "btn btn-primary">바로 구매</a>
+               class="btn btn-primary">바로 구매</a>
         </div>
         <div style="float: left; width: 50%; padding:10px;" align="left">
             <a href="#" th:data-user="${userName}" th:data-id="${itemForm.id}"
                th:onClick="addItemToCart(this.getAttribute('data-user'), this.getAttribute('data-id'))"
-               class = "btn btn-primary">장바구니에 추가</a>
+               class="btn btn-primary">장바구니에 추가</a>
         </div>
     </div>
     <form role="form" action="/items/createComment" th:object="${commentForm}" method="post">
@@ -31,20 +31,22 @@
             <input type="hidden" th:field="*{createdUserName}">
             <input type="hidden" th:field="*{itemId}">
             <input type="text" th:field="*{content}" class="form-control" placeholder="내용을 입력하세요">
-<!--                   th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">-->
-<!--            <p th:if="${#fields.hasErrors(('content')}" th:errors="*{content}" style="color:red;"/>-->
+            <!--                   th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">-->
+            <!--            <p th:if="${#fields.hasErrors(('content')}" th:errors="*{content}" style="color:red;"/>-->
         </div>
         <button type="submit" class="btn btn-primary">작성</button>
     </form>
     <div th:each="comment : ${comments}">
-        <span th:text = "${comment.createdUserName} + ' / '"/>
-        <span th:text = "${comment.lastModifiedDate} + ' / '"/>
-        <span th:text = "${comment.content}"/>
+        <span th:text="${comment.createdUserName} + ' / '"/>
+        <span th:text="${comment.lastModifiedDate} + ' / '"/>
+        <span th:text="${comment.content}"/>
     </div>
 
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script th:inline="javascript">
 function buy(itemId){
     var form = document.createElement("form");
@@ -75,25 +77,40 @@ function buy(itemId){
 }
 
 function addItemToCart(username, itemId) {
-    var form = document.createElement("form");
-    form.setAttribute("method", "post");
-    form.setAttribute("action", "/cart/new");
 
-    var hiddenField1 = document.createElement("input");
-    hiddenField1.setAttribute("type", "hidden");
-    hiddenField1.setAttribute("name", "itemId");
-    hiddenField1.setAttribute("value", itemId);
-    form.appendChild(hiddenField1);
+var count = document.getElementById("count").value;
 
-    var count = document.getElementById("count").value;
-    var hiddenField3 = document.createElement("input");
-    hiddenField3.setAttribute("type", "hidden");
-    hiddenField3.setAttribute("name", "count");
-    hiddenField3.setAttribute("value", count);
-    form.appendChild(hiddenField3);
+    var test = {
+        "userName" : username,
+        "itemId" : itemId,
+        "count" : count
+    };
 
-    document.body.appendChild(form);
-    form.submit();
+    $.ajax({
+
+    type : 'post',
+    url : '/cart/new',
+    headers : {
+        "Content-Type" : "application/json",
+        "X-HTTP-Method-Override" : "POST"
+    },
+    dataType : 'json',
+    data : JSON.stringify(test),
+    success : function(){
+        if(confirm("장바구니로 이동하시겠습니까?")){
+            window.location.href = "http://localhost:8080/cart";
+        }
+        else{
+            return false;
+        }
+    },
+    failure : function(){
+        alert("서버와의 통신에 실패했습니다.");
+    }
+
+    });
+
 }
+
 </script>
 </html>

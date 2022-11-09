@@ -1,4 +1,4 @@
-package pofol.shop.controller.form;
+package pofol.shop.formAndDto;
 
 import lombok.Data;
 
