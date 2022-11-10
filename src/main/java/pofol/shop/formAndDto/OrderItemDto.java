@@ -13,6 +13,7 @@ public class OrderItemDto {
     private String itemName;
     private int price;
     private int count;
+    private int totalPrice;
 
     public OrderItemDto(Item item) {
         this.itemId = item.getId();
@@ -26,5 +27,6 @@ public class OrderItemDto {
         this.itemName = cart.getItem().getItemName();
         this.price = cart.getItem().getPrice();
         this.count = cart.getCount();
+        this.totalPrice = price * count;
     }
 }

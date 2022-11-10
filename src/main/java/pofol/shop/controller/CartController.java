@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pofol.shop.domain.Cart;
 import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
+import pofol.shop.formAndDto.OrderItemDto;
 import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
@@ -16,6 +17,7 @@ import pofol.shop.service.MemberService;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,8 +31,9 @@ public class CartController {
     public String cart(Model model, Principal principal){
         Member findMember = memberService.findOneByName(principal.getName());
         List<Cart> carts = cartService.findListByMemberFetchItem(findMember);
-        model.addAttribute("carts", carts);
+        List<OrderItemDto> itemDtos = carts.stream().map(OrderItemDto::new).collect(Collectors.toList());
+        model.addAttribute("carts", itemDtos);
+        model.addAttribute("username", principal.getName());
         return "carts/cartList";
     }
-
 }

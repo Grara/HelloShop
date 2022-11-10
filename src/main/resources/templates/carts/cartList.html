@@ -9,48 +9,76 @@
   <div th:replace="fragments/bodyHeader :: bodyHeader" />
   <table class="table table-striped">
     <tr class="table-primary">
+      <th></th>
       <th>상품명</th>
       <th>개당 가격</th>
       <th>수량</th>
       <th>총 가격</th>
+      <th></th>
     </tr>
-    <tr th:each="cart : ${carts}">
-      <td th:text="${cart.item.itemName}"></td>
-      <td th:text="${cart.item.price}"></td>
-      <td th:text="${cart.count}"></td>
-      <td th:text="${cart.totalPrice}"></td>
+    <tr name="item" th:each="cart : ${carts}">
+      <td th:value="${cart.itemId}"></td>
+      <td th:text="${cart.itemName}" th:value="${cart.itemName}"></td>
+      <td th:text="${cart.price}" th:value="${cart.price}"></td>
+      <td th:text="${cart.count}" th:value="${cart.count}"></td>
+      <td th:text="${cart.totalPrice}" th:value="${cart.totalPrice}"></td>
+      <td name="dd"><input type="checkbox" checked th:value="${cart.cartId}"> </td>
     </tr>
   </table>
-    <a href="javascript:buy();">주문으로</a>
+    <a th:data-username="${username}" class="btn btn-primary"
+            th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</a>
   <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script>
-  function buy(){
-    var form = document.createElement("form");
-    form.setAttribute("method", "get");
-    form.setAttribute("action", "/orders/new");
+  function buy(param){
+    var userName = param;
+    var orderType = 'cart';
+    var items = new Array();
+    $('[name=item]').each(function(){
+      var checkBox = $(this).children().last().children();
+      var isChecked = checkBox.is(':checked');
+      if(isChecked){
+        var item = {};
+        item.cartId = checkBox.val();
+        item.itemId = $(this).children().eq(0).attr('value');
+        item.itemName = $(this).children().eq(1).attr('value');
+        item.price = $(this).children().eq(2).attr('value');
+        item.count = $(this).children().eq(3).attr('value');
+        item.totalPrice = $(this).children().eq(4).attr('value');
+        items.push(item);
+      }
+    });
 
-    var hiddenField1 = document.createElement("input");
-    hiddenField1.setAttribute("type", "hidden");
-    hiddenField1.setAttribute("name", "itemId");
-    hiddenField1.setAttribute("value", 1);
-    form.appendChild(hiddenField1);
+    var form = {
+      "userName" : userName,
+      "orderType" : orderType,
+      "items" : items
+    }
 
-    var hiddenField2 = document.createElement("input");
-    hiddenField2.setAttribute("type", "hidden");
-    hiddenField2.setAttribute("name", "orderType");
-    hiddenField2.setAttribute("value", "cart");
-    form.appendChild(hiddenField2);
+    alert(JSON.stringify(items));
 
-    var hiddenField3 = document.createElement("input");
-    hiddenField3.setAttribute("type", "hidden");
-    hiddenField3.setAttribute("name", "count");
-    hiddenField3.setAttribute("value", 1);
-    form.appendChild(hiddenField3);
+    $.ajax({
 
-    document.body.appendChild(form);
-    form.submit();
+    type : 'post',
+    url : "/orders/createOrderSheet",
+    headers : {
+        "Content-Type" : "application/json",
+        "X-HTTP-Method-Override" : "POST"
+    },
+    dataType : 'json',
+    data : JSON.stringify(form),
+    success : function(res){
+        window.location.href = 'http://localhost:8080/orders/sheet/' + res;
+    },
+    failure : function(){
+        alert("서버와의 통신에 실패했습니다.");
+    }
+
+    });
+    return false;
 }
 </script>
 </html>

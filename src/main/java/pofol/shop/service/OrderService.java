@@ -5,13 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
-import pofol.shop.repository.CartRepository;
-import pofol.shop.repository.MemberRepository;
-import pofol.shop.repository.OrderItemRepository;
-import pofol.shop.repository.OrderRepository;
+import pofol.shop.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -19,9 +17,9 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
+    private final OrderSheetRepository orderSheetRepository;
 
     /**
      * 장바구니에서 주문을 생성합니다.
@@ -58,4 +56,14 @@ public class OrderService {
         orderRepository.save(order);
         return order.getId();
     }
+
+    public long saveSheet(OrderSheet sheet){
+        orderSheetRepository.save(sheet);
+        return sheet.getId();
+    }
+
+    public Optional<OrderSheet> findSheetById(Long id){
+        return orderSheetRepository.findById(id);
+    }
+
 }

@@ -8,6 +8,7 @@ import pofol.shop.domain.Cart;
 import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
 import pofol.shop.formAndDto.CartCreateForm;
+import pofol.shop.formAndDto.OrderSheetForm;
 import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
@@ -23,7 +24,7 @@ public class CartApiController {
     private final ItemService itemService;
 
     @PostMapping("/cart/new")
-    public boolean test(@RequestBody CartCreateForm form) {
+    public boolean addCart(@RequestBody CartCreateForm form) {
         try {
             Member member = memberService.findOneByName(form.getUserName());
             Item item = itemService.findOne(form.getItemId());
@@ -45,6 +46,12 @@ public class CartApiController {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @PostMapping("/cart/test")
+    public boolean test(@RequestBody OrderSheetForm form){
+        System.out.println(form);
+        return true;
     }
 
 }

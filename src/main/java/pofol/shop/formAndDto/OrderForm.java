@@ -1,12 +1,14 @@
 package pofol.shop.formAndDto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class OrderForm {
     private String orderType;
     @NotEmpty(message = "받는분 성함은 필수입니다")
@@ -18,8 +20,12 @@ public class OrderForm {
     private int zipcode;
     private List<OrderItemDto> orderItems = new ArrayList<>();
     private int totalPrice;
-    private Long itemId;
-    private int count;
+
+    public OrderForm(OrderSheetForm form){
+        this.orderType = form.getOrderType();
+        form.getItems().forEach(i -> this.addOrderItem(i));
+
+    }
 
     public void addOrderItem(OrderItemDto orderItem){
         //orderItems에 주문아이템DTO 추가하고 총 주문금액에
