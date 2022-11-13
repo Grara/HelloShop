@@ -43,7 +43,6 @@ public class OrderTest {
     public void 장바구니주문(){
         Address address = new Address("서울", "신림", 1010);
         Member findMember = memberRepository.findByUserName("member1").get();
-        orderService.orderByCart(findMember, address);
     }
 
     @Test

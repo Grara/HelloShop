@@ -25,7 +25,8 @@
       <td name="dd"><input type="checkbox" checked th:value="${cart.cartId}"> </td>
     </tr>
   </table>
-    <a th:data-username="${username}" class="btn btn-primary"
+    <a th:data-username="${username}"
+       class="btn btn-primary"
             th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</a>
   <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
@@ -58,12 +59,10 @@
       "items" : items
     }
 
-    alert(JSON.stringify(items));
-
     $.ajax({
 
     type : 'post',
-    url : "/orders/createOrderSheet",
+    url : "/orderSheet/new",
     headers : {
         "Content-Type" : "application/json",
         "X-HTTP-Method-Override" : "POST"
@@ -71,7 +70,7 @@
     dataType : 'json',
     data : JSON.stringify(form),
     success : function(res){
-        window.location.href = 'http://localhost:8080/orders/sheet/' + res;
+        window.location.href = 'http://localhost:8080/orderSheet/' + res;
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");

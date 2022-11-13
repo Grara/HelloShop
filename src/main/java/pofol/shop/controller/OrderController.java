@@ -31,30 +31,27 @@ public class OrderController {
     private final MemberService memberService;
     private ObjectMapper mapper = new ObjectMapper();
 
-    @GetMapping("/orders/sheet/{id}")
+    @GetMapping("/orderSheet/{id}")
     //주문 생성폼 화면
     public String createForm(@PathVariable("id") Long id,
                              Model model,
                              Principal principal) throws Exception {
 
 
-            Optional<OrderSheet> opSheet = orderService.findSheetById(id);
-        System.out.println("111111");
-            if (opSheet.isPresent()) {
-                OrderSheet sheet = opSheet.get();
-                OrderSheetForm sheetForm = mapper.readValue(sheet.getContent(), OrderSheetForm.class);
-                System.out.println(sheetForm);
-                System.out.println("2222222");
-                if(!sheetForm.getUserName().equals(principal.getName())){
-                    return "orders/orderForm";
-                }
+        Optional<OrderSheet> opSheet = orderService.findSheetById(id);
 
-                System.out.println("333333");
-                OrderForm orderForm = new OrderForm(sheetForm);
-                model.addAttribute("orderForm", orderForm);
+        if (opSheet.isPresent()) {
+            OrderSheet sheet = opSheet.get();
+            OrderSheetForm sheetForm = mapper.readValue(sheet.getContent(), OrderSheetForm.class);
+            System.out.println(sheetForm);
+
+            if (!sheetForm.getUserName().equals(principal.getName())) {
+                return "orders/orderForm";
             }
-        System.out.println("444444");
 
+            OrderForm orderForm = new OrderForm(sheetForm);
+            model.addAttribute("orderForm", orderForm);
+        }
 
 
         return "orders/orderForm";
@@ -63,7 +60,18 @@ public class OrderController {
     @PostMapping("/orders/new")
     //주문 생성 요청
     public String order(@ModelAttribute OrderForm form, Principal principal) {
+        Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
+        Member member = memberService.findOneByName(principal.getName());
 
+        if (form.getOrderType().equals("buy")) {
+            Item item = itemService.findOne(form.getOrderItems().get(0).getItemId());
+            OrderItem orderItem = new OrderItem(item, form.getOrderItems().get(0).getCount());
+            orderService.order(member, address, orderItem);
+        }
+
+        if (form.getOrderType().equals("cart")) {
+            orderService.orderByCart(member, address, form.getOrderItems());
+        }
 
         return "redirect:/";
     }

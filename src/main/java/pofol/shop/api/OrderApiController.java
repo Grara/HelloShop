@@ -18,14 +18,11 @@ public class OrderApiController {
     private final OrderService orderService;
     private ObjectMapper mapper = new ObjectMapper();
 
-
-    @PostMapping("/orders/createOrderSheet")
+    @PostMapping("/orderSheet/new")
     public Long createOrderSheet(@RequestBody OrderSheetForm form) throws Exception {
 
-            System.out.println("$$$$"+form);
             OrderSheet sheet = new OrderSheet();
             sheet.setContent(mapper.writeValueAsString(form));
-            System.out.println("$$$$"+mapper.writeValueAsString(form));
             return orderService.saveSheet(sheet);
 
     }

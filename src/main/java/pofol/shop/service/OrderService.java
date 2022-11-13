@@ -1,10 +1,12 @@
 package pofol.shop.service;
 
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
+import pofol.shop.formAndDto.OrderItemDto;
 import pofol.shop.repository.*;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final CartRepository cartRepository;
+    private final CartService cartService;
     private final OrderItemRepository orderItemRepository;
     private final OrderSheetRepository orderSheetRepository;
 
@@ -27,14 +29,19 @@ public class OrderService {
      * @param address 주소정보
      * @return 생성한 주문의 id
      */
-    public long orderByCart(Member member, Address address){
-        List<Cart> findCart = cartRepository.findByMember(member);
+    public long orderByCart(Member member, Address address, List<OrderItemDto> itemDtos){
         List<OrderItem> orderItems = new ArrayList<>();
-        for (Cart cart : findCart) {
+        List<Cart> orderedCart = new ArrayList<>();
+        for(OrderItemDto dto : itemDtos){
+            Cart cart = cartService.findOne(dto.getCartId()).get();
+            orderedCart.add(cart);
+        }
+
+        for (Cart cart : orderedCart) {
             OrderItem orderItem = new OrderItem(cart);
             orderItems.add(orderItem);
             orderItemRepository.save(orderItem);
-            cartRepository.delete(cart);
+            cartService.delete(cart);
         }
         Order order = Order.createOrder(member, address, orderItems);
         orderRepository.save(order);

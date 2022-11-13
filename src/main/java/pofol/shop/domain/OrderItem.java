@@ -2,6 +2,7 @@ package pofol.shop.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pofol.shop.formAndDto.OrderItemDto;
 
 import javax.persistence.*;
 
@@ -36,6 +37,7 @@ public class OrderItem extends BaseEntity{
         this.count = count;
         this.totalPrice = item.getPrice() * count;
     }
+
 
 
 }

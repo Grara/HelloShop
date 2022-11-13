@@ -56,6 +56,9 @@ width: 90%;
         </div>
 
         <div th:each="item, iterStat : *{orderItems}" style="border:5px solid gold">
+            <input type="hidden" th:field="*{orderItems[__${iterStat.index}__].cartId}">
+            <input type="hidden" th:field="*{orderItems[__${iterStat.index}__].itemId}">
+            <input type="hidden" th:field="*{orderItems[__${iterStat.index}__].totalPrice}">
             <div class="inputs">
                 <div class="firstbox">
                     <label>상품명</label>

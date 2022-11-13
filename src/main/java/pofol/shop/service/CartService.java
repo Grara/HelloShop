@@ -60,4 +60,6 @@ public class CartService {
         return Optional.empty();
     }
 
+    public void delete(Cart cart) { cartRepository.delete(cart); }
+
 }
