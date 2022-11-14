@@ -13,6 +13,7 @@ import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -48,10 +49,15 @@ public class CartApiController {
         }
     }
 
-    @PostMapping("/cart/test")
-    public boolean test(@RequestBody OrderSheetForm form){
-        System.out.println(form);
+    @PostMapping("/cart/delete")
+    public boolean delete(@RequestBody List<Long> list){
+        for(Long cartId : list){
+            Optional<Cart> opCart = cartService.findOne(cartId);
+            if(opCart.isPresent()){
+                cartService.delete(opCart.get());
+            }
+            else return false;
+        }
         return true;
     }
-
 }

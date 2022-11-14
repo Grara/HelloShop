@@ -14,4 +14,6 @@ public class OrderSheet {
     private Long id;
     @Lob
     private String content;
+    private Boolean isOrdered;
+    private Long test;
 }

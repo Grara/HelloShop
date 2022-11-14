@@ -20,6 +20,7 @@ public class OrderForm {
     private int zipcode;
     private List<OrderItemDto> orderItems = new ArrayList<>();
     private int totalPrice;
+    private Long sheetId;
 
     public OrderForm(OrderSheetForm form){
         this.orderType = form.getOrderType();

@@ -1,34 +1,43 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
-  <title>Hello</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
+<style>
+
+</style>
 <body>
 <div class="container">
-  <div th:replace="fragments/bodyHeader :: bodyHeader" />
-  <table class="table table-striped">
-    <tr class="table-primary">
-      <th></th>
-      <th>상품명</th>
-      <th>개당 가격</th>
-      <th>수량</th>
-      <th>총 가격</th>
-      <th></th>
-    </tr>
-    <tr name="item" th:each="cart : ${carts}">
-      <td th:value="${cart.itemId}"></td>
-      <td th:text="${cart.itemName}" th:value="${cart.itemName}"></td>
-      <td th:text="${cart.price}" th:value="${cart.price}"></td>
-      <td th:text="${cart.count}" th:value="${cart.count}"></td>
-      <td th:text="${cart.totalPrice}" th:value="${cart.totalPrice}"></td>
-      <td name="dd"><input type="checkbox" checked th:value="${cart.cartId}"> </td>
-    </tr>
-  </table>
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div class="parent" style="height:50px" align="right">
+        <a class="btn btn-primary" th:onClick="javascript:deleteChecked();">선택한 항목 삭제</a>
+        <label for="allSelect">전체선택</label>
+        <input id="allSelect" name="allSelect" type="checkbox" onclick="javascript:allSelect(this);" checked>
+    </div>
+    <table class="table table-striped">
+        <tr class="table-primary">
+            <th></th>
+            <th>상품명</th>
+            <th>개당 가격</th>
+            <th>수량</th>
+            <th>총 가격</th>
+            <th></th>
+        </tr>
+        <tr name="item" th:each="cart : ${carts}">
+            <td th:value="${cart.itemId}"></td>
+            <td th:text="${cart.itemName}" th:value="${cart.itemName}"></td>
+            <td th:text="${cart.price}" th:value="${cart.price}"></td>
+            <td th:text="${cart.count}" th:value="${cart.count}"></td>
+            <td th:text="${cart.totalPrice}" th:value="${cart.totalPrice}"></td>
+            <td><input id="itemCheck" type="checkbox" checked th:value="${cart.cartId}"
+                       onclick="javascript:itemSelect();"></td>
+        </tr>
+    </table>
     <a th:data-username="${username}"
        class="btn btn-primary"
-            th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</a>
-  <div th:replace="fragments/footer :: footer" />
+       th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</a>
+    <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -79,5 +88,80 @@
     });
     return false;
 }
+
+function allSelect(chk){
+  if(chk.checked){
+    $('input:checkbox').prop('checked',true);
+  }
+  else {
+    $('input:checkbox').prop('checked',false);
+  }
+}
+
+function itemSelect(){
+  var allSelected = true;
+  $('[id=itemCheck]').each(function(){
+    if(!$(this).prop('checked')) {
+      $('#allSelect').prop('checked', false);
+      allSelected = false;
+    }
+  });
+
+  if(allSelected) $('#allSelect').prop('checked', true);
+
+}
+
+function deleteChecked(){
+
+  var deleteList = new Array();
+
+  $('[name=item]').each(function(){
+    let checkBox = $(this).children().last().children();
+    let isChecked = checkBox.is(':checked');
+
+    if(isChecked){
+        deleteList.push(checkBox.val());
+      }
+  });
+
+  if(!confirm('선택한 상품들을 장바구니에서 삭제하시겠습니까?')){
+        return false;
+    }
+
+  $.ajax({
+
+    type : 'post',
+    url : "/cart/delete",
+    headers : {
+        "Content-Type" : "application/json",
+        "X-HTTP-Method-Override" : "POST"
+    },
+    dataType : 'json',
+    data : JSON.stringify(deleteList),
+    success : function(res){
+        if(res){
+          $('[name=item]').each(function(){
+            let checkBox = $(this).children().last().children();
+            let isChecked = checkBox.is(':checked');
+
+            if(isChecked){
+                $(this).remove();
+              }
+          });
+        }
+
+        else{
+            alert("처리 과정에 문제가 생겼습니다.");
+        }
+    },
+    failure : function(){
+        alert("서버와의 통신에 실패했습니다.");
+    }
+
+    });
+    return false;
+
+}
+
 </script>
 </html>

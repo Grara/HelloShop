@@ -28,7 +28,7 @@ public class CartController {
     private final ItemService itemService;
 
     @GetMapping("/cart")
-    public String cart(Model model, Principal principal){
+    public String list(Model model, Principal principal){
         Member findMember = memberService.findOneByName(principal.getName());
         List<Cart> carts = cartService.findListByMemberFetchItem(findMember);
         List<OrderItemDto> itemDtos = carts.stream().map(OrderItemDto::new).collect(Collectors.toList());

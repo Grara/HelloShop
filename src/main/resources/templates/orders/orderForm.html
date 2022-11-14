@@ -29,6 +29,7 @@ width: 90%;
     <div>
     <form action="#" th:action="@{/orders/new}" th:object="${orderForm}" method="post">
         <input type="hidden" th:field="*{orderType}">
+        <input type="hidden" th:field="*{sheetId}">
 
         <div class="form-group">
             <label>받는분 성함</label>
@@ -59,6 +60,7 @@ width: 90%;
             <input type="hidden" th:field="*{orderItems[__${iterStat.index}__].cartId}">
             <input type="hidden" th:field="*{orderItems[__${iterStat.index}__].itemId}">
             <input type="hidden" th:field="*{orderItems[__${iterStat.index}__].totalPrice}">
+
             <div class="inputs">
                 <div class="firstbox">
                     <label>상품명</label>

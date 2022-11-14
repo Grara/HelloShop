@@ -37,22 +37,23 @@ public class OrderController {
                              Model model,
                              Principal principal) throws Exception {
 
-
         Optional<OrderSheet> opSheet = orderService.findSheetById(id);
 
         if (opSheet.isPresent()) {
             OrderSheet sheet = opSheet.get();
+
+            if (sheet.getIsOrdered()) return "redirect:/";
+
             OrderSheetForm sheetForm = mapper.readValue(sheet.getContent(), OrderSheetForm.class);
-            System.out.println(sheetForm);
 
             if (!sheetForm.getUserName().equals(principal.getName())) {
-                return "orders/orderForm";
+                return "redirect:/";
             }
 
             OrderForm orderForm = new OrderForm(sheetForm);
+            orderForm.setSheetId(sheet.getId());
             model.addAttribute("orderForm", orderForm);
         }
-
 
         return "orders/orderForm";
     }
@@ -72,8 +73,10 @@ public class OrderController {
         if (form.getOrderType().equals("cart")) {
             orderService.orderByCart(member, address, form.getOrderItems());
         }
+        OrderSheet sheet = orderService.findSheetById(form.getSheetId()).get();
+        sheet.setIsOrdered(true);
+        orderService.saveSheet(sheet);
 
         return "redirect:/";
     }
-
 }

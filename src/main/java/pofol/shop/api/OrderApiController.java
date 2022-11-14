@@ -23,6 +23,7 @@ public class OrderApiController {
 
             OrderSheet sheet = new OrderSheet();
             sheet.setContent(mapper.writeValueAsString(form));
+            sheet.setIsOrdered(false);
             return orderService.saveSheet(sheet);
 
     }
