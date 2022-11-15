@@ -51,6 +51,5 @@ public class OrderTest {
         Member findMember = memberRepository.findByUserName("member1").get();
 
         OrderItem orderItem = new OrderItem(item1, 3);
-        orderService.order(findMember, address, orderItem);
     }
 }

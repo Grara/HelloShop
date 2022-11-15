@@ -22,7 +22,7 @@ public class SecurityConfig {
         //시큐리티 적용url, 로그인, 로그아웃 커스텀
         return http.authorizeRequests()
                 .antMatchers("/members").hasRole("ADMIN")
-                .antMatchers("/orders/new", "/cart/new").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/orders/new", "/cart/new","/orderSheet").hasAnyRole("ADMIN", "USER")
                 .anyRequest().permitAll()
                 .and()
                 .formLogin().and()

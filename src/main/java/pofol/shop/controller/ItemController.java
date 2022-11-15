@@ -12,6 +12,7 @@ import pofol.shop.domain.Item;
 import pofol.shop.repository.CommentRepository;
 import pofol.shop.service.ItemService;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -25,7 +26,7 @@ public class ItemController {
 
     @GetMapping("/items")
     //아이템 리스트
-    public String list(Model model){
+    public String list(Model model) throws Exception {
         List<Item> items = itemService.findList();
         model.addAttribute("items", items);
         return "items/itemList";
@@ -33,15 +34,15 @@ public class ItemController {
 
     @GetMapping("/items/new")
     //아이템 등록폼 화면
-    public String createForm(Model model){
+    public String createForm(Model model) throws Exception {
         model.addAttribute("itemForm", new ItemForm());
         return "items/createItemForm";
     }
 
     @PostMapping("/items/new")
     //아이템 등록 실행
-    public String create(@Valid ItemForm form, BindingResult result){
-        if(result.hasErrors()){
+    public String create(@Valid ItemForm form, BindingResult result) throws Exception {
+        if (result.hasErrors()) {
             return "items/createItemForm";
         }
 
@@ -57,7 +58,7 @@ public class ItemController {
 
     @GetMapping("/items/edit")
     //아이템 수정 폼 화면
-    public String editForm(@RequestParam Long id, Model model){
+    public String editForm(@RequestParam Long id, Model model) throws Exception {
         Item item = itemService.findOne(id);
 
         ItemForm form = new ItemForm();
@@ -74,9 +75,9 @@ public class ItemController {
 
     @PostMapping("/items/edit")
     //아이템 수정 실행
-    public String edit (@Valid ItemForm form,BindingResult result){
+    public String edit(@Valid ItemForm form, BindingResult result) throws Exception {
         System.out.println(form);
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return "/items/updateItemForm";
         }
         itemService.edit(form.getId(), form.getItemName(), form.getPrice(), form.getQuantity());
@@ -84,7 +85,7 @@ public class ItemController {
     }
 
     @GetMapping("/items/{itemId}")
-    public String item(@PathVariable("itemId") Long id, Model model, Principal principal){
+    public String item(@PathVariable("itemId") Long id, Model model, Principal principal) throws Exception {
         Item item = itemService.findOne(id);
         ItemForm itemForm = new ItemForm();
 
@@ -108,7 +109,7 @@ public class ItemController {
     }
 
     @PostMapping("/items/createComment")
-    public String createComment(@Valid CommentForm form){
+    public String createComment(@Valid CommentForm form) throws Exception{
         Comment comment = new Comment();
         Item item = itemService.findOne(form.getItemId());
         comment.setItem(item);

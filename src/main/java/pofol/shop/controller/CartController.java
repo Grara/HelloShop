@@ -14,6 +14,7 @@ import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
 
+import javax.persistence.EntityNotFoundException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +29,14 @@ public class CartController {
     private final ItemService itemService;
 
     @GetMapping("/cart")
-    public String list(Model model, Principal principal){
-        Member findMember = memberService.findOneByName(principal.getName());
-        List<Cart> carts = cartService.findListByMemberFetchItem(findMember);
+    public String list(Model model, Principal principal) throws Exception {
+
+        Member member = memberService.findOneByName(principal.getName());
+        List<Cart> carts = cartService.findListByMemberFetchItem(member);
         List<OrderItemDto> itemDtos = carts.stream().map(OrderItemDto::new).collect(Collectors.toList());
         model.addAttribute("carts", itemDtos);
         model.addAttribute("username", principal.getName());
         return "carts/cartList";
+
     }
 }

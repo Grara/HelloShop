@@ -38,7 +38,7 @@ public class CartApiController {
             }
             //있으면 기존 장바구니 아이템에 수량만 추가
             else {
-                Cart existingCart = cartService.findOne(existingCartId.get()).get();
+                Cart existingCart = cartService.findOne(existingCartId.get());
                 existingCart.addCount(form.getCount());
                 cartService.add(existingCart);
             }
@@ -50,13 +50,10 @@ public class CartApiController {
     }
 
     @PostMapping("/cart/delete")
-    public boolean delete(@RequestBody List<Long> list){
+    public boolean delete(@RequestBody List<Long> list) throws Exception{
         for(Long cartId : list){
-            Optional<Cart> opCart = cartService.findOne(cartId);
-            if(opCart.isPresent()){
-                cartService.delete(opCart.get());
-            }
-            else return false;
+            Cart cart = cartService.findOne(cartId);
+            cartService.delete(cart);
         }
         return true;
     }

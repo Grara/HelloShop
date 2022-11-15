@@ -45,7 +45,6 @@
 <script>
   function buy(param){
     var userName = param;
-    var orderType = 'cart';
     var items = new Array();
     $('[name=item]').each(function(){
       var checkBox = $(this).children().last().children();
@@ -64,7 +63,6 @@
 
     var form = {
       "userName" : userName,
-      "orderType" : orderType,
       "items" : items
     }
 

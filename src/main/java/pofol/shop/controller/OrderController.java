@@ -37,43 +37,29 @@ public class OrderController {
                              Model model,
                              Principal principal) throws Exception {
 
-        Optional<OrderSheet> opSheet = orderService.findSheetById(id);
+        OrderSheet sheet = orderService.findSheetById(id);
+        Member findMember = sheet.getMember();
+        System.out.println("start");
 
-        if (opSheet.isPresent()) {
-            OrderSheet sheet = opSheet.get();
-
-            if (sheet.getIsOrdered()) return "redirect:/";
-
-            OrderSheetForm sheetForm = mapper.readValue(sheet.getContent(), OrderSheetForm.class);
-
-            if (!sheetForm.getUserName().equals(principal.getName())) {
-                return "redirect:/";
-            }
-
-            OrderForm orderForm = new OrderForm(sheetForm);
-            orderForm.setSheetId(sheet.getId());
-            model.addAttribute("orderForm", orderForm);
+        if (sheet.getIsOrdered() || !findMember.getUserName().equals(principal.getName())){
+            return "redirect:/";
         }
+        OrderSheetForm content = mapper.readValue(sheet.getContent(), OrderSheetForm.class);
+
+        OrderForm orderForm = new OrderForm(content.getItems());
+        orderForm.setSheetId(sheet.getId());
+        model.addAttribute("orderForm", orderForm);
 
         return "orders/orderForm";
     }
 
     @PostMapping("/orders/new")
     //주문 생성 요청
-    public String order(@ModelAttribute OrderForm form, Principal principal) {
+    public String order(@ModelAttribute OrderForm form, Principal principal) throws Exception {
         Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
         Member member = memberService.findOneByName(principal.getName());
-
-        if (form.getOrderType().equals("buy")) {
-            Item item = itemService.findOne(form.getOrderItems().get(0).getItemId());
-            OrderItem orderItem = new OrderItem(item, form.getOrderItems().get(0).getCount());
-            orderService.order(member, address, orderItem);
-        }
-
-        if (form.getOrderType().equals("cart")) {
-            orderService.orderByCart(member, address, form.getOrderItems());
-        }
-        OrderSheet sheet = orderService.findSheetById(form.getSheetId()).get();
+        orderService.order(member, address, form.getOrderItems());
+        OrderSheet sheet = orderService.findSheetById(form.getSheetId());
         sheet.setIsOrdered(true);
         orderService.saveSheet(sheet);
 

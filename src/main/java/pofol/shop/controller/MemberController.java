@@ -24,19 +24,19 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/members")
-    public String list(Model model){
+    public String list(Model model)throws Exception{
         model.addAttribute("members", memberService.findList());
         return "members/memberList";
     }
 
     @GetMapping("/members/new")
-    public String createForm(Model model){
+    public String createForm(Model model)throws Exception{
         model.addAttribute("memberForm", new MemberForm());
         return "members/createMemberForm";
     }
 
     @PostMapping("/members/new")
-    public String create(@Valid MemberForm form, BindingResult result){
+    public String create(@Valid MemberForm form, BindingResult result)throws Exception{
         //비밀번호와 비밀번호 확인이 일치하는지 체크
         if(!form.getPassword().equals(form.getPasswordCheck()))
             result.addError(new FieldError("memberForm",

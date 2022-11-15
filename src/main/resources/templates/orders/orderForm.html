@@ -28,7 +28,6 @@ width: 90%;
 
     <div>
     <form action="#" th:action="@{/orders/new}" th:object="${orderForm}" method="post">
-        <input type="hidden" th:field="*{orderType}">
         <input type="hidden" th:field="*{sheetId}">
 
         <div class="form-group">

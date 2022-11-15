@@ -9,7 +9,5 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderSheetForm {
     private String userName;
-    private String orderType;
     private List<OrderItemDto> items;
-
 }
