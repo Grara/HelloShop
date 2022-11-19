@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class Comment extends BaseEntity{
+    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "comment_id")
     private Long id;
@@ -19,14 +20,20 @@ public class Comment extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Item item;
-    @PrePersist
-    public void Setting(){
-        this.lastModifiedDate = LocalDate.now();
-    }
+    //----------필드 끝----------//
 
+    //----------생성자 시작----------//
     Comment(String content, String createdUserName, Item item){
         this.content = content;
         this.createdUserName = createdUserName;
         this.item = item;
     }
+    //----------생성자 끝----------//
+
+    //----------메소드 시작----------//
+    @PrePersist
+    public void Setting(){
+        this.lastModifiedDate = LocalDate.now();
+    }
+    //----------메소드 끝----------//
 }

@@ -32,27 +32,25 @@ width: 90%;
 
         <div class="form-group">
             <label>받는분 성함</label>
-            <input type="text" th:field="*{realName}" class="form-control" placeholder="받는분 성함을 입력하세요"/>
-<!--                   th:class="${#fields.hasErrors('realName')}? 'form-control fieldError' : 'form-control'">-->
-<!--            <p th:if="${#fields.hasErrors('realName')}" th:errors="*{realName}" style="color:red;"/>-->
+            <input type="text" th:field="*{realName}" class="form-control" placeholder="받는분 성함을 입력하세요"
+                   th:class="${#fields.hasErrors('realName')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('realName')}" th:errors="*{realName}" style="color:red;"/>
         </div>
         <div class="form-group">
             <label>기본주소</label>
-            <input type="text" th:field="*{address1}" class="form-control" placeholder="기본주소를 입력하세요"/>
-<!--                   th:class="${#fields.hasErrors('address1')}? 'form-control fieldError' : 'form-control'">-->
-<!--            <p th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}" style="color:red;"/>-->
+            <input type="text" th:field="*{address1}" class="form-control" placeholder="기본주소를 입력하세요"
+                   th:class="${#fields.hasErrors('address1')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}" style="color:red;"/>
         </div>
         <div class="form-group">
             <label>상세주소</label>
-            <input type="text" th:field="*{address2}" class="form-control" placeholder="상세주소를 입력하세요"/>
-<!--                   th:class="${#fields.hasErrors('address2')}? 'form-control fieldError' : 'form-control'">-->
-<!--            <p th:if="${#fields.hasErrors('address2')}" th:errors="*{address2}" style="color:red;"/>-->
+            <input type="text" th:field="*{address2}" class="form-control" placeholder="상세주소를 입력하세요"
+                   th:class="${#fields.hasErrors('address2')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('address2')}" th:errors="*{address2}" style="color:red;"/>
         </div>
         <div class="form-group">
             <label>우편번호</label>
-            <input type="text" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요"/>
-<!--                   th:class="${#fields.hasErrors('zipcode')}? 'form-control fieldError' : 'form-control'">-->
-<!--            <p th:if="${#fields.hasErrors('zipcode')}" th:errors="*{zipcode}" style="color:red;"/>-->
+            <input type="text" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요">
         </div>
 
         <div th:each="item, iterStat : *{orderItems}" style="border:5px solid gold">

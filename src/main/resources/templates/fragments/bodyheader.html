@@ -2,15 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-
 <div class="header" th:fragment="bodyHeader">
   <ul class="nav nav-pills pull-right">
-    <li>
-      <a href="/">Home  /</a>
-      <a sec:authorize="isAuthenticated()" href="/logout">Logout  /</a>
-      <a sec:authorize="isAuthenticated()" href="/mypage">MyPage  /</a>
-      <a sec:authorize="isAuthenticated()" href="/cart">장바구니</a>
-      <a sec:authorize="!isAuthenticated()" href="/login">Login</a>
+    <li style="list-style: none;">
+      <a class="link" href="/">Home</a>
+    </li>
+
+    <li sec:authorize="isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+      <a href="/logout">Logout</a>
+    </li>
+
+    <li sec:authorize="isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+      <a href="/mypage">MyPage</a>
+    </li>
+
+    <li sec:authorize="isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+      <a href="/cart">장바구니</a>
+    </li>
+
+    <li sec:authorize="!isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+      <a href="/login">Login</a>
     </li>
   </ul>
   <a href="/"><h3 class="text-muted">HELLO SHOP</h3></a>

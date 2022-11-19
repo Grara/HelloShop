@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 public class OrderSheet {
+    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "ordersheet_id")
     private Long id;
@@ -20,5 +21,5 @@ public class OrderSheet {
     @Lob
     private String content;
     private Boolean isOrdered;
-    private Long test;
+    //----------필드 끝----------//
 }

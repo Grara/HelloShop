@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pofol.shop.formAndDto.OrderForm;
 import pofol.shop.formAndDto.OrderItemDto;
@@ -16,6 +17,7 @@ import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
 import pofol.shop.service.OrderService;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +57,10 @@ public class OrderController {
 
     @PostMapping("/orders/new")
     //주문 생성 요청
-    public String order(@ModelAttribute OrderForm form, Principal principal) throws Exception {
+    public String order(@ModelAttribute @Valid OrderForm form, BindingResult result, Principal principal) throws Exception {
+        if(result.hasErrors()) {
+            return "orders/orderForm";
+        }
         Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
         Member member = memberService.findOneByName(principal.getName());
         orderService.order(member, address, form.getOrderItems());

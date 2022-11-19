@@ -1,7 +1,9 @@
 package pofol.shop.domain;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,7 +11,9 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@Setter(AccessLevel.NONE)
 public class Item extends BaseEntity{
+    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "item_id")
     private Long id;
@@ -25,14 +29,65 @@ public class Item extends BaseEntity{
     private int rating;
 
     @OneToMany(mappedBy = "item")
-    private List<Comment> comments;
+    private List<Comment> comments; //item에는 Comment setter프로퍼티가 없음
+    private String thumbnailPath;
+
+    //----------필드 끝----------//
+
+    //----------Setter 시작----------//
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setTotalSales(int totalSales) {
+        this.totalSales = totalSales;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
+    }
+
+    //----------Setter 끝----------//
+
+    //----------생성자 시작----------//
     public Item(String itemName, int price, int quantity) {
         this.itemName = itemName;
         this.author = "짬뽕먹고싶다";
         this.price = price;
         this.quantity = quantity;
     }
+    //----------생성자 끝----------//
 
+
+    //----------메소드 시작----------//
     @PrePersist
     void beforePersist(){
         if(description == null) description = "";
@@ -45,4 +100,5 @@ public class Item extends BaseEntity{
     public void addQty(int count){
         this.quantity += count;
     }
+    //----------메소드 끝----------//
 }

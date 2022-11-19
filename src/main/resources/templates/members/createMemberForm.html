@@ -12,11 +12,16 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-    <form role="form" action="/members/new" th:object="${memberForm}" method="post">
+    <form id="form" action="/members/new" th:object="${memberForm}" method="post">
         <div class="form-group">
             <label>회원명</label>
-            <input type="text" th:field="*{userName}" class="form-control" placeholder="회원명을 입력하세요"
+            <input type="hidden" name="duplCheck" id="duplCheck" value="false">
+            <input id="userName" type="text" th:field="*{userName}" class="form-control" placeholder="회원명을 입력하세요"
                    th:class="${#fields.hasErrors('userName')}? 'form-control fieldError' : 'form-control'">
+            <span> <a href="#" class="btn btn-primary" th:onClick="javascript:duplicateCheck();">
+                중복확인</a>
+            </span>
+            <span id="duplMsg"></span>
             <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color:red;"/>
         </div>
         <div class="form-group">
@@ -65,11 +70,65 @@
             <input type="number" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요">
         </div>
 
-
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="#" class="btn btn-primary" th:onClick="javascript:join();">
+            회원 가입</a>
     </form>
     <br/>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+$('#userName').on('change', function() {
+    $('#duplCheck').val(false);
+    $('#duplMsg').html('중복확인을 해주세요');
+});
+
+function join(){
+    if($('#duplCheck').val()=='false'){
+        alert('회원명 중복확인을 해주세요');
+        return false;
+    }
+    $('#form').submit();
+}
+
+
+function duplicateCheck(){
+    var username = $('#userName').val();
+    if(username == undefined || username == null || username.length == 0){
+        $('#duplCheck').val(false);
+        $('#duplMsg').html('사용불가능한 회원명입니다.');
+        return false;
+    }
+
+    $.ajax({
+
+        type : 'post',
+        url : "/members/duplicateCheck",
+        headers : {
+            "Content-Type" : "text/html; charset=utf-8",
+            "X-HTTP-Method-Override" : "POST"
+        },
+        dataType : 'text',
+        data : username,
+        success : function(res){
+            if(res==='true'){
+            $('#duplCheck').val(true);
+            $('#duplMsg').html('사용가능한 회원명입니다.');
+            }
+            else{
+            $('#duplCheck').val(false);
+            $('#duplMsg').html('사용불가능한 회원명입니다.');
+            }
+        },
+        failure : function(){
+            alert("다시 시도해주세요");
+        }
+    });
+
+    return false;
+}
+</script>
+
 </html>

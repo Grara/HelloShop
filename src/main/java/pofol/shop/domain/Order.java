@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Order extends BaseEntity{
+    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "order_id")
     private Long id;
@@ -32,12 +33,16 @@ public class Order extends BaseEntity{
     private int itemKind;
     private int orderTotalPrice;
     private LocalDateTime orderDate;
+    //----------필드 끝----------//
 
+    //----------생성자 시작----------//
     public Order(Member member, OrderStatus status) {
         this.member = member;
         this.status = status;
     }
+    //----------생성자 끝----------//
 
+    //----------메소드 시작----------//
     public void addOrderItem(OrderItem orderItem){
         orderItem.setOrder(this);
     }
@@ -59,4 +64,5 @@ public class Order extends BaseEntity{
         order.setOrderDate(LocalDateTime.now());
         return order;
     }
+    //----------메소드 끝----------//
 }

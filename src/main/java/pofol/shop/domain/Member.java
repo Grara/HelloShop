@@ -18,6 +18,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 public class Member extends BaseEntity{
+    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
@@ -30,7 +31,9 @@ public class Member extends BaseEntity{
     private PersonalInfo personalInfo;
     @Enumerated(EnumType.STRING)
     private Role role;
+    //----------필드 끝----------//
 
+    //----------생성자 시작----------//
     public Member(String userName, String password, Address address, PersonalInfo personalInfo) {
         this.userName = userName;
         this.password = password;
@@ -54,4 +57,5 @@ public class Member extends BaseEntity{
         this.personalInfo = new PersonalInfo("노민준", 28, Sex.MALE);
         this.role = role;
     }
+    //----------생성자 끝----------//
 }
