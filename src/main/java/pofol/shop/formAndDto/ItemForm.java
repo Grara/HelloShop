@@ -1,9 +1,11 @@
 package pofol.shop.formAndDto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Data
 public class ItemForm {
@@ -17,4 +19,5 @@ public class ItemForm {
     private int price;
     @Min(value = 1, message = "수량은 1개 이상이어야 합니다")
     private int quantity;
+    private MultipartFile thumbnail;
 }

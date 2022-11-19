@@ -41,7 +41,6 @@ public class OrderController {
 
         OrderSheet sheet = orderService.findSheetById(id);
         Member findMember = sheet.getMember();
-        System.out.println("start");
 
         if (sheet.getIsOrdered() || !findMember.getUserName().equals(principal.getName())){
             return "redirect:/";

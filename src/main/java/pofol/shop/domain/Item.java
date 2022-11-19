@@ -12,11 +12,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Setter(AccessLevel.NONE)
-public class Item extends BaseEntity{
+public class Item extends BaseEntity {
     //----------필드 시작----------//
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "item_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private String itemName;
     private String author;
@@ -30,7 +35,9 @@ public class Item extends BaseEntity{
 
     @OneToMany(mappedBy = "item")
     private List<Comment> comments; //item에는 Comment setter프로퍼티가 없음
-    private String thumbnailPath;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private FileEntity thumbnailFile; //상품 이미지 경로
 
     //----------필드 끝----------//
 
@@ -38,6 +45,8 @@ public class Item extends BaseEntity{
     public void setId(Long id) {
         this.id = id;
     }
+
+    public void setMember(Member member) { this.member = member; }
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
@@ -71,8 +80,8 @@ public class Item extends BaseEntity{
         this.rating = rating;
     }
 
-    public void setThumbnailPath(String thumbnailPath) {
-        this.thumbnailPath = thumbnailPath;
+    public void setThumbnailFile(FileEntity thumbnailFile) {
+        this.thumbnailFile = thumbnailFile;
     }
 
     //----------Setter 끝----------//
@@ -89,15 +98,15 @@ public class Item extends BaseEntity{
 
     //----------메소드 시작----------//
     @PrePersist
-    void beforePersist(){
-        if(description == null) description = "";
+    void beforePersist() {
+        if (description == null) description = "";
     }
 
-    public void reduceQty(int count){
+    public void reduceQty(int count) {
         this.quantity -= count;
     }
 
-    public void addQty(int count){
+    public void addQty(int count) {
         this.quantity += count;
     }
     //----------메소드 끝----------//

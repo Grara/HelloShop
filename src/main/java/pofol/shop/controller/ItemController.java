@@ -1,21 +1,26 @@
 package pofol.shop.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pofol.shop.domain.FileEntity;
 import pofol.shop.formAndDto.CommentForm;
 import pofol.shop.formAndDto.ItemForm;
 import pofol.shop.domain.Comment;
 import pofol.shop.domain.Item;
 import pofol.shop.repository.CommentRepository;
+import pofol.shop.service.FileService;
 import pofol.shop.service.ItemService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.io.File;
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,6 +28,7 @@ public class ItemController {
 
     private final ItemService itemService;
     private final CommentRepository commentRepository;
+    private final FileService fileService;
 
     @GetMapping("/items")
     //아이템 리스트
@@ -52,6 +58,12 @@ public class ItemController {
         item.setDescription(form.getDescription());
         item.setPrice(form.getPrice());
         item.setQuantity(form.getQuantity());
+
+        if(form.getThumbnail() != null){
+            Long fileId = fileService.saveFile(form.getThumbnail());
+            item.setThumbnailFile(fileService.findOne(fileId));
+        }
+
         itemService.save(item);
         return "redirect:/items";
     }
@@ -68,7 +80,6 @@ public class ItemController {
         form.setDescription(item.getDescription());
         form.setPrice(item.getPrice());
         form.setQuantity(item.getQuantity());
-
         model.addAttribute("itemForm", form);
         return "/items/updateItemForm";
     }
@@ -76,7 +87,6 @@ public class ItemController {
     @PostMapping("/items/edit")
     //아이템 수정 실행
     public String edit(@Valid ItemForm form, BindingResult result) throws Exception {
-        System.out.println(form);
         if (result.hasErrors()) {
             return "/items/updateItemForm";
         }
@@ -99,6 +109,10 @@ public class ItemController {
 
         String userName = principal != null ? principal.getName() : "Guest";
         model.addAttribute("userName", userName);
+
+        if(item.getThumbnailFile() != null) {
+            model.addAttribute("fileId", item.getThumbnailFile().getId());
+        }
 
         CommentForm commentForm = new CommentForm();
         commentForm.setItemId(id);

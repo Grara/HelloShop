@@ -4,7 +4,9 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-
+    <div>
+        <img th:src="|/images/${fileId}|" width="150" height="150">
+    </div>
     <div id="itemAttr">
         <input type="hidden" readonly th:value="${itemForm.id}"/>
         <p th:text="'상품명 : ' + ${itemForm.itemName}" th:value="${itemForm.itemName}"/>
