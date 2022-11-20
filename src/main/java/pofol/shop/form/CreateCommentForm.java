@@ -1,9 +1,9 @@
-package pofol.shop.formAndDto;
+package pofol.shop.form.create;
 
 import lombok.Data;
 
 @Data
-public class CommentForm {
+public class CreateCommentForm {
     private Long itemId;
     private String createdUserName;
     private String content;

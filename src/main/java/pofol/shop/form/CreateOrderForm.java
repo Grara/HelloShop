@@ -1,7 +1,8 @@
-package pofol.shop.formAndDto;
+package pofol.shop.form.create;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pofol.shop.dto.OrderItemDto;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class OrderForm {
+public class CreateOrderForm {
     @NotEmpty(message = "받는분 성함은 필수입니다")
     private String realName;
     @NotEmpty(message = "기본주소는 필수입니다")
@@ -21,7 +22,7 @@ public class OrderForm {
     private int totalPrice;
     private Long sheetId;
 
-    public OrderForm(List<OrderItemDto> dtos) {
+    public CreateOrderForm(List<OrderItemDto> dtos) {
         dtos.forEach(i -> this.addOrderItem(i));
     }
 

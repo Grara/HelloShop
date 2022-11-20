@@ -1,14 +1,13 @@
-package pofol.shop.formAndDto;
+package pofol.shop.form.create;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 @Data
-public class ItemForm {
+public class CreateItemForm {
     private Long id;
     @NotEmpty(message = "이름은 필수입니다")
     private String itemName;

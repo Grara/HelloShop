@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+  <title>Hello</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<style>
+  .profile {
+    padding: 10px;
+  }
+
+</style>
+
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader" />
+  <div class="jumbotron">
+    <h1>My Page</h1>
+    <div class="profile">
+      <img th:src="|/images/${fileId}|" width="80" height="80">
+    </div>
+
+
+    <p>
+      <a class="btn btn-lg btn-secondary" href="/members/new">상세 정보</a>
+    </p>
+    <p>
+      <a class="btn btn-lg btn-dark" href="/items/new">비밀번호 변경</a>
+    </p>
+    <p>
+      <a class="btn btn-lg btn-info" href="/order">판매상품 관리</a>
+    </p>
+    <p>
+      <a class="btn btn-lg btn-info" href="/order">주문내역</a>
+    </p>
+  </div>
+  <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

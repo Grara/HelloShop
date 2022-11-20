@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+ .info {
+      width: 30%;
+  }
+  .profile {
+    padding: 10px;
+  }
+</style>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div class="profile">
+        <img th:src="|/images/${fileId}|" width="80" height="80">
+    </div>
+    <p>
+        <a class="btn btn-lg btn-secondary" href="/members/new">상세 정보</a>
+    </p>
+
+    <label>회원명</label>
+    <input type="text" th:value="${dto.userName}" class="info" readonly>
+    <label>실명</label>
+    <input type="text" th:value="${dto.personalInfo.realName}" class="info" readonly>
+    <label>성별</label>
+    <input type="text" th:value="${dto.personalInfo.sex}" class="info" readonly>
+    <label>나이</label>
+    <input type="text" th:value="${dto.personalInfo.age}" class="info" readonly>
+    <label>기본주소</label>
+    <input type="text" th:value="${dto.address.address1}" class="info" readonly>
+    <label>상세주소</label>
+    <input type="text" th:value="${dto.address.address2}" class="info" readonly>
+    <label>우편번호</label>
+    <input type="text" th:value="${dto.address.zipcode}" class="info" readonly>
+    <p>
+        <a class="btn btn-lg btn-secondary" href="/members/new">수정</a>
+    </p>
+
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+</script>
+
+</html>

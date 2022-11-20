@@ -1,4 +1,4 @@
-package pofol.shop.formAndDto;
+package pofol.shop.form.create;
 
 
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CartCreateForm {
+public class CreateCartForm {
     private String userName;
     private Long itemId;
     private Integer count;

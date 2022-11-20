@@ -1,4 +1,4 @@
-package pofol.shop.formAndDto;
+package pofol.shop.form.create;
 
 import lombok.Data;
 import pofol.shop.domain.enums.Sex;
@@ -6,7 +6,7 @@ import pofol.shop.domain.enums.Sex;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-public class MemberForm {
+public class CreateMemberForm {
 
     @NotEmpty(message = "회원이름은 필수입니다")
     private String userName;
