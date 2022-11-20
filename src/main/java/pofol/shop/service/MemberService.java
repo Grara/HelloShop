@@ -69,6 +69,11 @@ public class MemberService implements UserDetailsService {
         return member.getId();
     }
 
+    public Long save(Member member) {
+        memberRepository.save(member);
+        return member.getId();
+    }
+
     /**
      * 인자로 들어온 Member의 유저명과 같은 Member가 있는지 중복체크합니다.
      *

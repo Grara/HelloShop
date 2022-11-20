@@ -1,10 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+ .info {
+      width: 30%;
+  }
+  .profile {
+    padding: 10px;
+  }
+  .form-control {
+      width: 100%;
+  }
+  .form-group{
+    align: left;
+    width: 30%;
+  }
+</style>
 <body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div class="outer" align="center">
+        <div class="profile" align="center">
+            <img th:src="|/images/${fileId}|" width="80" height="80">
+        </div>
+        <form method="post" action="/mypage/details/edit" th:object="${updateMyDetailForm}">
+            <div class="form-group">
+                <label>프로필사진 변경</label>
+                <input type="file" name="updateMyDetailForm.profileImage" id="updateMyDetailForm.profileImage" class="form-control">
+            </div>
 
+            <div class="form-group">
+                <label>회원명</label>
+                <input type="text" th:field="*{userName}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>실명</label>
+                <input type="text" th:field="*{realName}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>성별</label>
+                <input type="text" th:field="*{sex}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>나이</label>
+                <input type="number" th:field="*{age}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>기본주소</label>
+                <input type="text" th:field="*{address1}" class="form-control" placeholder="회원명을 입력하세요"
+                       th:class="${#fields.hasErrors('address1')}? 'form-control fieldError' : 'form-control'">
+                <p th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}" style="color:red;"/>
+            </div>
+            <div class="form-group">
+                <label>상세주소</label>
+                <input type="text" th:field="*{address2}" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>우편번호</label>
+                <input type="number" th:field="*{zipcode}" class="form-control">
+            </div>
+            <p>
+                <button class="btn btn-primary" type="submit">수정 완료</button>
+                <button class="btn btn-primary" type="submit">취소</button>
+            </p>
+        </form>
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
 </body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+$('.form-group').attr('align','left');
+</script>
+
 </html>

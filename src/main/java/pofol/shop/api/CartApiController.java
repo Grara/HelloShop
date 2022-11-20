@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pofol.shop.domain.Cart;
 import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
-import pofol.shop.formAndDto.CartCreateForm;
-import pofol.shop.formAndDto.OrderSheetForm;
+import pofol.shop.form.create.CreateCartForm;
 import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
@@ -25,7 +24,7 @@ public class CartApiController {
     private final ItemService itemService;
 
     @PostMapping("/cart/new")
-    public boolean addCart(@RequestBody CartCreateForm form) {
+    public boolean addCart(@RequestBody CreateCartForm form) {
         try {
             Member member = memberService.findOneByName(form.getUserName());
             Item item = itemService.findOne(form.getItemId());

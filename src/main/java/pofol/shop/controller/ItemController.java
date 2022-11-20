@@ -1,26 +1,21 @@
 package pofol.shop.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pofol.shop.domain.FileEntity;
-import pofol.shop.formAndDto.CommentForm;
-import pofol.shop.formAndDto.ItemForm;
+import pofol.shop.form.create.CreateCommentForm;
+import pofol.shop.form.create.CreateItemForm;
 import pofol.shop.domain.Comment;
 import pofol.shop.domain.Item;
 import pofol.shop.repository.CommentRepository;
 import pofol.shop.service.FileService;
 import pofol.shop.service.ItemService;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.io.File;
 import java.security.Principal;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,13 +36,13 @@ public class ItemController {
     @GetMapping("/items/new")
     //아이템 등록폼 화면
     public String createForm(Model model) throws Exception {
-        model.addAttribute("itemForm", new ItemForm());
+        model.addAttribute("itemForm", new CreateItemForm());
         return "items/createItemForm";
     }
 
     @PostMapping("/items/new")
     //아이템 등록 실행
-    public String create(@Valid ItemForm form, BindingResult result) throws Exception {
+    public String create(@Valid CreateItemForm form, BindingResult result) throws Exception {
         if (result.hasErrors()) {
             return "items/createItemForm";
         }
@@ -73,7 +68,7 @@ public class ItemController {
     public String editForm(@RequestParam Long id, Model model) throws Exception {
         Item item = itemService.findOne(id);
 
-        ItemForm form = new ItemForm();
+        CreateItemForm form = new CreateItemForm();
         form.setId(item.getId());
         form.setItemName(item.getItemName());
         form.setAuthor(item.getAuthor());
@@ -86,7 +81,7 @@ public class ItemController {
 
     @PostMapping("/items/edit")
     //아이템 수정 실행
-    public String edit(@Valid ItemForm form, BindingResult result) throws Exception {
+    public String edit(@Valid CreateItemForm form, BindingResult result) throws Exception {
         if (result.hasErrors()) {
             return "/items/updateItemForm";
         }
@@ -97,7 +92,7 @@ public class ItemController {
     @GetMapping("/items/{itemId}")
     public String item(@PathVariable("itemId") Long id, Model model, Principal principal) throws Exception {
         Item item = itemService.findOne(id);
-        ItemForm itemForm = new ItemForm();
+        CreateItemForm itemForm = new CreateItemForm();
 
         itemForm.setId(item.getId());
         itemForm.setItemName(item.getItemName());
@@ -114,7 +109,7 @@ public class ItemController {
             model.addAttribute("fileId", item.getThumbnailFile().getId());
         }
 
-        CommentForm commentForm = new CommentForm();
+        CreateCommentForm commentForm = new CreateCommentForm();
         commentForm.setItemId(id);
         commentForm.setCreatedUserName(userName);
         model.addAttribute("commentForm", commentForm);
@@ -123,7 +118,7 @@ public class ItemController {
     }
 
     @PostMapping("/items/createComment")
-    public String createComment(@Valid CommentForm form) throws Exception{
+    public String createComment(@Valid CreateCommentForm form) throws Exception{
         Comment comment = new Comment();
         Item item = itemService.findOne(form.getItemId());
         comment.setItem(item);

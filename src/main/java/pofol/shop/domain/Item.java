@@ -37,6 +37,7 @@ public class Item extends BaseEntity {
     private List<Comment> comments; //item에는 Comment setter프로퍼티가 없음
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
     private FileEntity thumbnailFile; //상품 이미지 경로
 
     //----------필드 끝----------//

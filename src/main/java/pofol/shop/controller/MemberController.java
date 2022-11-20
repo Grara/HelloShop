@@ -8,14 +8,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import pofol.shop.formAndDto.MemberForm;
+import pofol.shop.form.create.CreateMemberForm;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;
 import pofol.shop.domain.enums.Role;
+import pofol.shop.form.update.UpdateMyDetailForm;
 import pofol.shop.service.MemberService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,15 +33,15 @@ public class MemberController {
 
     @GetMapping("/members/new")
     public String createForm(Model model)throws Exception{
-        model.addAttribute("memberForm", new MemberForm());
+        model.addAttribute("createMemberForm", new CreateMemberForm());
         return "members/createMemberForm";
     }
 
     @PostMapping("/members/new")
-    public String create(@Valid MemberForm form, BindingResult result)throws Exception{
+    public String create(@Valid CreateMemberForm form, BindingResult result)throws Exception{
         //비밀번호와 비밀번호 확인이 일치하는지 체크
         if(!form.getPassword().equals(form.getPasswordCheck()))
-            result.addError(new FieldError("memberForm",
+            result.addError(new FieldError("createMemberForm",
                     "passwordCheck",
                     "패스워드와 패스워드확인이 일치하지 않습니다"));
         
@@ -60,4 +62,63 @@ public class MemberController {
         memberService.signUp(member);
         return "redirect:/";
     }
+
+    @GetMapping("/mypage")
+    public String mypageHome(Model model, Principal principal) throws Exception{
+        Member member = memberService.findOneByName(principal.getName());
+
+        if(member.getProfileImage() != null){
+            model.addAttribute("fileId", member.getProfileImage().getId());
+        }
+
+        model.addAttribute("userName", member.getUserName());
+
+        return "/mypage/myhome";
+    }
+
+    @GetMapping("/mypage/details")
+    public String mypageDetails(Model model, Principal principal) throws Exception{
+        Member member = memberService.findOneByName(principal.getName());
+        UpdateMyDetailForm form = new UpdateMyDetailForm(member);
+
+        model.addAttribute("form", form);
+        if(member.getProfileImage() != null){
+            model.addAttribute("fileId", member.getProfileImage().getId());
+        }
+
+        return "/mypage/mydetails";
+    }
+
+    @GetMapping("/mypage/details/edit")
+    public String myDetailsEditForm(Model model, Principal principal) throws Exception {
+        Member member = memberService.findOneByName(principal.getName());
+        UpdateMyDetailForm form = new UpdateMyDetailForm(member);
+
+        model.addAttribute("updateMyDetailForm", form);
+        if(member.getProfileImage() != null){
+            model.addAttribute("fileId", member.getProfileImage().getId());
+        }
+
+        return "/mypage/updateMydetailForm";
+    }
+
+    @PostMapping("/mypage/details/edit")
+    public String EditMyDetail(@Valid UpdateMyDetailForm form, BindingResult result) throws Exception {
+        System.out.println("111111"+form);
+        if(result.hasErrors()){
+            System.out.println("2222222");
+            return "/mypage/updateMydetailForm";
+        }
+        Member member = memberService.findOneByName(form.getUserName());
+        Address address = new Address();
+        address.setAddress1(form.getAddress1());
+        address.setAddress2(form.getAddress2());
+        address.setZipcode(form.getZipcode());
+        member.setAddress(address);
+        memberService.save(member);
+        System.out.println("33333333");
+
+        return "redirect:/mypage/details";
+    }
+
 }

@@ -35,6 +35,6 @@ public class FileService {
     }
 
     public FileEntity findOne(Long id) throws Exception{
-        return fileRepository.findById(id).orElseThrow(()->new EntityNotFoundException());
+        return fileRepository.findById(id).orElseThrow(()->new EntityNotFoundException("fileEntity not found"));
     }
 }

@@ -3,9 +3,6 @@ package pofol.shop.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.parameters.P;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;
 import pofol.shop.domain.enums.Role;
@@ -31,6 +28,11 @@ public class Member extends BaseEntity{
     private PersonalInfo personalInfo;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private FileEntity profileImage;
+
     //----------필드 끝----------//
 
     //----------생성자 시작----------//

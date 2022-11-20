@@ -14,6 +14,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class FileEntity {
     @Id @GeneratedValue
+    @Column(name = "file_id")
     private Long id;
     private String originName;
     private String saveName;

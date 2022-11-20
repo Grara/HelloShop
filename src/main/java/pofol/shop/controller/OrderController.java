@@ -6,12 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pofol.shop.formAndDto.OrderForm;
-import pofol.shop.formAndDto.OrderItemDto;
+import pofol.shop.form.create.CreateOrderForm;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
-import pofol.shop.formAndDto.OrderSheetForm;
-import pofol.shop.repository.OrderSheetRepository;
+import pofol.shop.form.create.CreateOrderSheetForm;
 import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
@@ -19,9 +17,6 @@ import pofol.shop.service.OrderService;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -45,18 +40,18 @@ public class OrderController {
         if (sheet.getIsOrdered() || !findMember.getUserName().equals(principal.getName())){
             return "redirect:/";
         }
-        OrderSheetForm content = mapper.readValue(sheet.getContent(), OrderSheetForm.class);
+        CreateOrderSheetForm content = mapper.readValue(sheet.getContent(), CreateOrderSheetForm.class);
 
-        OrderForm orderForm = new OrderForm(content.getItems());
+        CreateOrderForm orderForm = new CreateOrderForm(content.getItems());
         orderForm.setSheetId(sheet.getId());
-        model.addAttribute("orderForm", orderForm);
+        model.addAttribute("createOrderForm", orderForm);
 
         return "orders/orderForm";
     }
 
     @PostMapping("/orders/new")
     //주문 생성 요청
-    public String order(@ModelAttribute @Valid OrderForm form, BindingResult result, Principal principal) throws Exception {
+    public String order(@ModelAttribute @Valid CreateOrderForm form, BindingResult result, Principal principal) throws Exception {
         if(result.hasErrors()) {
             return "orders/orderForm";
         }

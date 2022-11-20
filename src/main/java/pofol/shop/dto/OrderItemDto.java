@@ -1,4 +1,4 @@
-package pofol.shop.formAndDto;
+package pofol.shop.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

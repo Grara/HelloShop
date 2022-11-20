@@ -8,41 +8,60 @@
   .profile {
     padding: 10px;
   }
+  .form-control {
+      width: 100%;
+  }
+  .form-group{
+    align: left;
+    width: 30%;
+  }
 </style>
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-    <div class="profile">
+    <div class="outer" align="center">
+    <div class="profile" align="center">
         <img th:src="|/images/${fileId}|" width="80" height="80">
     </div>
+    <div class="form-group">
+        <label>회원명</label>
+        <input  type="text" th:value="${form.userName}" class="form-control" readonly>
+    </div>
+    <div class="form-group">
+        <label>실명</label>
+        <input type="text" th:value="${form.realName}" class="form-control" readonly>
+    </div>
+    <div class="form-group">
+        <label>성별</label>
+        <input type="text" th:value="${form.sex}" class="form-control" readonly>
+    </div>
+    <div class="form-group">
+        <label>나이</label>
+        <input type="text" th:value="${form.age}" class="form-control" readonly>
+    </div>
+    <div class="form-group">
+        <label>기본주소</label>
+        <input type="text" th:value="${form.address1}" class="form-control" readonly>
+    </div>
+    <div class="form-group">
+        <label>상세주소</label>
+        <input type="text" th:value="${form.address2}" class="form-control" readonly>
+    </div>
+    <div class="form-group">
+        <label>우편번호</label>
+        <input type="text" th:value="${form.zipcode}" class="form-control" readonly>
+    </div>
     <p>
-        <a class="btn btn-lg btn-secondary" href="/members/new">상세 정보</a>
+        <a class="btn btn-lg btn-secondary" href="/mypage/details/edit">수정</a>
     </p>
-
-    <label>회원명</label>
-    <input type="text" th:value="${dto.userName}" class="info" readonly>
-    <label>실명</label>
-    <input type="text" th:value="${dto.personalInfo.realName}" class="info" readonly>
-    <label>성별</label>
-    <input type="text" th:value="${dto.personalInfo.sex}" class="info" readonly>
-    <label>나이</label>
-    <input type="text" th:value="${dto.personalInfo.age}" class="info" readonly>
-    <label>기본주소</label>
-    <input type="text" th:value="${dto.address.address1}" class="info" readonly>
-    <label>상세주소</label>
-    <input type="text" th:value="${dto.address.address2}" class="info" readonly>
-    <label>우편번호</label>
-    <input type="text" th:value="${dto.address.zipcode}" class="info" readonly>
-    <p>
-        <a class="btn btn-lg btn-secondary" href="/members/new">수정</a>
-    </p>
-
+    </div>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script>
+$('.form-group').attr('align','left');
 </script>
 
 </html>
