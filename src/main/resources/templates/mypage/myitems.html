@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
 <body>
-
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>상품명</th>
+                <th>저자</th>
+                <th>가격</th>
+                <th>재고수량</th>
+                <th></th>
+            </tr>
+            <tr th:each="item : ${items}">
+                <td th:text="${item.id}"></td>
+                <td>
+                    <a th:text="${item.itemName}" th:href="@{/items/{id}(id = ${item.id})}"></a>
+                </td>
+                <td th:text="${item.author}"></td>
+                <td th:text="${item.price}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td>
+                    <form role="form" action="/items/edit" method="get">
+                        <input type="hidden" th:name="id" th:value="${item.id}">
+                        <button type="submit" class="btn btn-primary">수정</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
 </body>
 </html>

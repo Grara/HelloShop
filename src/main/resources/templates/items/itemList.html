@@ -11,8 +11,6 @@
         <th>상품명</th>
         <th>저자</th>
         <th>가격</th>
-        <th>재고수량</th>
-        <th></th>
       </tr>
       <tr th:each="item : ${items}">
         <td th:text="${item.id}"></td>
@@ -21,13 +19,6 @@
         </td>
         <td th:text="${item.author}"></td>
         <td th:text="${item.price}"></td>
-        <td th:text="${item.quantity}"></td>
-        <td>
-          <form role="form" action="/items/edit" method="get">
-            <input type="hidden" th:name="id" th:value="${item.id}">
-            <button type="submit" class="btn btn-primary">수정</button>
-          </form>
-        </td>
       </tr>
     </table>
   </div>

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pofol.shop.dto.OrderSearchCondition;
+import pofol.shop.exception.NotEnoughQuantityException;
 import pofol.shop.form.create.CreateOrderForm;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
@@ -17,6 +19,7 @@ import pofol.shop.service.OrderService;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,13 +58,28 @@ public class OrderController {
         if(result.hasErrors()) {
             return "orders/orderForm";
         }
-        Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
-        Member member = memberService.findOneByName(principal.getName());
-        orderService.order(member, address, form.getOrderItems());
-        OrderSheet sheet = orderService.findSheetById(form.getSheetId());
-        sheet.setIsOrdered(true);
-        orderService.saveSheet(sheet);
+        try {
+            Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
+            Member member = memberService.findOneByName(principal.getName());
+            orderService.order(member, address, form.getOrderItems());
+            OrderSheet sheet = orderService.findSheetById(form.getSheetId());
+            sheet.setIsOrdered(true);
+            orderService.saveSheet(sheet);
+        }catch(NotEnoughQuantityException e){
+            return "errors/quantityError";
+        }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/mypage/myorders")
+    public String myorders(@ModelAttribute OrderSearchCondition condition, Model model,Principal principal) throws Exception {
+        System.out.println(condition);
+        Member member = memberService.findOneByName(principal.getName());
+        condition.setMember(member);
+        List<Order> orders = orderService.search(condition);
+        model.addAttribute("orderSearch", condition);
+        model.addAttribute("orders", orders);
+        return "/mypage/myorders";
     }
 }

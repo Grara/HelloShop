@@ -22,6 +22,7 @@ public class FileController {
     @ResponseBody
     public Resource downloadImage(@PathVariable("fileId")Long id, Model model) throws Exception {
         FileEntity file = fileService.findOne(id);
+        System.out.println("$$$$$$$" + file.getSavePath());
         UrlResource url = new UrlResource("file:" + file.getSavePath());
         System.out.println("#####" + url);
         return url;

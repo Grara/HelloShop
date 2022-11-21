@@ -10,11 +10,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pofol.shop.config.DefaultValue;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.enums.Role;
 import pofol.shop.repository.MemberRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -27,7 +29,7 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final FileService fileService;
     /**
      * 전체 Member목록을 반환합니다.
      *
@@ -63,9 +65,10 @@ public class MemberService implements UserDetailsService {
      * @param member 가입시킬 Member
      * @return 가입시킨 Member의 id
      */
-    public Long signUp(Member member) {
+    public Long signUp(Member member) throws Exception{
         duplicateCheck(member);
         memberRepository.save(member);
+        member.setProfileImage(fileService.findOne(DefaultValue.DEFAULT_PROFILE_IMAGE_ID));
         return member.getId();
     }
 
@@ -103,9 +106,10 @@ public class MemberService implements UserDetailsService {
      * @param role     권한
      * @return 생성한 Member의 id
      */
-    public Long createInitMember(String username, String password, Role role) {
+    public Long createInitMember(String username, String password, Role role) throws Exception{
         //패스워드 값을 인코더로 인코딩해서 넣음
         Member member = new Member(username, passwordEncoder.encode(password), role);
+        member.setProfileImage(fileService.findOne(DefaultValue.DEFAULT_PROFILE_IMAGE_ID));
         memberRepository.save(member);
         return member.getId();
     }

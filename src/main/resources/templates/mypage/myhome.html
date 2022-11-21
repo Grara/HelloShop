@@ -8,7 +8,9 @@
   .profile {
     padding: 10px;
   }
-
+  .btn{
+    width: 300px;
+  }
 </style>
 
 <body>
@@ -25,13 +27,13 @@
       <a class="btn btn-lg btn-secondary" href="/mypage/details">상세 정보</a>
     </p>
     <p>
-      <a class="btn btn-lg btn-dark" href="/items/new">비밀번호 변경</a>
+      <a class="btn btn-lg btn-dark" href="/mypage/password-edit">비밀번호 변경</a>
     </p>
     <p>
-      <a class="btn btn-lg btn-info" href="/order">판매상품 관리</a>
+      <a class="btn btn-lg btn-info" href="/mypage/myitems">판매상품 관리</a>
     </p>
     <p>
-      <a class="btn btn-lg btn-info" href="/order">주문내역</a>
+      <a class="btn btn-lg btn-info" href="/mypage/myorders">주문내역</a>
     </p>
   </div>
   <div th:replace="fragments/footer :: footer" />

@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pofol.shop.exception.NotEnoughQuantityException;
 
 import javax.persistence.*;
 import java.util.List;
@@ -94,6 +95,14 @@ public class Item extends BaseEntity {
         this.price = price;
         this.quantity = quantity;
     }
+
+    public Item(Member member, String itemName, int price, int quantity){
+        this.member = member;
+        this.itemName = itemName;
+        this.author = "흥엉이";
+        this.price = price;
+        this.quantity = quantity;
+    }
     //----------생성자 끝----------//
 
 
@@ -103,8 +112,9 @@ public class Item extends BaseEntity {
         if (description == null) description = "";
     }
 
-    public void reduceQty(int count) {
-        this.quantity -= count;
+    public void reduceQty(int count) throws NotEnoughQuantityException {
+        if(this.quantity < count) throw new NotEnoughQuantityException("현재 재고가 부족합니다.");
+        else this.quantity -= count;
     }
 
     public void addQty(int count) {

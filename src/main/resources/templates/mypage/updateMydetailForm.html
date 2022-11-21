@@ -23,10 +23,10 @@
         <div class="profile" align="center">
             <img th:src="|/images/${fileId}|" width="80" height="80">
         </div>
-        <form method="post" action="/mypage/details/edit" th:object="${updateMyDetailForm}">
+        <form method="post" action="/mypage/details/edit" th:object="${updateMyDetailForm}" enctype="multipart/form-data">
             <div class="form-group">
                 <label>프로필사진 변경</label>
-                <input type="file" name="updateMyDetailForm.profileImage" id="updateMyDetailForm.profileImage" class="form-control">
+                <input type="file" name="profileImage" id="profileImage" class="form-control" accept="image/*">
             </div>
 
             <div class="form-group">
@@ -61,7 +61,7 @@
             </div>
             <p>
                 <button class="btn btn-primary" type="submit">수정 완료</button>
-                <button class="btn btn-primary" type="submit">취소</button>
+                <a class="btn btn-primary" href="/mypage/details">취소</a>
             </p>
         </form>
     </div>

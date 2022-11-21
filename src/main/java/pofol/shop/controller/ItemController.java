@@ -5,6 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pofol.shop.config.DefaultValue;
+import pofol.shop.domain.Member;
+import pofol.shop.domain.enums.Role;
 import pofol.shop.form.create.CreateCommentForm;
 import pofol.shop.form.create.CreateItemForm;
 import pofol.shop.domain.Comment;
@@ -12,6 +15,7 @@ import pofol.shop.domain.Item;
 import pofol.shop.repository.CommentRepository;
 import pofol.shop.service.FileService;
 import pofol.shop.service.ItemService;
+import pofol.shop.service.MemberService;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -24,6 +28,7 @@ public class ItemController {
     private final ItemService itemService;
     private final CommentRepository commentRepository;
     private final FileService fileService;
+    private final MemberService memberService;
 
     @GetMapping("/items")
     //아이템 리스트
@@ -33,16 +38,25 @@ public class ItemController {
         return "items/itemList";
     }
 
+    @GetMapping("/mypage/myitems")
+    //아이템 리스트
+    public String myItemList(Model model, Principal principal) throws Exception {
+        Member member = memberService.findOneByName(principal.getName());
+        List<Item> items = itemService.findListByMember(member);
+        model.addAttribute("items", items);
+        return "mypage/myitems";
+    }
+
     @GetMapping("/items/new")
     //아이템 등록폼 화면
     public String createForm(Model model) throws Exception {
-        model.addAttribute("itemForm", new CreateItemForm());
+        model.addAttribute("createItemForm", new CreateItemForm());
         return "items/createItemForm";
     }
 
     @PostMapping("/items/new")
     //아이템 등록 실행
-    public String create(@Valid CreateItemForm form, BindingResult result) throws Exception {
+    public String create(@Valid CreateItemForm form, BindingResult result, Principal principal) throws Exception {
         if (result.hasErrors()) {
             return "items/createItemForm";
         }
@@ -53,10 +67,13 @@ public class ItemController {
         item.setDescription(form.getDescription());
         item.setPrice(form.getPrice());
         item.setQuantity(form.getQuantity());
+        item.setMember(memberService.findOneByName(principal.getName()));
 
-        if(form.getThumbnail() != null){
+        try{
             Long fileId = fileService.saveFile(form.getThumbnail());
             item.setThumbnailFile(fileService.findOne(fileId));
+        }catch(IllegalArgumentException e){
+            item.setThumbnailFile(fileService.findOne(DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID));
         }
 
         itemService.save(item);
@@ -65,8 +82,12 @@ public class ItemController {
 
     @GetMapping("/items/edit")
     //아이템 수정 폼 화면
-    public String editForm(@RequestParam Long id, Model model) throws Exception {
+    public String editForm(@RequestParam Long id, Model model, Principal principal) throws Exception {
+        Member member = memberService.findOneByName(principal.getName());
         Item item = itemService.findOne(id);
+        if (member.getRole() != Role.ROLE_ADMIN && item.getMember() != member) {
+            return "redirect:/";
+        }
 
         CreateItemForm form = new CreateItemForm();
         form.setId(item.getId());
@@ -86,7 +107,7 @@ public class ItemController {
             return "/items/updateItemForm";
         }
         itemService.edit(form.getId(), form.getItemName(), form.getPrice(), form.getQuantity());
-        return "redirect:/items";
+        return "redirect:/mypage/myitems";
     }
 
     @GetMapping("/items/{itemId}")
@@ -105,9 +126,12 @@ public class ItemController {
         String userName = principal != null ? principal.getName() : "Guest";
         model.addAttribute("userName", userName);
 
-        if(item.getThumbnailFile() != null) {
-            model.addAttribute("fileId", item.getThumbnailFile().getId());
+        if (item.getThumbnailFile() == null) {
+            item.setThumbnailFile(fileService.findOne(DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID));
         }
+
+        model.addAttribute("fileId", item.getThumbnailFile().getId());
+
 
         CreateCommentForm commentForm = new CreateCommentForm();
         commentForm.setItemId(id);
@@ -118,7 +142,7 @@ public class ItemController {
     }
 
     @PostMapping("/items/createComment")
-    public String createComment(@Valid CreateCommentForm form) throws Exception{
+    public String createComment(@Valid CreateCommentForm form) throws Exception {
         Comment comment = new Comment();
         Item item = itemService.findOne(form.getItemId());
         comment.setItem(item);

@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
 <body>
-
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+  <div>
+    <div>
+      <form th:object="${orderSearch}" class="form-inline">
+<!--        <div class="form-group mb-2">-->
+<!--          <input type="text" th:field="*{memberName}" class="formcontrol" placeholder="회원명"/>-->
+<!--        </div>-->
+        <div class="form-group mx-sm-1 mb-2">
+          <select th:field="*{orderStatus}" class="form-control">
+            <option value="">주문상태</option>
+            <option th:each="status : ${T(pofol.shop.domain.enums.OrderStatus).values()}"
+                    th:value="${status}"
+                    th:text="${status}">option
+            </option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">검색</button>
+      </form>
+    </div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <td>주문번호</td>
+        <td>결제금액</td>
+        <td>일시</td>
+        <td>주문상태</td>
+        <td></td>
+        <td></td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${orders}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.orderTotalPrice}"></td>
+        <td th:text="${item.orderDate}"></td>
+        <td th:text="${item.status}"></td>
+        <td>
+          <a th:href="|/orders/${item.id}|" class="btn btn-primary">상세정보</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
 </body>
+<script type="text/javascript">
+ function cancel(id) {
+ var form = document.createElement("form");
+ form.setAttribute("method", "post");
+ form.setAttribute("action", "/orders/" + id + "/cancel");
+ document.body.appendChild(form);
+ form.submit();
+ }
+</script>
 </html>

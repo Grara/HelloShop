@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.dto.OrderItemDto;
+import pofol.shop.dto.OrderSearchCondition;
+import pofol.shop.exception.NotEnoughQuantityException;
 import pofol.shop.repository.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -60,6 +62,7 @@ public class OrderService {
         for(OrderItemDto dto : itemDtos){
             if(dto.getCartId() != null) {
                 Cart cart = cartService.findOne(dto.getCartId());
+                cart.getItem().reduceQty(cart.getCount());
                 OrderItem orderItem = new OrderItem(cart);
                 orderItemRepository.save(orderItem);
                 orderItems.add(orderItem);
@@ -67,6 +70,7 @@ public class OrderService {
             }
             else{
                 Item item = itemService.findOne(dto.getItemId());
+                item.reduceQty(dto.getCount());
                 OrderItem orderItem = new OrderItem(item, dto.getCount());
                 orderItemRepository.save(orderItem);
                 orderItems.add(orderItem);
@@ -85,6 +89,10 @@ public class OrderService {
 
     public OrderSheet findSheetById(Long id) throws Exception{
         return orderSheetRepository.findById(id).orElseThrow(()->new EntityNotFoundException("sheet not found"));
+    }
+
+    public List<Order> search(OrderSearchCondition condition){
+        return orderRepository.search(condition);
     }
 
 }

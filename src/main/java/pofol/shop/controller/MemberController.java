@@ -8,12 +8,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import pofol.shop.config.DefaultValue;
 import pofol.shop.form.create.CreateMemberForm;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;
 import pofol.shop.domain.enums.Role;
 import pofol.shop.form.update.UpdateMyDetailForm;
+import pofol.shop.form.update.UpdatePasswordForm;
+import pofol.shop.service.FileService;
 import pofol.shop.service.MemberService;
 
 import javax.validation.Valid;
@@ -23,7 +27,9 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final FileService fileService;
     private final PasswordEncoder passwordEncoder;
+
 
     @GetMapping("/members")
     public String list(Model model)throws Exception{
@@ -104,21 +110,53 @@ public class MemberController {
 
     @PostMapping("/mypage/details/edit")
     public String EditMyDetail(@Valid UpdateMyDetailForm form, BindingResult result) throws Exception {
-        System.out.println("111111"+form);
         if(result.hasErrors()){
-            System.out.println("2222222");
             return "/mypage/updateMydetailForm";
         }
+        System.out.println("######"+form);
+
         Member member = memberService.findOneByName(form.getUserName());
         Address address = new Address();
         address.setAddress1(form.getAddress1());
         address.setAddress2(form.getAddress2());
         address.setZipcode(form.getZipcode());
         member.setAddress(address);
+
+        try{
+            Long fileId = fileService.saveFile(form.getProfileImage());
+            member.setProfileImage(fileService.findOne(fileId));
+        }catch(IllegalArgumentException e){
+            member.setProfileImage(fileService.findOne(DefaultValue.DEFAULT_PROFILE_IMAGE_ID));
+        }
+
         memberService.save(member);
-        System.out.println("33333333");
 
         return "redirect:/mypage/details";
     }
 
+    @GetMapping("/mypage/password-edit")
+    public String passwordEditForm(Model model){
+        model.addAttribute("updatePasswordForm", new UpdatePasswordForm());
+        return "mypage/updatePasswordForm";
+    }
+
+    @PostMapping("/mypage/password-edit")
+    public String passwordEdit(@Valid UpdatePasswordForm form, BindingResult result, Principal principal) throws Exception{
+
+        if(!form.getNewPassword().equals(form.getNewPasswordCheck()))
+            result.addError(new FieldError("createMemberForm",
+                    "newPasswordCheck",
+                    "새로운 패스워드와 패스워드확인이 일치하지 않습니다"));
+
+
+        if(result.hasErrors()){
+            return "mypage/updatePasswordForm";
+        }
+
+        Member member = memberService.findOneByName(principal.getName());
+        member.setPassword(passwordEncoder.encode(form.getNewPassword()));
+        memberService.save(member);
+
+        return "redirect:/mypage";
+    }
 }

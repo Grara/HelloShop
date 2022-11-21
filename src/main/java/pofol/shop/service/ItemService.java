@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.Item;
+import pofol.shop.domain.Member;
 import pofol.shop.repository.ItemRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -20,10 +21,20 @@ public class ItemService {
     /**
      * 모든 Item목록을 반환합니다.
      *
-     * @return Item목록
+     * @return 모든 Item목록
      */
     public List<Item> findList() throws Exception {
         return itemRepository.findAll();
+    }
+
+    /**
+     * member가 등록한 Item목록을 반환합니다.
+     * @param member 상품을 등록한 Member
+     * @return member가 등록한 Item 목록
+     * @throws Exception
+     */
+    public List<Item> findListByMember(Member member) throws Exception {
+        return itemRepository.findListByMember(member);
     }
 
     /**

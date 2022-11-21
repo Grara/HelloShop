@@ -27,7 +27,7 @@ public class MemberTest {
 
 
     @Test
-    public void joinTest(){
+    public void joinTest()throws Exception{
         Member member1 = new Member("member1", "1234");
         memberService.signUp(member1);
         em.flush();
@@ -38,7 +38,7 @@ public class MemberTest {
     }
 
     @Test()
-    public void duplicateTest(){
+    public void duplicateTest()throws Exception{
         Member member1 = new Member("member1","1234");
         Member member2 = new Member("member2","1234");
         memberService.signUp(member1);

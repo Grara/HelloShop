@@ -21,14 +21,16 @@ public class FileService {
     @Value("${fileDir}")
     private String FILE_DIR;
 
-
-    public Long saveFile(MultipartFile uploadFile) throws IOException {
+    public Long saveFile(MultipartFile uploadFile) throws Exception {
+        if(uploadFile.getOriginalFilename().equals("")){
+            throw new IllegalArgumentException("이미지 첨부 안함 or 파일 이름이 없음");
+        }
         FileEntity file = new FileEntity();
         file.setOriginName(uploadFile.getOriginalFilename());
         String uuid = UUID.randomUUID().toString();
         String extention = file.getOriginName().substring(file.getOriginName().lastIndexOf("."));
         file.setSaveName(uuid + extention);
-        file.setSavePath(FILE_DIR + file.getSaveName());
+        file.setSavePath(FILE_DIR + file.getOriginName());
         uploadFile.transferTo(new File(file.getSavePath()));
         fileRepository.save(file);
         return file.getId();
@@ -36,5 +38,10 @@ public class FileService {
 
     public FileEntity findOne(Long id) throws Exception{
         return fileRepository.findById(id).orElseThrow(()->new EntityNotFoundException("fileEntity not found"));
+    }
+
+    public Long initFile(FileEntity file) throws Exception{
+        FileEntity saveFile = fileRepository.save(file);
+        return saveFile.getId();
     }
 }
