@@ -74,7 +74,6 @@ public class OrderController {
 
     @GetMapping("/mypage/myorders")
     public String myorders(@ModelAttribute OrderSearchCondition condition, Model model,Principal principal) throws Exception {
-        System.out.println(condition);
         Member member = memberService.findOneByName(principal.getName());
         condition.setMember(member);
         List<Order> orders = orderService.search(condition);

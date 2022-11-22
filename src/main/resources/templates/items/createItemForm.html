@@ -43,9 +43,12 @@
         </div>
         <div class="form-group">
             <label>상품 이미지</label>
-            <input type="file" id="thumbnail" name="thumbnail" accept="image/jpeg" class="form-control">
+            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" class="form-control"
+            style="width:20%; height:45px;">
         </div>
-        <div>
+        <img id="img" src="/images/2" width="100" height="100"/>
+
+        <div style="padding:10px">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
 
@@ -54,5 +57,30 @@
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$('#img').attr('src', e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
 
+	$(":input[name='thumbnail']").change(function() {
+		if( $(":input[name='thumbnail']").val() == '' ) {
+			$('#img').attr('src' , '/images/2');
+		}
+		$('#img').css({ 'display' : '' });
+		readURL(this);
+	});
+
+	function imgAreaError(){
+		$('#img').css({ 'display' : 'none' });
+	}
+
+</script>
 </html>

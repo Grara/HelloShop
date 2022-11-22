@@ -19,10 +19,12 @@
   <div class="jumbotron">
     <h1>My Page</h1>
     <div class="profile">
-      <img th:src="|/images/${fileId}|" width="80" height="80">
+      <img id="img" th:src="|/images/${fileId}|" width="100" height="100">
     </div>
 
-
+    <p>
+      <a href="#" class="btn btn-lg btn-primary" onclick="javascript:openPop();">프로필 사진 수정</a>
+    </p>
     <p>
       <a class="btn btn-lg btn-secondary" href="/mypage/details">상세 정보</a>
     </p>
@@ -39,4 +41,9 @@
   <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
+<script>
+function openPop(){
+var popup = window.open("/mypage/details/profile/update", 'pop', 'width=600px, height=300px, resizable=no, scrollbars=yes');
+}
+</script>
 </html>

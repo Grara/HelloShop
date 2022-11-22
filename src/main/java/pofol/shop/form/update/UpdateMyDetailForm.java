@@ -21,7 +21,7 @@ public class UpdateMyDetailForm {
     private String realName;
     private int age;
     private Sex sex;
-    private MultipartFile profileImage;
+    private Long profileId;
 
     public UpdateMyDetailForm(Member member){
         this.userName = member.getUserName();

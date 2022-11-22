@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import pofol.shop.config.DefaultValue;
@@ -15,6 +16,7 @@ import pofol.shop.domain.Member;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;
 import pofol.shop.domain.enums.Role;
+import pofol.shop.form.update.UpdateImageForm;
 import pofol.shop.form.update.UpdateMyDetailForm;
 import pofol.shop.form.update.UpdatePasswordForm;
 import pofol.shop.service.FileService;
@@ -22,6 +24,8 @@ import pofol.shop.service.MemberService;
 
 import javax.validation.Valid;
 import java.security.Principal;
+
+import static pofol.shop.config.DefaultValue.DEFAULT_PROFILE_IMAGE_ID;
 
 @Controller
 @RequiredArgsConstructor
@@ -86,11 +90,9 @@ public class MemberController {
     public String mypageDetails(Model model, Principal principal) throws Exception{
         Member member = memberService.findOneByName(principal.getName());
         UpdateMyDetailForm form = new UpdateMyDetailForm(member);
+        form.setProfileId(member.getProfileImage().getId());
 
         model.addAttribute("form", form);
-        if(member.getProfileImage() != null){
-            model.addAttribute("fileId", member.getProfileImage().getId());
-        }
 
         return "/mypage/mydetails";
     }
@@ -99,11 +101,9 @@ public class MemberController {
     public String myDetailsEditForm(Model model, Principal principal) throws Exception {
         Member member = memberService.findOneByName(principal.getName());
         UpdateMyDetailForm form = new UpdateMyDetailForm(member);
+        form.setProfileId(member.getProfileImage().getId());
 
         model.addAttribute("updateMyDetailForm", form);
-        if(member.getProfileImage() != null){
-            model.addAttribute("fileId", member.getProfileImage().getId());
-        }
 
         return "/mypage/updateMydetailForm";
     }
@@ -113,7 +113,6 @@ public class MemberController {
         if(result.hasErrors()){
             return "/mypage/updateMydetailForm";
         }
-        System.out.println("######"+form);
 
         Member member = memberService.findOneByName(form.getUserName());
         Address address = new Address();
@@ -122,12 +121,6 @@ public class MemberController {
         address.setZipcode(form.getZipcode());
         member.setAddress(address);
 
-        try{
-            Long fileId = fileService.saveFile(form.getProfileImage());
-            member.setProfileImage(fileService.findOne(fileId));
-        }catch(IllegalArgumentException e){
-            member.setProfileImage(fileService.findOne(DefaultValue.DEFAULT_PROFILE_IMAGE_ID));
-        }
 
         memberService.save(member);
 
@@ -142,6 +135,13 @@ public class MemberController {
 
     @PostMapping("/mypage/password-edit")
     public String passwordEdit(@Valid UpdatePasswordForm form, BindingResult result, Principal principal) throws Exception{
+        Member member = memberService.findOneByName(principal.getName());
+
+        if(!passwordEncoder.matches(form.getCurPassword(), member.getPassword())){
+            result.addError(new FieldError("createMemberForm",
+                    "curPassword",
+                    "기존 비밀번호를 잘못 입력했습니다"));
+        }
 
         if(!form.getNewPassword().equals(form.getNewPasswordCheck()))
             result.addError(new FieldError("createMemberForm",
@@ -153,10 +153,32 @@ public class MemberController {
             return "mypage/updatePasswordForm";
         }
 
-        Member member = memberService.findOneByName(principal.getName());
         member.setPassword(passwordEncoder.encode(form.getNewPassword()));
         memberService.save(member);
 
         return "redirect:/mypage";
+    }
+
+    @GetMapping("/mypage/details/profile/update")
+    public String updateProfileImageForm(){
+        return "popup/updateProfileForm";
+    }
+
+    @PostMapping("/mypage/details/profile/update")
+    public String updateProfile(UpdateImageForm form, Principal principal,Model model) throws Exception{
+        Member member = memberService.findOneByName(principal.getName());
+        long returnId = 0l;
+        try {
+            Long fileId = fileService.saveFile(form.getUploadImg());
+            member.setProfileImage(fileService.findOne(fileId));
+            memberService.save(member);
+            returnId = fileId;
+        }catch (IllegalArgumentException e){
+            member.setProfileImage(fileService.findOne(DEFAULT_PROFILE_IMAGE_ID));
+            memberService.save(member);
+            returnId = DEFAULT_PROFILE_IMAGE_ID;
+        }
+        model.addAttribute("imgUrl", "/images/" + returnId);
+        return "popup/finishUpdateProfile";
     }
 }
