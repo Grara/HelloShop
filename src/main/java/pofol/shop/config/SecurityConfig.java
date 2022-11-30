@@ -21,7 +21,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //시큐리티 적용url, 로그인, 로그아웃 커스텀
         return http.authorizeRequests()
-                .antMatchers("/members").hasRole("ADMIN")
+                .antMatchers("/admin", "/members", "/orders").hasRole("ADMIN")
                 .antMatchers("/orders/new",
                         "/cart/new",
                         "/orderSheet",

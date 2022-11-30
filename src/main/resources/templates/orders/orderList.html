@@ -8,47 +8,48 @@
         <div>
             <form th:object="${orderSearch}" class="form-inline">
                 <div class="form-group mb-2">
-                    <input type="text" th:field="*{memberName}" class="formcontrol" placeholder="회원명"/>
+                  <input type="text" th:field="*{userName}" class="formcontrol" placeholder="회원명"/>
                 </div>
                 <div class="form-group mx-sm-1 mb-2">
                     <select th:field="*{orderStatus}" class="form-control">
                         <option value="">주문상태</option>
-                        <option th:each=
-                                        "status : ${T(jpabook.jpashop.domain.OrderStatus).values()}"
+                        <option th:each="status : ${T(pofol.shop.domain.enums.OrderStatus).values()}"
                                 th:value="${status}"
                                 th:text="${status}">option
                         </option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <input type="date" th:field="*{startDateInput}" class="formcontrol"/>
+                </div>
+                <span>~</span>
+                <div class="form-group">
+                    <input type="date" th:field="*{endDateInput}" class="formcontrol"/>
+                </div>
+
+
                 <button type="submit" class="btn btn-primary mb-2">검색</button>
             </form>
         </div>
         <table class="table table-striped">
             <thead>
             <tr>
-                <td>#</td>
-                <td >회원명</td>
-                <td>대표상품 이름</td>
-                <td>대표상품 주문가격</td>
-                <td>대표상품 주문수량</td>
-                <td align="center">상태</td>
-                <td align="center">일시</td>
+                <td>주문번호</td>
+                <td>결제금액</td>
+                <td>일시</td>
+                <td>주문상태</td>
+                <td></td>
                 <td></td>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${orders}">
-                <td th:text="${item.id}"></td>
-                <td th:text="${item.member.name}"></td>
-                <td th:text="${item.orderItems[0].item.name}"></td>
-                <td th:text="${item.orderItems[0].orderPrice}"></td>
-                <td th:text="${item.orderItems[0].count}"></td>
-                <td th:text="${item.status}"></td>
-                <td th:text="${item.orderDate}"></td>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}"></td>
+                <td th:text="${order.orderTotalPrice}"></td>
+                <td th:text="${order.orderDate}"></td>
+                <td th:text="${order.status}"></td>
                 <td>
-                    <a th:if="${item.status.name() == 'ORDER'}"
-                       th:href="'javascript:;cancel('+${item.id}+')'"
-                       class="btn btn-danger">CANCEL</a>
+                    <a th:href="|/orders/${order.id}|" class="btn btn-primary">상세정보</a>
                 </td>
             </tr>
             </tbody>
@@ -58,12 +59,5 @@
 </div> <!-- /container -->
 </body>
 <script type="text/javascript">
- function cancel(id) {
- var form = document.createElement("form");
- form.setAttribute("method", "post");
- form.setAttribute("action", "/orders/" + id + "/cancel");
- document.body.appendChild(form);
- form.submit();
- }
 </script>
 </html>

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pofol.shop.domain.enums.Role;
 import pofol.shop.dto.OrderSearchCondition;
 import pofol.shop.exception.NotEnoughQuantityException;
 import pofol.shop.form.create.CreateOrderForm;
@@ -24,7 +26,9 @@ import pofol.shop.service.OrderService;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,6 +40,25 @@ public class OrderController {
     private final MemberRepository memberRepository;
     private final OrderItemRepository orderItemRepository;
     private ObjectMapper mapper = new ObjectMapper();
+
+    @GetMapping("/orders") //전체 주문 목록, 어드민만 접근 가능
+    public String orderList(@ModelAttribute OrderSearchCondition condition, Model model){
+
+
+        if(StringUtils.hasText(condition.getStartDateInput())) {
+            LocalDate temp = LocalDate.parse(condition.getStartDateInput());
+            condition.setStartDate(temp.atStartOfDay());
+        }
+        if(StringUtils.hasText(condition.getEndDateInput())) {
+            LocalDate temp = LocalDate.parse(condition.getEndDateInput());
+            condition.setEndDate(temp.atTime(23,59));
+        }
+
+        List<Order> orders = orderRepository.search(condition); //검색 조건으로 주문 목록을 찾음
+        model.addAttribute("orderSearch", condition);
+        model.addAttribute("orders", orders);
+        return "/orders/orderList";
+    }
 
     @GetMapping("/orderSheet/{id}")//주문 생성폼 화면
     public String createForm(@PathVariable("id") Long id,
@@ -106,8 +129,13 @@ public class OrderController {
 
     @GetMapping("/orders/{id}")//주문 상세 정보 조회 화면
     public String orderDetail(@PathVariable("id")Long id, Model model, Principal principal){
-
         Order order = orderRepository.findById(id).orElseThrow();
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
+        if(order.getMember() != member && member.getRole() != Role.ROLE_ADMIN){
+            return "redirect:/";
+        }
+
+
         List<OrderItem> orderItems = orderItemRepository.findListByOrderFetchItem(order);
         model.addAttribute("order", order);
         model.addAttribute("orderItems", orderItems);

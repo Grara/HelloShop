@@ -46,7 +46,6 @@ public class OrderApiController {
     @PostMapping("/orders/cancel") //주문취소 요청
     public ResponseEntity<String> delete(@RequestBody String id, Principal principal) {
         Order order = orderRepository.findById(Long.parseLong(id)).orElseThrow();
-        System.out.println("#####"+principal.getName());
         if(!order.getMember().getUserName().equals(principal.getName())){
             return ResponseEntity
                     .badRequest()

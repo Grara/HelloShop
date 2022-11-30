@@ -1,32 +1,47 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head th:replace="fragments/header :: header"/>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div>
+        <div>
+            <form th:object="${memberSearch}" class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" th:field="*{userName}" class="formcontrol" placeholder="회원명"/>
+                </div>
+                <div class="form-group mb-2">
+                    <input type="text" th:field="*{realName}" class="formcontrol" placeholder="이름"/>
+                </div>
+
+                <button type="submit" class="btn btn-primary mb-2">검색</button>
+            </form>
+        </div>
         <table class="table table-striped">
+            <thead>
             <tr>
-                <th>#</th>
-                <th>회원명</th>
-                <th>실명</th>
-                <th>나이</th>
-                <th>기본주소</th>
-                <th>상세주소</th>
-                <th>우편번호</th>
+                <td width="200">회원명</td>
+                <td width="200">이름</td>
+                <td width="200">나이</td>
+                <td width="200"></td>
             </tr>
+            </thead>
+            <tbody>
             <tr th:each="member : ${members}">
-                <td th:text="${member.id}"></td>
                 <td th:text="${member.userName}"></td>
                 <td th:text="${member.personalInfo.realName}"></td>
                 <td th:text="${member.personalInfo.age}"></td>
-                <td th:text="${member.address.address1}"></td>
-                <td th:text="${member.address.address2}"></td>
-                <td th:text="${member.address.zipcode}"></td>
+                <td>
+                    <a th:href="|/members/${member.id}|" class="btn btn-primary">상세정보</a>
+                </td>
             </tr>
+            </tbody>
         </table>
     </div>
-    <div th:replace="fragments/footer :: footer" />
+    <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
+<script type="text/javascript">
+
+</script>
 </html>

@@ -21,8 +21,20 @@
     </li>
 
     <li sec:authorize="!isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
-      <a href="/login">Login</a>
+      <a href="/login">Sign in</a>
     </li>
+
+    <li sec:authorize="!isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+      <a href="/members/new">Sign up</a>
+    </li>
+
+    <li sec:authorize="hasRole('ROLE_ADMIN')" style="list-style: none; float: left; margin-left: 20px">
+      <a href="/admin">Admin Menu</a>
+    </li>
+
+
+
+
   </ul>
   <a href="/"><h3 class="text-muted">HELLO SHOP</h3></a>
 </div>

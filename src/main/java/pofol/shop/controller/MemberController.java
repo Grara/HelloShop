@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import pofol.shop.config.DefaultValue;
+import pofol.shop.dto.MemberSearchCondition;
 import pofol.shop.form.create.CreateMemberForm;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.embedded.Address;
@@ -27,6 +28,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.List;
 
 import static pofol.shop.config.DefaultValue.DEFAULT_PROFILE_IMAGE_ID;
 
@@ -39,8 +41,11 @@ public class MemberController {
 
 
     @GetMapping("/members") //전체 Member 목록
-    public String list(Model model){
-        model.addAttribute("members", memberRepository.findAll());
+    public String list(@ModelAttribute MemberSearchCondition condition, Model model){
+        List<Member> members = memberRepository.search(condition);
+        model.addAttribute("memberSearch", condition);
+        model.addAttribute("members", members);
+
         return "members/memberList";
     }
 

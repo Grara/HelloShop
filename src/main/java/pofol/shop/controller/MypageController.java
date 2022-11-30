@@ -190,7 +190,7 @@ public class MypageController {
     public String myorders(@ModelAttribute OrderSearchCondition condition, Model model, Principal principal){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
-        condition.setMember(member);
+        condition.setUserName(member.getUserName());
         List<Order> orders = orderRepository.search(condition); //검색 조건으로 주문 목록을 찾음
         model.addAttribute("orderSearch", condition);
         model.addAttribute("orders", orders);
