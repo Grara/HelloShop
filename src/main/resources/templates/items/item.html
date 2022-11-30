@@ -30,9 +30,9 @@
                class="btn btn-primary">장바구니에 추가</a>
         </div>
     </div>
-    <form role="form" action="/items/createComment" th:object="${commentForm}" method="post">
+    <form role="form" action="/items/comments/new" th:object="${commentForm}" method="post">
         <div class="form-group">
-            <label>댓글 쓰기</label>
+            <label>후기 쓰기</label>
             <input type="hidden" th:field="*{createdUserName}">
             <input type="hidden" th:field="*{itemId}">
             <input type="text" th:field="*{content}" class="form-control" placeholder="내용을 입력하세요">

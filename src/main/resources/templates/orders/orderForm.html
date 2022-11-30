@@ -16,6 +16,13 @@ width: 10%;
 .inputs .secondbox {
 width: 90%;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 </style>
 <head th:replace="fragments/header :: header" />
 <body>
@@ -31,10 +38,16 @@ width: 90%;
         <input type="hidden" th:field="*{sheetId}">
 
         <div class="form-group">
-            <label>받는분 성함</label>
-            <input type="text" th:field="*{realName}" class="form-control" placeholder="받는분 성함을 입력하세요"
-                   th:class="${#fields.hasErrors('realName')}? 'form-control fieldError' : 'form-control'">
-            <p th:if="${#fields.hasErrors('realName')}" th:errors="*{realName}" style="color:red;"/>
+            <label>받는분</label>
+            <input type="text" th:field="*{receiverName}" class="form-control" placeholder="받는분 성함을 입력하세요"
+                   th:class="${#fields.hasErrors('receiverName')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('receiverName')}" th:errors="*{receiverName}" style="color:red;"/>
+        </div>
+        <div class="form-group">
+            <label>연락처</label>
+            <input type="number" th:field="*{receiverPhoneNumber}" class="form-control" placeholder="연락처를 입력하세요"
+                   th:class="${#fields.hasErrors('receiverPhoneNumber')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('receiverPhoneNumber')}" th:errors="*{receiverPhoneNumber}" style="color:red;"/>
         </div>
         <div class="form-group">
             <label>기본주소</label>
@@ -52,6 +65,12 @@ width: 90%;
             <label>우편번호</label>
             <input type="text" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요">
         </div>
+
+        <div class="form-group">
+            <label>배송메모</label>
+            <input type="text" th:field="*{memo}" class="form-control" placeholder="배송메모를 입력하세요">
+        </div>
+
 
         <div th:each="item, iterStat : *{orderItems}" style="border:5px solid gold">
             <input type="hidden" th:field="*{orderItems[__${iterStat.index}__].cartId}">

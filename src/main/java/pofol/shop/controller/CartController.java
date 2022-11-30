@@ -23,14 +23,16 @@ public class CartController {
     private final MemberService memberService;
     private final ItemService itemService;
 
-    @GetMapping("/cart")
-    public String list(Model model, Principal principal) throws Exception {
+    @GetMapping("/cart") //Member의 장바구니 리스트
+    public String list(Model model, Principal principal) {
 
         Member member = memberService.findOneByName(principal.getName());
         List<Cart> carts = cartService.findListByMemberFetchItem(member);
         List<OrderItemDto> itemDtos = carts.stream().map(OrderItemDto::new).collect(Collectors.toList());
+
         model.addAttribute("carts", itemDtos);
         model.addAttribute("username", principal.getName());
+
         return "carts/cartList";
 
     }

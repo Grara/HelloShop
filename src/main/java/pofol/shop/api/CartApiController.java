@@ -1,6 +1,7 @@
 package pofol.shop.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,12 +24,12 @@ public class CartApiController {
     private final MemberService memberService;
     private final ItemService itemService;
 
-    @PostMapping("/cart/new")
+    @PostMapping("/cart/new") //Cart 생성 요청
     public boolean addCart(@RequestBody CreateCartForm form) {
         try {
             Member member = memberService.findOneByName(form.getUserName());
             Item item = itemService.findOne(form.getItemId());
-            Optional<Long> existingCartId = cartService.duplicateCheck(member, item);
+            Optional<Long> existingCartId = cartService.findDuplicateCart(member, item);
 
             //장바구니에 현재 추가하는 아이템과 같은 아이템이 없으면 새로 추가
             if (!existingCartId.isPresent()) {
@@ -48,8 +49,9 @@ public class CartApiController {
         }
     }
 
-    @PostMapping("/cart/delete")
-    public boolean delete(@RequestBody List<Long> list) throws Exception{
+    @PostMapping("/cart/delete") //Cart 삭제 요청
+    public boolean delete(@RequestBody List<Long> list){
+        //전달받은 Cart의 id들을 참고하여 해당 Cart들을 삭제
         for(Long cartId : list){
             Cart cart = cartService.findOne(cartId);
             cartService.delete(cart);

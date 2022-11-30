@@ -9,25 +9,21 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 public class OrderItem extends BaseEntity{
-    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "orderitem_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //단방향 다대일
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //단방향 다대일
     @JoinColumn(name = "order_id")
     private Order order;
 
     private int count;
-
     private int totalPrice;
-    //----------필드 끝----------//
-
-    //----------생성자 시작----------//
+    //----------필드 끝 / 생성자 시작----------//
     public OrderItem(Cart cart){
         this.item = cart.getItem();
         this.count = cart.getCount();
@@ -39,7 +35,4 @@ public class OrderItem extends BaseEntity{
         this.count = count;
         this.totalPrice = item.getPrice() * count;
     }
-    //----------생성자 끝----------//
-
-
 }

@@ -18,6 +18,7 @@ import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -30,33 +31,22 @@ public class ItemController {
     private final FileService fileService;
     private final MemberService memberService;
 
-    @GetMapping("/items")
-    //아이템 리스트
-    public String list(Model model) throws Exception {
+    @GetMapping("/items") //Item 리스트
+    public String list(Model model){
         List<Item> items = itemService.findList();
         model.addAttribute("items", items);
         return "items/itemList";
     }
 
-    @GetMapping("/mypage/myitems")
-    //아이템 리스트
-    public String myItemList(Model model, Principal principal) throws Exception {
-        Member member = memberService.findOneByName(principal.getName());
-        List<Item> items = itemService.findListByMember(member);
-        model.addAttribute("items", items);
-        return "mypage/myitems";
-    }
-
-    @GetMapping("/items/new")
-    //아이템 등록폼 화면
-    public String createForm(Model model) throws Exception {
+    @GetMapping("/items/new") //Item 등록 폼 화면
+    public String createForm(Model model){
         model.addAttribute("createItemForm", new CreateItemForm());
         return "items/createItemForm";
     }
 
-    @PostMapping("/items/new")
-    //아이템 등록 실행
-    public String create(@Valid CreateItemForm form, BindingResult result, Principal principal) throws Exception {
+    @PostMapping("/items/new") //Item 등록 요청
+    public String create(@Valid CreateItemForm form, BindingResult result, Principal principal){
+
         if (result.hasErrors()) {
             return "items/createItemForm";
         }
@@ -69,10 +59,12 @@ public class ItemController {
         item.setQuantity(form.getQuantity());
         item.setMember(memberService.findOneByName(principal.getName()));
 
-        try{
+        try{ //제출한 이미지를 상품이미지로 설정
             Long fileId = fileService.saveFile(form.getThumbnail());
             item.setThumbnailFile(fileService.findOne(fileId));
-        }catch(IllegalArgumentException e){
+        }catch(IllegalArgumentException e){ //제출한 이미지가 없으면 기본이미지로 설정
+            item.setThumbnailFile(fileService.findOne(DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID));
+        }catch(IOException e){ //처리하던도중 IOException이 발생하면 기본이미지로 설정
             item.setThumbnailFile(fileService.findOne(DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID));
         }
 
@@ -80,11 +72,13 @@ public class ItemController {
         return "redirect:/items";
     }
 
-    @GetMapping("/items/edit")
-    //아이템 수정 폼 화면
-    public String editForm(@RequestParam Long id, Model model, Principal principal) throws Exception {
+    @GetMapping("/items/edit") //Item 수정 폼 화면
+    public String editForm(@RequestParam Long id, Model model, Principal principal){
+
         Member member = memberService.findOneByName(principal.getName());
         Item item = itemService.findOne(id);
+
+        //로그인한 Member가 어드민계정이나 해당 아이템을 등록한 Member가 아니면 홈페이지로 되돌려 보냄
         if (member.getRole() != Role.ROLE_ADMIN && item.getMember() != member) {
             return "redirect:/";
         }
@@ -97,12 +91,13 @@ public class ItemController {
         form.setPrice(item.getPrice());
         form.setQuantity(item.getQuantity());
         model.addAttribute("itemForm", form);
+
         return "/items/updateItemForm";
     }
 
-    @PostMapping("/items/edit")
-    //아이템 수정 실행
-    public String edit(@Valid CreateItemForm form, BindingResult result) throws Exception {
+    @PostMapping("/items/edit") //Item 수정 요청
+    public String edit(@Valid CreateItemForm form, BindingResult result){
+
         if (result.hasErrors()) {
             return "/items/updateItemForm";
         }
@@ -110,11 +105,13 @@ public class ItemController {
         return "redirect:/mypage/myitems";
     }
 
-    @GetMapping("/items/{itemId}")
-    public String item(@PathVariable("itemId") Long id, Model model, Principal principal) throws Exception {
+    @GetMapping("/items/{itemId}") //Item 상세 페이지 화면
+    public String item(@PathVariable("itemId") Long id, Model model, Principal principal) {
+
         Item item = itemService.findOne(id);
         CreateItemForm itemForm = new CreateItemForm();
 
+        //아이템 정보 데이터
         itemForm.setId(item.getId());
         itemForm.setItemName(item.getItemName());
         itemForm.setAuthor(item.getAuthor());
@@ -123,26 +120,32 @@ public class ItemController {
         itemForm.setQuantity(item.getQuantity());
         model.addAttribute("itemForm", itemForm);
 
+        //로그인을 안했으면 username = Guest
         String userName = principal != null ? principal.getName() : "Guest";
-        model.addAttribute("userName", userName);
 
+        model.addAttribute("userName", userName); //바로구매, 장바구니 추가를 위한 데이터
+
+        //상품 이미지 설정이 안되어있을 경우 기본 이미지로 설정
         if (item.getThumbnailFile() == null) {
             item.setThumbnailFile(fileService.findOne(DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID));
         }
 
-        model.addAttribute("fileId", item.getThumbnailFile().getId());
+        model.addAttribute("fileId", item.getThumbnailFile().getId()); //상품 이미지
 
-
+        //Comment 작성 폼 데이터
         CreateCommentForm commentForm = new CreateCommentForm();
         commentForm.setItemId(id);
         commentForm.setCreatedUserName(userName);
         model.addAttribute("commentForm", commentForm);
+
+        //Item에 달린 Comment List 데이터
         model.addAttribute("comments", item.getComments());
         return "/items/item";
     }
 
-    @PostMapping("/items/createComment")
-    public String createComment(@Valid CreateCommentForm form) throws Exception {
+    @PostMapping("/items/comments/new") //Item 상세페이지 Comment 생성 요청
+    public String createComment(@Valid CreateCommentForm form) {
+
         Comment comment = new Comment();
         Item item = itemService.findOne(form.getItemId());
         comment.setItem(item);

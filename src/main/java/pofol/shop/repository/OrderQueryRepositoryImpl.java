@@ -30,7 +30,6 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository{
                         memberEq(condition.getMember())
                 )
                 .fetch();
-
     }
 
     private BooleanExpression statusEq(OrderStatus status) {

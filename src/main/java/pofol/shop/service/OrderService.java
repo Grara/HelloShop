@@ -26,38 +26,23 @@ public class OrderService {
     private final ItemService itemService;
 
     /**
-     * 장바구니에서 주문을 생성합니다.
-     * @param member 주문한 Member
-     * @param address 주소정보
-     * @return 생성한 주문의 id
+     * 인자로 들어온 id에 해당하는 Order를 DB에서 찾습니다.
+     * @param id 찾아낼 Order의 id
+     * @return 찾아낸 Order
      */
-    public long orderByCart(Member member, Address address, List<OrderItemDto> itemDtos) throws Exception {
-        List<OrderItem> orderItems = new ArrayList<>();
-        List<Cart> orderedCart = new ArrayList<>();
-        for(OrderItemDto dto : itemDtos){
-            Cart cart = cartService.findOne(dto.getCartId());
-            orderedCart.add(cart);
-        }
-
-        for (Cart cart : orderedCart) {
-            OrderItem orderItem = new OrderItem(cart);
-            orderItems.add(orderItem);
-            orderItemRepository.save(orderItem);
-            cartService.delete(cart);
-        }
-        Order order = Order.createOrder(member, address, orderItems);
-        orderRepository.save(order);
-        return order.getId();
+    public Order findOneById(Long id){
+        return orderRepository.findById(id).orElseThrow(()->new EntityNotFoundException());
     }
 
     /**
-     * 바로구매 시 주문을 생성합니다.
+     * 주어진 인자로 주문을 생성 후 DB에 저장합니다.
      * @param member 주문한 Member
-     * @param address 주소정보
-     * @param itemDtos 주문 시 참고할 ItemDto 리스트
+     * @param delivery 배송정보
+     * @param itemDtos 주문한 Item들의 DTO 리스트
      * @return 생성한 주문의 id
      */
-    public long order(Member member, Address address, List<OrderItemDto> itemDtos) throws Exception{
+    public long order(Member member, Delivery delivery, List<OrderItemDto> itemDtos){
+
         List<OrderItem> orderItems = new ArrayList<>();
         for(OrderItemDto dto : itemDtos){
             if(dto.getCartId() != null) {
@@ -77,20 +62,35 @@ public class OrderService {
             }
         }
         
-        Order order = Order.createOrder(member, address, orderItems);
+        Order order = Order.createOrder(member, delivery, orderItems);
         orderRepository.save(order);
         return order.getId();
     }
 
+    /**
+     * id에 해당하는 주문시트를 DB에서 찾습니다.
+     * @param id 찾을 주문시트의 id
+     * @return 찾아낸 주문시트
+     */
+    public OrderSheet findSheetById(Long id){
+        return orderSheetRepository.findById(id).orElseThrow(()->new EntityNotFoundException("sheet not found"));
+    }
+
+    /**
+     * 주문시트를 DB에 저장합니다.
+     * @param sheet 저장할 주문시트
+     * @return 저장한 주문시트의 id
+     */
     public long saveSheet(OrderSheet sheet){
         orderSheetRepository.save(sheet);
         return sheet.getId();
     }
 
-    public OrderSheet findSheetById(Long id) throws Exception{
-        return orderSheetRepository.findById(id).orElseThrow(()->new EntityNotFoundException("sheet not found"));
-    }
-
+    /**
+     * 검색조건에 해당하는 Order들을 DB에서 찾습니다.
+     * @param condition 검색조건
+     * @return 찾아낸 Order들의 List
+     */
     public List<Order> search(OrderSearchCondition condition){
         return orderRepository.search(condition);
     }

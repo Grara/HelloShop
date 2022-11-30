@@ -23,7 +23,9 @@ import pofol.shop.service.FileService;
 import pofol.shop.service.MemberService;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
+import java.sql.SQLException;
 
 import static pofol.shop.config.DefaultValue.DEFAULT_PROFILE_IMAGE_ID;
 
@@ -35,20 +37,21 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
 
-    @GetMapping("/members")
-    public String list(Model model)throws Exception{
+    @GetMapping("/members") //전체 Member 목록
+    public String list(Model model){
         model.addAttribute("members", memberService.findList());
         return "members/memberList";
     }
 
-    @GetMapping("/members/new")
-    public String createForm(Model model)throws Exception{
+    @GetMapping("/members/new") //Member 가입 폼 화면
+    public String createForm(Model model){
         model.addAttribute("createMemberForm", new CreateMemberForm());
         return "members/createMemberForm";
     }
 
-    @PostMapping("/members/new")
-    public String create(@Valid CreateMemberForm form, BindingResult result)throws Exception{
+    @PostMapping("/members/new") //Member 가입 요청
+    public String create(@Valid CreateMemberForm form, BindingResult result){
+
         //비밀번호와 비밀번호 확인이 일치하는지 체크
         if(!form.getPassword().equals(form.getPasswordCheck()))
             result.addError(new FieldError("createMemberForm",
@@ -60,125 +63,20 @@ public class MemberController {
             return "members/createMemberForm";
         }
 
-        Member member = new Member();
-        Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
-        PersonalInfo personalInfo = new PersonalInfo(form.getRealName(), form.getAge(), form.getSex());
-        member.setUserName(form.getUserName());
-        member.setPassword(passwordEncoder.encode(form.getPassword()));
-        member.setAddress(address);
-        member.setPersonalInfo(personalInfo);
-        member.setRole(Role.ROLE_USER);
-
-        memberService.signUp(member);
-        return "redirect:/";
-    }
-
-    @GetMapping("/mypage")
-    public String mypageHome(Model model, Principal principal) throws Exception{
-        Member member = memberService.findOneByName(principal.getName());
-
-        if(member.getProfileImage() != null){
-            model.addAttribute("fileId", member.getProfileImage().getId());
-        }
-
-        model.addAttribute("userName", member.getUserName());
-
-        return "/mypage/myhome";
-    }
-
-    @GetMapping("/mypage/details")
-    public String mypageDetails(Model model, Principal principal) throws Exception{
-        Member member = memberService.findOneByName(principal.getName());
-        UpdateMyDetailForm form = new UpdateMyDetailForm(member);
-        form.setProfileId(member.getProfileImage().getId());
-
-        model.addAttribute("form", form);
-
-        return "/mypage/mydetails";
-    }
-
-    @GetMapping("/mypage/details/edit")
-    public String myDetailsEditForm(Model model, Principal principal) throws Exception {
-        Member member = memberService.findOneByName(principal.getName());
-        UpdateMyDetailForm form = new UpdateMyDetailForm(member);
-        form.setProfileId(member.getProfileImage().getId());
-
-        model.addAttribute("updateMyDetailForm", form);
-
-        return "/mypage/updateMydetailForm";
-    }
-
-    @PostMapping("/mypage/details/edit")
-    public String EditMyDetail(@Valid UpdateMyDetailForm form, BindingResult result) throws Exception {
-        if(result.hasErrors()){
-            return "/mypage/updateMydetailForm";
-        }
-
-        Member member = memberService.findOneByName(form.getUserName());
-        Address address = new Address();
-        address.setAddress1(form.getAddress1());
-        address.setAddress2(form.getAddress2());
-        address.setZipcode(form.getZipcode());
-        member.setAddress(address);
-
-
-        memberService.save(member);
-
-        return "redirect:/mypage/details";
-    }
-
-    @GetMapping("/mypage/password-edit")
-    public String passwordEditForm(Model model){
-        model.addAttribute("updatePasswordForm", new UpdatePasswordForm());
-        return "mypage/updatePasswordForm";
-    }
-
-    @PostMapping("/mypage/password-edit")
-    public String passwordEdit(@Valid UpdatePasswordForm form, BindingResult result, Principal principal) throws Exception{
-        Member member = memberService.findOneByName(principal.getName());
-
-        if(!passwordEncoder.matches(form.getCurPassword(), member.getPassword())){
-            result.addError(new FieldError("createMemberForm",
-                    "curPassword",
-                    "기존 비밀번호를 잘못 입력했습니다"));
-        }
-
-        if(!form.getNewPassword().equals(form.getNewPasswordCheck()))
-            result.addError(new FieldError("createMemberForm",
-                    "newPasswordCheck",
-                    "새로운 패스워드와 패스워드확인이 일치하지 않습니다"));
-
-
-        if(result.hasErrors()){
-            return "mypage/updatePasswordForm";
-        }
-
-        member.setPassword(passwordEncoder.encode(form.getNewPassword()));
-        memberService.save(member);
-
-        return "redirect:/mypage";
-    }
-
-    @GetMapping("/mypage/details/profile/update")
-    public String updateProfileImageForm(){
-        return "popup/updateProfileForm";
-    }
-
-    @PostMapping("/mypage/details/profile/update")
-    public String updateProfile(UpdateImageForm form, Principal principal,Model model) throws Exception{
-        Member member = memberService.findOneByName(principal.getName());
-        long returnId = 0l;
         try {
-            Long fileId = fileService.saveFile(form.getUploadImg());
-            member.setProfileImage(fileService.findOne(fileId));
-            memberService.save(member);
-            returnId = fileId;
-        }catch (IllegalArgumentException e){
-            member.setProfileImage(fileService.findOne(DEFAULT_PROFILE_IMAGE_ID));
-            memberService.save(member);
-            returnId = DEFAULT_PROFILE_IMAGE_ID;
+            Member member = new Member();
+            Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
+            PersonalInfo personalInfo = new PersonalInfo(form.getRealName(), form.getAge(), form.getSex());
+            member.setUserName(form.getUserName());
+            member.setPassword(passwordEncoder.encode(form.getPassword()));
+            member.setAddress(address);
+            member.setPersonalInfo(personalInfo);
+            member.setRole(Role.ROLE_USER);
+
+            memberService.signUp(member);
+            return "redirect:/";
+        }catch(Exception e){
+            return "errors/unknownError";
         }
-        model.addAttribute("imgUrl", "/images/" + returnId);
-        return "popup/finishUpdateProfile";
     }
 }

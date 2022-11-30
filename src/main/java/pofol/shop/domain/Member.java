@@ -15,27 +15,25 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 public class Member extends BaseEntity{
-    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY) //단방향 일대일
+    @JoinColumn(name = "file_id")
+    private FileEntity profileImage; //프로필 이미지 파일 엔티티
+
     private String userName;
     private String password;
-
     @Embedded
     private Address address;
     @Embedded
     private PersonalInfo personalInfo;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role; //권한
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_id")
-    private FileEntity profileImage;
 
-    //----------필드 끝----------//
-
-    //----------생성자 시작----------//
+    //----------필드 끝 / 생성자 시작----------//
     public Member(String userName, String password, Address address, PersonalInfo personalInfo) {
         this.userName = userName;
         this.password = password;
@@ -59,5 +57,4 @@ public class Member extends BaseEntity{
         this.personalInfo = new PersonalInfo("노민준", 28, Sex.MALE);
         this.role = role;
     }
-    //----------생성자 끝----------//
 }

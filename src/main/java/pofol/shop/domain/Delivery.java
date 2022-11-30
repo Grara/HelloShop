@@ -11,22 +11,22 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 public class Delivery extends BaseEntity{
-    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "delivery_id")
     private Long id;
+
+    private String receiverName;
+    private String receiverPhoneNumber;
+    private String memo;
 
     @Embedded
     private Address address;
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
-    //----------필드 끝----------//
-
-    //----------생성자 시작----------//
+    //----------필드 끝 / 생성자 시작----------//
     public Delivery(Address address){
         this.address = address;
         this.status = DeliveryStatus.READY;
     }
-    //----------생성자 끝----------//
 }

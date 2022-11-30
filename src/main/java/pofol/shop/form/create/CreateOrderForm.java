@@ -12,12 +12,15 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateOrderForm {
     @NotEmpty(message = "받는분 성함은 필수입니다")
-    private String realName;
+    private String receiverName;
+    @NotEmpty(message = "연락처는 필수입니다")
+    private String receiverPhoneNumber;
     @NotEmpty(message = "기본주소는 필수입니다")
     private String address1;
     @NotEmpty(message = "상세주소는 필수입니다")
     private String address2;
     private int zipcode;
+    private String memo;
     private List<OrderItemDto> orderItems = new ArrayList<>();
     private int totalPrice;
     private Long sheetId;

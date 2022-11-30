@@ -19,37 +19,33 @@ public class ItemService {
     private final ItemRepository itemRepository;
 
     /**
-     * 모든 Item목록을 반환합니다.
-     *
-     * @return 모든 Item목록
+     * 모든 Item을 DB에서 찾습니다.
+     * @return 모든 Item의 List
      */
-    public List<Item> findList() throws Exception {
+    public List<Item> findList(){
         return itemRepository.findAll();
     }
 
     /**
-     * member가 등록한 Item목록을 반환합니다.
+     * member가 등록한 Item들을 DB에서 찾습니다.
      * @param member 상품을 등록한 Member
-     * @return member가 등록한 Item 목록
-     * @throws Exception
+     * @return member가 등록한 Item들의 List
      */
-    public List<Item> findListByMember(Member member) throws Exception {
+    public List<Item> findListByMember(Member member){
         return itemRepository.findListByMember(member);
     }
 
     /**
-     * id를 통해 item을 찾아낸 뒤 반환합니다.
-     *
+     * id에 해당한는 Item을 DB에서 찾습니다.
      * @param itemId 찾을 Item의 id
      * @return 찾아낸 Item
      */
-    public Item findOne(Long itemId) throws Exception {
+    public Item findOne(Long itemId){
         return itemRepository.findById(itemId).orElseThrow(() -> new EntityNotFoundException("item not found"));
     }
 
     /**
      * Item을 DB에 저장합니다.
-     *
      * @param item 저장할 Item
      * @return 저장한 Item의 id
      */
@@ -59,8 +55,7 @@ public class ItemService {
     }
 
     /**
-     * id에 해당하는 Item의 정보를 수정합니다.
-     *
+     * id에 해당하는 Item의 정보를 수정하고 DB에 적용합니다.
      * @param itemId 수정할 Item의 id
      * @param name   수정 후 적용할 상품명
      * @param price  수정 후 적용할 가격

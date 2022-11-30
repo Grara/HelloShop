@@ -11,7 +11,7 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div class="parent" style="height:50px" align="right">
-        <a class="btn btn-primary" th:onClick="javascript:deleteChecked();">선택한 항목 삭제</a>
+        <button type="button" class="btn btn-primary" th:onClick="javascript:deleteChecked();">선택한 항목 삭제</button>
         <label for="allSelect">전체선택</label>
         <input id="allSelect" name="allSelect" type="checkbox" onclick="javascript:allSelect(this);" checked>
     </div>
@@ -34,9 +34,9 @@
                        onclick="javascript:itemSelect();"></td>
         </tr>
     </table>
-    <a th:data-username="${username}"
+    <button type="button" th:data-username="${username}"
        class="btn btn-primary"
-       th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</a>
+       th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</button>
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>

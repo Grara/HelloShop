@@ -14,16 +14,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Order extends BaseEntity{
-    //----------필드 시작----------//
     @Id @GeneratedValue
     @Column(name = "order_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //단방향 다대일
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //단방향 일대일
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
@@ -33,24 +32,20 @@ public class Order extends BaseEntity{
     private int itemKind;
     private int orderTotalPrice;
     private LocalDateTime orderDate;
-    //----------필드 끝----------//
-
-    //----------생성자 시작----------//
+    //----------필드 끝 / 생성자 시작----------//
     public Order(Member member, OrderStatus status) {
         this.member = member;
         this.status = status;
     }
-    //----------생성자 끝----------//
-
-    //----------메소드 시작----------//
+    //----------생성자 끝 / 메소드 시작----------//
     public void addOrderItem(OrderItem orderItem){
         orderItem.setOrder(this);
     }
 
-    public static Order createOrder(Member member, Address address , List<OrderItem> orderItems){
+    public static Order createOrder(Member member, Delivery delivery , List<OrderItem> orderItems){
         Order order = new Order();
         order.setMember(member);
-        order.setDelivery(new Delivery(address));
+        order.setDelivery(delivery);
         order.setStatus(OrderStatus.ORDER);
         int totalPrice = 0;
         int kind = 0;
@@ -64,5 +59,4 @@ public class Order extends BaseEntity{
         order.setOrderDate(LocalDateTime.now());
         return order;
     }
-    //----------메소드 끝----------//
 }

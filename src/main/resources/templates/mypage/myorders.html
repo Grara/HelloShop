@@ -34,13 +34,13 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="item : ${orders}">
-        <td th:text="${item.id}"></td>
-        <td th:text="${item.orderTotalPrice}"></td>
-        <td th:text="${item.orderDate}"></td>
-        <td th:text="${item.status}"></td>
+      <tr th:each="order : ${orders}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.orderTotalPrice}"></td>
+        <td th:text="${order.orderDate}"></td>
+        <td th:text="${order.status}"></td>
         <td>
-          <a th:href="|/orders/${item.id}|" class="btn btn-primary">상세정보</a>
+          <a th:href="|/orders/${order.id}|" class="btn btn-primary">상세정보</a>
         </td>
       </tr>
       </tbody>

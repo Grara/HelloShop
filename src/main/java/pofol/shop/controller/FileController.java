@@ -18,11 +18,13 @@ import java.security.Principal;
 public class FileController {
     private final FileService fileService;
 
-    @GetMapping("/images/{fileId}")
+    @GetMapping("/images/{fileId}") //html img태그들의 src경로
     @ResponseBody
-    public Resource downloadImage(@PathVariable("fileId")Long id, Model model) throws Exception {
+    public Resource downloadImage(@PathVariable("fileId") Long id, Model model) throws Exception {
+
         FileEntity file = fileService.findOne(id);
         UrlResource url = new UrlResource("file:" + file.getSavePath());
+
         return url;
     }
 

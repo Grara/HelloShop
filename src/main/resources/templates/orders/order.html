@@ -1,0 +1,165 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<style>
+.fieldError {
+border-color: #bd2130;
+}
+.form-group .form-control {
+width: 30%;
+}
+.inputs{
+display: flex;
+}
+.inputs .firstbox {
+width: 10%;
+}
+.inputs .secondbox {
+width: 90%;
+}
+</style>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div class="parent" style="height:50px" align="right">
+        <button th:if="${order.status.name() == 'ORDER'}"
+                type="button" class="btn btn-primary" th:onClick="orderCancel()">주문 취소</button>
+    </div>
+    <div class="form-group">
+        <label>주문번호</label>
+        <input type="text" class="form-control" id="orderId" name="orderId" th:value="${order.id}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>주문일자</label>
+        <input type="text" class="form-control" th:value="${order.orderDate}" readonly>
+    </div>
+
+    <div>
+        <span><h3>배송정보</h3></span>
+    </div>
+
+    <div class="form-group">
+        <label>받는분</label>
+        <input type="text" class="form-control" th:value="${order.delivery.receiverName}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>연락처</label>
+        <input type="text" class="form-control" th:value="${order.delivery.receiverPhoneNumber}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>기본주소</label>
+        <input type="text" class="form-control" th:value="${order.delivery.address.address1}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>상세주소</label>
+        <input type="text" class="form-control" th:value="${order.delivery.address.address2}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>우편번호</label>
+        <input type="text" class="form-control" th:value="${order.delivery.address.zipcode}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>배송메모</label>
+        <input type="text" class="form-control" th:value="${order.delivery.memo}" readonly>
+    </div>
+
+    <div class="form-group">
+        <label>배송상태</label>
+        <input type="text" class="form-control" th:value="${order.delivery.status}" readonly>
+    </div>
+
+    <div>
+        <span><h3>주문상품 목록</h3></span>
+    </div>
+
+    <div th:each="orderItem : ${orderItems}" style="border:5px solid gold">
+        <div class="inputs">
+            <div class="firstbox">
+                <label>상품명</label>
+            </div>
+            <div class="secondbox">
+                <input th:value="${orderItem.item.itemName}" readonly/>
+            </div>
+        </div>
+
+        <div class="inputs">
+            <div class="firstbox">
+                <label>가격</label>
+            </div>
+            <div class="secondbox">
+                <input th:value="${orderItem.item.price}" readonly/>
+            </div>
+        </div>
+
+        <div class="inputs">
+            <div class="firstbox">
+                <label>수량</label>
+            </div>
+            <div class="secondbox">
+                <input th:value="${orderItem.count}" readonly/>
+            </div>
+        </div>
+
+        <div class="inputs">
+            <div class="firstbox">
+                <label>상품 총 결제금액</label>
+            </div>
+            <div class="secondbox">
+                <input th:value="${orderItem.totalPrice}" readonly/>
+            </div>
+        </div>
+    </div>
+
+    <div class="inputs">
+        <div class="firstbox">
+            <label>주문 총 결제금액</label>
+        </div>
+        <div class="secondbox">
+            <input type="number" th:value="${order.orderTotalPrice}" readonly/>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script th:inline="javascript">
+function orderCancel(){
+    const orderId = $('#orderId').val();
+
+    if(confirm('주문을 취소하시겠습니까?')){
+
+        $.ajax({
+
+        type : 'post',
+        url : "/orders/cancel",
+        headers : {
+            "Content-Type" : "text/html; charset=utf-8",
+            "X-HTTP-Method-Override" : "POST"
+        },
+        dataType : 'text',
+        data : orderId,
+        success : function(res){
+            window.location.href = "/orders/cancel-finish";
+        },
+        failure : function(){
+            alert("서버와의 통신에 실패했습니다.");
+        }
+
+        });
+
+    }
+
+
+
+}
+
+</script>
+</html>

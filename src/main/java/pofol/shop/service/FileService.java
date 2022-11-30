@@ -19,9 +19,14 @@ public class FileService {
     private final FileRepository fileRepository;
 
     @Value("${fileDir}")
-    private String FILE_DIR;
+    private String FILE_DIR; //기본 파일 경로
 
-    public Long saveFile(MultipartFile uploadFile) throws Exception {
+    /**
+     * Form으로 제출된 파일을 기본 경로에 저장하고, 해당 파일의 FileEntity를 만들어 DB에 저장합니다.
+     * @param uploadFile 저장할 파일
+     * @return
+     */
+    public Long saveFile(MultipartFile uploadFile)throws IOException {
         if(uploadFile.getOriginalFilename().equals("")){
             throw new IllegalArgumentException("이미지 첨부 안함 or 파일 이름이 없음");
         }
@@ -36,11 +41,21 @@ public class FileService {
         return file.getId();
     }
 
-    public FileEntity findOne(Long id) throws Exception{
+    /**
+     * id에 해당하는 FileEntity를 DB에서 찾습니다.
+     * @param id 찾을 FIleEntity의 id
+     * @return 찾아낸 FileEntity
+     */
+    public FileEntity findOne(Long id){
         return fileRepository.findById(id).orElseThrow(()->new EntityNotFoundException("fileEntity not found"));
     }
 
-    public Long initFile(FileEntity file) throws Exception{
+    /**
+     * FileEntity를 DB에 저장합니다.
+     * @param file 저장할 FileEntity
+     * @return 저장한 FileEntity의 id
+     */
+    public Long initFile(FileEntity file){
         FileEntity saveFile = fileRepository.save(file);
         return saveFile.getId();
     }
