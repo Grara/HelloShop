@@ -12,7 +12,9 @@ import pofol.shop.domain.Order;
 import pofol.shop.domain.OrderSheet;
 import pofol.shop.domain.enums.OrderStatus;
 import pofol.shop.form.create.CreateOrderSheetForm;
+import pofol.shop.repository.MemberRepository;
 import pofol.shop.repository.OrderRepository;
+import pofol.shop.repository.OrderSheetRepository;
 import pofol.shop.service.MemberService;
 import pofol.shop.service.OrderService;
 
@@ -22,28 +24,28 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class OrderApiController {
 
-    private final OrderService orderService;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
-    private ObjectMapper mapper = new ObjectMapper();
+    private final OrderSheetRepository orderSheetRepository;
+    private ObjectMapper mapper = new ObjectMapper(); //JSON - 객체 간 매퍼
 
     @PostMapping("/orderSheet/new") //주문시트 생성 요청
     public Long createOrderSheet(@RequestBody CreateOrderSheetForm form) throws Exception {
 
         OrderSheet sheet = new OrderSheet();
-        Member member = memberService.findOneByName(form.getUserName());
+        Member member = memberRepository.findByUserName(form.getUserName()).orElseThrow();
 
         //Form을 JSON으로 변환해서 DB에 저장
         sheet.setContent(mapper.writeValueAsString(form));
         sheet.setMember(member);
         sheet.setIsOrdered(false);
-        return orderService.saveSheet(sheet);
+        return orderSheetRepository.save(sheet).getId();
 
     }
 
     @PostMapping("/orders/cancel") //주문취소 요청
     public ResponseEntity<String> delete(@RequestBody String id, Principal principal) {
-        Order order = orderService.findOneById(Long.parseLong(id));
+        Order order = orderRepository.findById(Long.parseLong(id)).orElseThrow();
         System.out.println("#####"+principal.getName());
         if(!order.getMember().getUserName().equals(principal.getName())){
             return ResponseEntity

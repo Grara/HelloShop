@@ -18,6 +18,10 @@ import pofol.shop.dto.OrderSearchCondition;
 import pofol.shop.form.update.UpdateImageForm;
 import pofol.shop.form.update.UpdateMyDetailForm;
 import pofol.shop.form.update.UpdatePasswordForm;
+import pofol.shop.repository.FileRepository;
+import pofol.shop.repository.ItemRepository;
+import pofol.shop.repository.MemberRepository;
+import pofol.shop.repository.OrderRepository;
 import pofol.shop.service.FileService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
@@ -36,15 +40,19 @@ import static pofol.shop.config.DefaultValue.DEFAULT_PROFILE_IMAGE_ID;
 public class MypageController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileService fileService;
+    private final FileRepository fileRepository;
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/mypage") //마이페이지 홈
     public String mypageHome(Model model, Principal principal){
 
-        Member member = memberService.findOneByName(principal.getName());
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
 
         if (member.getProfileImage() != null) { //프로필 이미지 파일 id 추가
             model.addAttribute("fileId", member.getProfileImage().getId());
@@ -59,7 +67,7 @@ public class MypageController {
     @GetMapping("/mypage/details") //개인정보 화면
     public String mypageDetails(Model model, Principal principal){
 
-        Member member = memberService.findOneByName(principal.getName());
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         UpdateMyDetailForm form = new UpdateMyDetailForm(member);
         form.setProfileId(member.getProfileImage().getId());
 
@@ -71,7 +79,7 @@ public class MypageController {
     @GetMapping("/mypage/details/edit") //개인정보 수정 폼 화면
     public String myDetailsEditForm(Model model, Principal principal){
 
-        Member member = memberService.findOneByName(principal.getName());
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         UpdateMyDetailForm form = new UpdateMyDetailForm(member);
         form.setProfileId(member.getProfileImage().getId());
 
@@ -87,14 +95,14 @@ public class MypageController {
             return "/mypage/updateMydetailForm";
         }
 
-        Member member = memberService.findOneByName(form.getUserName());
+        Member member = memberRepository.findByUserName(form.getUserName()).orElseThrow();
         Address address = new Address();
         address.setAddress1(form.getAddress1());
         address.setAddress2(form.getAddress2());
         address.setZipcode(form.getZipcode());
         member.setAddress(address);
 
-        memberService.save(member);
+        memberRepository.save(member);
 
         return "redirect:/mypage/details";
     }
@@ -109,7 +117,7 @@ public class MypageController {
     @PostMapping("/mypage/password-edit") //비밀번호 변경 요청
     public String passwordEdit(@Valid UpdatePasswordForm form, BindingResult result, Principal principal){
 
-        Member member = memberService.findOneByName(principal.getName());
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
 
         //현재 비밀번호입력이 틀렸을 경우 오류 추가
         if(!passwordEncoder.matches(form.getCurPassword(), member.getPassword())){
@@ -130,7 +138,7 @@ public class MypageController {
         }
 
         member.setPassword(passwordEncoder.encode(form.getNewPassword()));
-        memberService.save(member);
+        memberRepository.save(member);
 
         return "redirect:/mypage";
     }
@@ -143,20 +151,20 @@ public class MypageController {
     @PostMapping("/mypage/details/profile/update") //프로필 변경 요청
     public String updateProfile(UpdateImageForm form, Principal principal, Model model){
 
-        Member member = memberService.findOneByName(principal.getName());
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         long returnId = 0l; //모델에 전달할 FileEntity id값
 
         try {
             //멤버의 프로필을 제출한 이미지 파일로 설정
             Long fileId = fileService.saveFile(form.getUploadImg());
-            member.setProfileImage(fileService.findOne(fileId));
-            memberService.save(member);
+            member.setProfileImage(fileRepository.findById(fileId).orElseThrow());
+            memberRepository.save(member);
             returnId = fileId;
 
         }catch (IllegalArgumentException e){
             //이미지 파일이 없을 경우 프로필을 기본 이미지로 설정
-            member.setProfileImage(fileService.findOne(DEFAULT_PROFILE_IMAGE_ID));
-            memberService.save(member);
+            member.setProfileImage(fileRepository.findById(DEFAULT_PROFILE_IMAGE_ID).orElseThrow());
+            memberRepository.save(member);
             returnId = DEFAULT_PROFILE_IMAGE_ID;
 
         }catch (IOException e){
@@ -172,8 +180,8 @@ public class MypageController {
     @GetMapping("/mypage/myitems") //내가 판매하는 아이템 리스트 화면
     public String myItemList(Model model, Principal principal){
 
-        Member member = memberService.findOneByName(principal.getName());
-        List<Item> items = itemService.findListByMember(member);
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
+        List<Item> items = itemRepository.findListByMember(member);
         model.addAttribute("items", items);
         return "mypage/myitems";
     }
@@ -181,9 +189,9 @@ public class MypageController {
     @GetMapping("/mypage/myorders") //내 구매내역
     public String myorders(@ModelAttribute OrderSearchCondition condition, Model model, Principal principal){
 
-        Member member = memberService.findOneByName(principal.getName());
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         condition.setMember(member);
-        List<Order> orders = orderService.search(condition); //검색 조건으로 주문 목록을 찾음
+        List<Order> orders = orderRepository.search(condition); //검색 조건으로 주문 목록을 찾음
         model.addAttribute("orderSearch", condition);
         model.addAttribute("orders", orders);
         return "/mypage/myorders";

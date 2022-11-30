@@ -11,8 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.config.DefaultValue;
+import pofol.shop.domain.FileEntity;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.enums.Role;
+import pofol.shop.repository.FileRepository;
 import pofol.shop.repository.MemberRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -29,6 +31,7 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileService fileService;
+    private final FileRepository fileRepository;
 
 
     /**
@@ -40,53 +43,12 @@ public class MemberService implements UserDetailsService {
         if(isDuplicate(member.getUserName())) {
             throw new IllegalStateException("같은 회원명의 Member가 이미 존재합니다.");
         }
-        memberRepository.save(member);
         //프로필 기본 이미지 설정
-        member.setProfileImage(fileService.findOne(DefaultValue.DEFAULT_PROFILE_IMAGE_ID));
-        return member.getId();
-    }
-    /**
-     * 모든 Member를 DB에서 찾습니다.
-     * @return 전체 Member의 List
-     */
-    public List<Member> findList() {
-        return memberRepository.findAll();
-    }
+        FileEntity defaultProfile = fileRepository.findById(DefaultValue.DEFAULT_PROFILE_IMAGE_ID).orElseThrow();
+        member.setProfileImage(defaultProfile);
 
-    /**
-     * id를 통해 Member를 DB에서 찾습니다.
-     * @param id 찾을 Member의 id
-     * @return 찾아낸 Member
-     */
-    public Member findOne(Long id){
-        return memberRepository.findById(id).orElseThrow(()->new EntityNotFoundException("member not found"));
-    }
-
-    /**
-     * 유저명을 통해 DB에서 Member를 찾습니다.
-     * @param name 찾을 Member의 유저명
-     * @return 찾아낸 Member
-     */
-    public Member findOneByName(String name){
-        return memberRepository.findByUserName(name).orElseThrow(()->new EntityNotFoundException("member not found"));
-    }
-
-    /**
-     * Member를 DB에 저장합니다.
-     * @param member 저장할 Member
-     * @return
-     */
-    public Long save(Member member){
         memberRepository.save(member);
         return member.getId();
-    }
-
-    /**
-     * Member를 DB에서 삭제합니다.
-     * @param member 삭제할 Member
-     */
-    public void signOut(Member member){
-        memberRepository.delete(member);
     }
 
     /**
@@ -95,8 +57,8 @@ public class MemberService implements UserDetailsService {
      * @return 있으면 true, 없으면 false
      */
     public boolean isDuplicate(String username){
-        List<Member> findMembers = memberRepository.findListByUserName(username);
-        if (!findMembers.isEmpty()) {
+        Optional<Member> findMember = memberRepository.findByUserName(username);
+        if (findMember.isPresent()) {
             return true;
         }
         return false;
@@ -112,7 +74,8 @@ public class MemberService implements UserDetailsService {
     public Long createInitMember(String username, String password, Role role){
         //패스워드 값을 인코더로 인코딩해서 넣음
         Member member = new Member(username, passwordEncoder.encode(password), role);
-        member.setProfileImage(fileService.findOne(DefaultValue.DEFAULT_PROFILE_IMAGE_ID));
+        FileEntity defaultProfile = fileRepository.findById(DefaultValue.DEFAULT_PROFILE_IMAGE_ID).orElseThrow();
+        member.setProfileImage(defaultProfile);
         memberRepository.save(member);
         return member.getId();
     }

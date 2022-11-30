@@ -11,8 +11,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
+
+    /**
+     * Member가 같은 Cart들을 찾습니다.
+     * @param member Cart들을 지닌 Member
+     * @return 찾은 Cart List
+     */
     List<Cart> findByMember(Member member);
 
+
+    /**
+     * Member가 같은 Cart들을 찾고 각 Cart의 Item을 페치조인합니다.
+     * @param member Cart들을 지닌 Member
+     * @return 찾은 Cart List
+     */
     @Query("select c from Cart c left join fetch c.item where c.member = :member")
     List<Cart> findByMemberFetchItem(@Param("member") Member member);
 

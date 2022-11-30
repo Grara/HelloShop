@@ -8,5 +8,10 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item,Long> {
 
+    /**
+     * 판매자가 같은 Item들을 찾습니다.
+     * @param member 판매자
+     * @return 찾아낸 Item List
+     */
     List<Item> findListByMember(Member member);
 }

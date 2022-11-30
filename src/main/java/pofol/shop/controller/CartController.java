@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import pofol.shop.domain.Cart;
 import pofol.shop.domain.Member;
 import pofol.shop.dto.OrderItemDto;
+import pofol.shop.repository.CartRepository;
+import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
@@ -19,15 +21,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CartController {
 
-    private final CartService cartService;
-    private final MemberService memberService;
-    private final ItemService itemService;
+    private final CartRepository cartRepository;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/cart") //Member의 장바구니 리스트
     public String list(Model model, Principal principal) {
 
-        Member member = memberService.findOneByName(principal.getName());
-        List<Cart> carts = cartService.findListByMemberFetchItem(member);
+        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
+        List<Cart> carts = cartRepository.findByMemberFetchItem(member);
         List<OrderItemDto> itemDtos = carts.stream().map(OrderItemDto::new).collect(Collectors.toList());
 
         model.addAttribute("carts", itemDtos);

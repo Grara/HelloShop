@@ -41,14 +41,6 @@ public class FileService {
         return file.getId();
     }
 
-    /**
-     * id에 해당하는 FileEntity를 DB에서 찾습니다.
-     * @param id 찾을 FIleEntity의 id
-     * @return 찾아낸 FileEntity
-     */
-    public FileEntity findOne(Long id){
-        return fileRepository.findById(id).orElseThrow(()->new EntityNotFoundException("fileEntity not found"));
-    }
 
     /**
      * FileEntity를 DB에 저장합니다.

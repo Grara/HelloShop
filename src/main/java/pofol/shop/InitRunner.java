@@ -10,6 +10,9 @@ import pofol.shop.domain.FileEntity;
 import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.enums.Role;
+import pofol.shop.repository.CartRepository;
+import pofol.shop.repository.ItemRepository;
+import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.CartService;
 import pofol.shop.service.FileService;
 import pofol.shop.service.ItemService;
@@ -21,8 +24,10 @@ public class InitRunner implements ApplicationRunner {
 
 
     private final MemberService memberService;
-    private final ItemService itemService;
+    private final MemberRepository memberRepository;
+    private final ItemRepository itemRepository;
     private final CartService cartService;
+    private final CartRepository cartRepository;
     private final FileService fileService;
 
     @Override
@@ -37,23 +42,23 @@ public class InitRunner implements ApplicationRunner {
 
         Long userId = memberService.createInitMember("user", "1234", Role.ROLE_USER);
         memberService.createInitMember("admin", "1234", Role.ROLE_ADMIN);
-        Member findMember = memberService.findOne(userId);
+        Member findMember = memberRepository.findById(userId).orElseThrow();
 
         Item item1 = new Item(findMember,"JAVA", 10000, 100);
         Item item2 = new Item(findMember,"SPRING", 12000, 100);
         Item item3 = new Item(findMember,"JPA", 15000, 100);
         Item item4 = new Item("JPA", 15000, 100);
-        itemService.save(item1);
-        itemService.save(item2);
-        itemService.save(item3);
-        itemService.save(item4);
+        itemRepository.save(item1);
+        itemRepository.save(item2);
+        itemRepository.save(item3);
+        itemRepository.save(item4);
 
 
         Cart cart1 = new Cart(findMember, item1, 1);
         Cart cart2 = new Cart(findMember, item2, 2);
         Cart cart3 = new Cart(findMember, item3, 3);
-        cartService.add(cart1);
-        cartService.add(cart2);
-        cartService.add(cart3);
+        cartRepository.save(cart1);
+        cartRepository.save(cart2);
+        cartRepository.save(cart3);
     }
 }

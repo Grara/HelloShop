@@ -19,6 +19,7 @@ import pofol.shop.domain.enums.Role;
 import pofol.shop.form.update.UpdateImageForm;
 import pofol.shop.form.update.UpdateMyDetailForm;
 import pofol.shop.form.update.UpdatePasswordForm;
+import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.FileService;
 import pofol.shop.service.MemberService;
 
@@ -33,13 +34,13 @@ import static pofol.shop.config.DefaultValue.DEFAULT_PROFILE_IMAGE_ID;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
-    private final FileService fileService;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
 
     @GetMapping("/members") //전체 Member 목록
     public String list(Model model){
-        model.addAttribute("members", memberService.findList());
+        model.addAttribute("members", memberRepository.findAll());
         return "members/memberList";
     }
 

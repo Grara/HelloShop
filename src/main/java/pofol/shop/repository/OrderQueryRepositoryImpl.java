@@ -32,11 +32,11 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository{
                 .fetch();
     }
 
-    private BooleanExpression statusEq(OrderStatus status) {
+    private BooleanExpression statusEq(OrderStatus status) { //주문 상태 조건
         if(status == null) return null;
         else return order.status.eq(status);
     }
-    private BooleanExpression memberEq(Member member){
+    private BooleanExpression memberEq(Member member){ //주문한 회원 조건
         if(member == null) return null;
         else return order.member.eq(member);
     }

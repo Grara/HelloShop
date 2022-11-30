@@ -12,7 +12,10 @@ import pofol.shop.form.create.CreateOrderForm;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.form.create.CreateOrderSheetForm;
+import pofol.shop.repository.MemberRepository;
 import pofol.shop.repository.OrderItemRepository;
+import pofol.shop.repository.OrderRepository;
+import pofol.shop.repository.OrderSheetRepository;
 import pofol.shop.service.CartService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
@@ -28,9 +31,9 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final ItemService itemService;
-    private final CartService cartService;
-    private final MemberService memberService;
+    private final OrderRepository orderRepository;
+    private final OrderSheetRepository orderSheetRepository;
+    private final MemberRepository memberRepository;
     private final OrderItemRepository orderItemRepository;
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -40,7 +43,7 @@ public class OrderController {
                              Principal principal)throws Exception{
         
         //id에 해당하는 주문시트를 가져옴
-        OrderSheet sheet = orderService.findSheetById(id);
+        OrderSheet sheet = orderSheetRepository.findById(id).orElseThrow();
         Member findMember = sheet.getMember();
         
         //해당 시트로 이미 주문을 했거나 현재 접근한 Member가 주문시트를 생성한 Member가 아니면 홈화면으로 이동
@@ -70,7 +73,7 @@ public class OrderController {
         OrderSheet sheet;
         
         try { //이미 주문한 시트거나 존재하지않는 시트라면 홈 화면으로 이동
-            sheet = orderService.findSheetById(form.getSheetId());
+            sheet = orderSheetRepository.findById(form.getSheetId()).orElseThrow();
             if(sheet.getIsOrdered()){
                 return "errors/alreadyOrder";
             }
@@ -85,13 +88,13 @@ public class OrderController {
             delivery.setReceiverPhoneNumber(form.getReceiverPhoneNumber());
             delivery.setMemo(form.getMemo());
 
-            Member member = memberService.findOneByName(principal.getName());
+            Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
             if(sheet.getMember() != member) {
                 return "redirect:/";
             }
             orderService.order(member, delivery, form.getOrderItems());
             sheet.setIsOrdered(true);
-            orderService.saveSheet(sheet);
+            orderSheetRepository.save(sheet);
         }catch(NotEnoughQuantityException e){
             return "errors/quantityError"; //Item 중 재고가 부족한 Item이 있을 경우 안내 페이지로 이동
         }catch(EntityNotFoundException e){
@@ -104,7 +107,7 @@ public class OrderController {
     @GetMapping("/orders/{id}")//주문 상세 정보 조회 화면
     public String orderDetail(@PathVariable("id")Long id, Model model, Principal principal){
 
-        Order order = orderService.findOneById(id);
+        Order order = orderRepository.findById(id).orElseThrow();
         List<OrderItem> orderItems = orderItemRepository.findListByOrderFetchItem(order);
         model.addAttribute("order", order);
         model.addAttribute("orderItems", orderItems);

@@ -29,14 +29,4 @@ public class HomeController {
         return "test";
     }
 
-    @PostMapping("/password")
-    public String test(TestForm form, Principal principal) throws Exception {
-        Member member = memberService.findOneByName(principal.getName());
-        if(passwordEncoder.matches(form.getPassword(), member.getPassword())){
-            System.out.println("######" + "true");
-        }
-        else System.out.println("#######" + "false");
-
-        return "test";
-    }
 }
