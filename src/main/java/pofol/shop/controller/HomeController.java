@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +25,11 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/password")
-    public String test1(){
+    @GetMapping("/test")
+    public String test1(Model model){
+        model.addAttribute("a", 10);
+        model.addAttribute("b", 11);
+        model.addAttribute("pageStart", 1);
         return "test";
     }
 

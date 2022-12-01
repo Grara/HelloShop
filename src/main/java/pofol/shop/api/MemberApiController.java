@@ -1,10 +1,16 @@
 package pofol.shop.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pofol.shop.domain.Member;
+import pofol.shop.dto.MemberDto;
+import pofol.shop.dto.MemberSearchCondition;
+import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.MemberService;
 
 import javax.persistence.EntityNotFoundException;
@@ -13,6 +19,7 @@ import javax.persistence.EntityNotFoundException;
 @RequiredArgsConstructor
 public class MemberApiController {
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @PostMapping("/members/duplicateCheck") //Member가입 시 회원명 중복체크 버튼
     public boolean duplicateCheck(@RequestBody String userName){
@@ -28,4 +35,5 @@ public class MemberApiController {
         //중복이 아니면 true를 반환해줘야됨
         return !memberService.isDuplicate(userName);
     }
+
 }

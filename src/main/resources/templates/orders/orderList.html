@@ -6,9 +6,9 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div>
         <div>
-            <form th:object="${orderSearch}" class="form-inline">
+            <form th:object="${search}" class="form-inline">
                 <div class="form-group mb-2">
-                  <input type="text" th:field="*{userName}" class="formcontrol" placeholder="회원명"/>
+                    <input type="text" th:field="*{userName}" class="formcontrol" placeholder="회원명"/>
                 </div>
                 <div class="form-group mx-sm-1 mb-2">
                     <select th:field="*{orderStatus}" class="form-control">
@@ -39,7 +39,6 @@
                 <td>일시</td>
                 <td>주문상태</td>
                 <td></td>
-                <td></td>
             </tr>
             </thead>
             <tbody>
@@ -55,6 +54,52 @@
             </tbody>
         </table>
     </div>
+
+    <div align="center">
+        <a th:if="${pageStart} > 10"
+           th:text="|<<|"
+           class="btn btn-info"
+           th:href="@{/orders
+                   (
+                   page=${pageStart - 2},
+                   userName=${search.userName},
+                   orderStatus=${search.orderStatus},
+                   startDateInput=${search.startDateInput},
+                   endDateInput=${search.endDateInput}
+                   )}"
+        ></a>
+
+        <span>
+                <a style="margin:3px;"
+                   th:each="num : ${#numbers.sequence( __${pageStart}__ , __${pageEnd}__ )}"
+                   th:with="isCur = ${ __${num}__ == __${curNumber}__ }"
+                   th:class="${isCur ? 'btn btn-primary' : 'btn btn-info'}"
+                   th:text="${num}"
+                   th:href="@{/orders
+                           (
+                           page=${num - 1},
+                           userName=${search.userName},
+                           orderStatus=${search.orderStatus},
+                           startDateInput=${search.startDateInput},
+                           endDateInput=${search.endDateInput}
+                           )}"
+                ></a>
+        </span>
+
+        <a th:if="${pageEnd} < ${totalPage}"
+           th:text="|>>|"
+           class="btn btn-info"
+           th:href="@{/orders
+                   (
+                   page=${pageEnd},
+                   userName=${search.userName},
+                   orderStatus=${search.orderStatus},
+                   startDateInput=${search.startDateInput},
+                   endDateInput=${search.endDateInput}
+                   )}"
+        ></a>
+    </div>
+
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>

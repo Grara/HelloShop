@@ -2,9 +2,12 @@ package pofol.shop.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.Order;
 import pofol.shop.domain.embedded.Address;
+import pofol.shop.dto.OrderDto;
 import pofol.shop.dto.OrderSearchCondition;
 import pofol.shop.form.update.UpdateImageForm;
 import pofol.shop.form.update.UpdateMyDetailForm;
@@ -31,6 +35,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 import static pofol.shop.config.DefaultValue.DEFAULT_PROFILE_IMAGE_ID;
@@ -187,13 +192,35 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/myorders") //내 구매내역
-    public String myorders(@ModelAttribute OrderSearchCondition condition, Model model, Principal principal){
+    public String myorders(@ModelAttribute OrderSearchCondition condition,
+                           Model model,
+                           Principal principal,
+                           Pageable pageable){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         condition.setUserName(member.getUserName());
-        List<Order> orders = orderRepository.search(condition); //검색 조건으로 주문 목록을 찾음
-        model.addAttribute("orderSearch", condition);
-        model.addAttribute("orders", orders);
+
+        if(StringUtils.hasText(condition.getStartDateInput())) {
+            LocalDate temp = LocalDate.parse(condition.getStartDateInput());
+            condition.setStartDate(temp.atStartOfDay());
+        }
+        if(StringUtils.hasText(condition.getEndDateInput())) {
+            LocalDate temp = LocalDate.parse(condition.getEndDateInput());
+            condition.setEndDate(temp.atTime(23,59));
+        }
+
+        Page<OrderDto> results = orderRepository.searchWithPage(condition, pageable);
+        int pageStart = results.getNumber() / 10 * 10 + 1;
+        int pageEnd = Math.min(pageStart + 9, results.getTotalPages());
+        if(pageEnd <= 0) pageEnd = 1;
+
+        model.addAttribute("totalPage", results.getTotalPages());
+        model.addAttribute("pageStart", pageStart);
+        model.addAttribute("pageEnd", pageEnd);
+        model.addAttribute("curNumber", results.getNumber() + 1);
+        model.addAttribute("search", condition);
+        model.addAttribute("orders", results.getContent());
+
         return "/mypage/myorders";
     }
 }

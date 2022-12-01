@@ -10,10 +10,11 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
-    <form action="/password" method="post">
-        <input name="password" type="password">
-        <button type="submit">dd</button>
-    </form>
+    <button th:if="${pageStart} > 10"
+    >dd</button>
+    <button th:if="${a} > 100">아아</button>
+    <button>dd</button>
+
 
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->

@@ -40,9 +40,16 @@ public class InitRunner implements ApplicationRunner {
         file2.setSavePath("C:/test/DEFAULT_ITEM_THUMBNAIL.png");
         DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID = fileService.initFile(file2);
 
+        for (int i = 0; i < 30; i++) {
+            String j = Integer.toString(i);
+            memberService.createInitMember("user" + j, "1234", Role.ROLE_USER);
+        }
+
         Long userId = memberService.createInitMember("user", "1234", Role.ROLE_USER);
         memberService.createInitMember("admin", "1234", Role.ROLE_ADMIN);
         Member findMember = memberRepository.findById(userId).orElseThrow();
+
+
 
         Item item1 = new Item(findMember,"JAVA", 10000, 100);
         Item item2 = new Item(findMember,"SPRING", 12000, 100);

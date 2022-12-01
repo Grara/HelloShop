@@ -2,12 +2,15 @@ package pofol.shop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pofol.shop.domain.enums.Role;
+import pofol.shop.dto.OrderDto;
 import pofol.shop.dto.OrderSearchCondition;
 import pofol.shop.exception.NotEnoughQuantityException;
 import pofol.shop.form.create.CreateOrderForm;
@@ -18,9 +21,6 @@ import pofol.shop.repository.MemberRepository;
 import pofol.shop.repository.OrderItemRepository;
 import pofol.shop.repository.OrderRepository;
 import pofol.shop.repository.OrderSheetRepository;
-import pofol.shop.service.CartService;
-import pofol.shop.service.ItemService;
-import pofol.shop.service.MemberService;
 import pofol.shop.service.OrderService;
 
 import javax.persistence.EntityNotFoundException;
@@ -42,21 +42,37 @@ public class OrderController {
     private ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping("/orders") //전체 주문 목록, 어드민만 접근 가능
-    public String orderList(@ModelAttribute OrderSearchCondition condition, Model model){
+    public String orderList(@ModelAttribute OrderSearchCondition condition, Model model, Pageable pageable){
 
-
+        //Form에서 전달받은 시작날짜 문자열을 LocalDateTime으로 변환, 시간은 00:00으로
         if(StringUtils.hasText(condition.getStartDateInput())) {
             LocalDate temp = LocalDate.parse(condition.getStartDateInput());
             condition.setStartDate(temp.atStartOfDay());
         }
+
+        //Form에서 전달받은 종료날짜 문자열을 LocalDateTime으로 변환, 시간은 24:00으로
         if(StringUtils.hasText(condition.getEndDateInput())) {
             LocalDate temp = LocalDate.parse(condition.getEndDateInput());
             condition.setEndDate(temp.atTime(23,59));
         }
 
-        List<Order> orders = orderRepository.search(condition); //검색 조건으로 주문 목록을 찾음
-        model.addAttribute("orderSearch", condition);
-        model.addAttribute("orders", orders);
+        //페이징 정보와 주문DTO목록을 받아옴
+        Page<OrderDto> results = orderRepository.searchWithPage(condition, pageable);
+
+        //페이지 이동 버튼의 시작 페이지 번호
+        //1~10, 11~20 ... 이런식으로 UI에 보여짐
+        int pageStart = results.getNumber() / 10 * 10 + 1;
+
+        //페이지 이동 버튼 끝 페이지 번호, 전체 페이지 중 마지막 페이지까지만
+        int pageEnd = Math.min(pageStart + 9, results.getTotalPages());
+        if(pageEnd <= 0) pageEnd = 1;
+
+        model.addAttribute("totalPage", results.getTotalPages());
+        model.addAttribute("pageStart", pageStart);
+        model.addAttribute("pageEnd", pageEnd);
+        model.addAttribute("curNumber", results.getNumber() + 1); //현재 페이지 번호
+        model.addAttribute("search", condition);
+        model.addAttribute("orders", results.getContent());
         return "/orders/orderList";
     }
 

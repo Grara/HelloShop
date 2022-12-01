@@ -1,43 +1,73 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"/>
+<style>
+
+</style>
+
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div>
-        <div>
-            <form th:object="${memberSearch}" class="form-inline">
-                <div class="form-group mb-2">
-                    <input type="text" th:field="*{userName}" class="formcontrol" placeholder="회원명"/>
-                </div>
-                <div class="form-group mb-2">
-                    <input type="text" th:field="*{realName}" class="formcontrol" placeholder="이름"/>
-                </div>
+        <form th:object="${search}" class="form-inline">
+            <div class="form-group mb-2">
+                <input type="text" th:field="*{userName}" class="formcontrol" placeholder="회원명"/>
+            </div>
+            <div class="form-group mb-2">
+                <input type="text" th:field="*{realName}" class="formcontrol" placeholder="이름"/>
+            </div>
 
-                <button type="submit" class="btn btn-primary mb-2">검색</button>
-            </form>
-        </div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <td width="200">회원명</td>
-                <td width="200">이름</td>
-                <td width="200">나이</td>
-                <td width="200"></td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="member : ${members}">
-                <td th:text="${member.userName}"></td>
-                <td th:text="${member.personalInfo.realName}"></td>
-                <td th:text="${member.personalInfo.age}"></td>
-                <td>
-                    <a th:href="|/members/${member.id}|" class="btn btn-primary">상세정보</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <button type="submit" class="btn btn-primary mb-2">검색</button>
+        </form>
     </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td width="200">회원명</td>
+            <td width="200">이름</td>
+            <td width="200">나이</td>
+            <td width="200"></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.userName}"></td>
+            <td th:text="${member.personalInfo.realName}"></td>
+            <td th:text="${member.personalInfo.age}"></td>
+            <td>
+                <a th:href="|/members/${member.id}|" class="btn btn-primary">상세정보</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div align="center">
+        <a th:if="${pageStart} > 10"
+           th:href="@{/members(page=${pageStart - 2}, userName=${search.userName}, realName=${search.realName})}"
+           th:text="|<<|"
+           class="btn btn-info"
+        ></a>
+
+        <span>
+                <a style="margin:3px;"
+                   th:each="num : ${#numbers.sequence( __${pageStart}__ , __${pageEnd}__ )}"
+                   th:with="isCur = ${ __${num}__ == __${curNumber}__ }"
+                   type="button"
+                   th:class="${isCur ? 'btn btn-primary' : 'btn btn-info'}"
+                   th:text="${num}"
+                   th:href="@{/members(page=${num-1}, userName=${search.userName}, realName=${search.realName})}"
+                ></a>
+        </span>
+
+        <a th:if="${pageEnd} < ${totalPage}"
+           th:href="@{/members(page=${pageEnd}, userName=${search.userName}, realName=${search.realName})}"
+           th:text="|>>|"
+           class="btn btn-info"
+        ></a>
+    </div>
+
+
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
