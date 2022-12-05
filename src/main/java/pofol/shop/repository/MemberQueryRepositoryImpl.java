@@ -29,8 +29,6 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository{
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-
-
     @Override
     public List<Member> search(MemberSearchCondition condition) {
         return queryFactory.select(member)

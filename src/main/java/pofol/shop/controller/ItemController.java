@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pofol.shop.config.DefaultValue;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.enums.Role;
+import pofol.shop.dto.CommentDto;
 import pofol.shop.form.create.CreateCommentForm;
 import pofol.shop.form.create.CreateItemForm;
 import pofol.shop.domain.Comment;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -140,23 +142,13 @@ public class ItemController {
         //Comment 작성 폼 데이터
         CreateCommentForm commentForm = new CreateCommentForm();
         commentForm.setItemId(id);
-        commentForm.setCreatedUserName(userName);
         model.addAttribute("commentForm", commentForm);
 
         //Item에 달린 Comment List 데이터
-        model.addAttribute("comments", item.getComments());
+        List<CommentDto> commentDtos = item.getComments().stream().map(CommentDto::new).collect(Collectors.toList());
+        model.addAttribute("comments", commentDtos);
         return "/items/item";
     }
 
-    @PostMapping("/items/comments/new") //Item 상세페이지 Comment 생성 요청
-    public String createComment(@Valid CreateCommentForm form) {
 
-        Comment comment = new Comment();
-        Item item = itemRepository.findById(form.getItemId()).orElseThrow();
-        comment.setItem(item);
-        comment.setCreatedUserName(form.getCreatedUserName());
-        comment.setContent(form.getContent());
-        commentRepository.save(comment);
-        return "redirect:/items/" + form.getItemId();
-    }
 }

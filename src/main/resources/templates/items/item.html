@@ -30,23 +30,28 @@
                class="btn btn-primary">장바구니에 추가</a>
         </div>
     </div>
-    <form role="form" action="/items/comments/new" th:object="${commentForm}" method="post">
+    <form role="form" th:object="${commentForm}">
         <div class="form-group">
             <label>후기 쓰기</label>
-            <input type="hidden" th:field="*{createdUserName}">
-            <input type="hidden" th:field="*{itemId}">
-            <input type="text" th:field="*{content}" class="form-control" placeholder="내용을 입력하세요">
-            <!--                   th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">-->
-            <!--            <p th:if="${#fields.hasErrors(('content')}" th:errors="*{content}" style="color:red;"/>-->
+            <input id="itemId" type="hidden" th:field="*{itemId}">
+            <input id="commentContent" type="text" th:field="*{content}" class="form-control" placeholder="내용을 입력하세요">
         </div>
-        <button type="submit" class="btn btn-primary">작성</button>
+        <button type="button" th:onclick="addComment()" class="btn btn-primary">작성</button>
     </form>
-    <div th:each="comment : ${comments}">
-        <span th:text="${comment.createdUserName} + ' / '"/>
-        <span th:text="${comment.lastModifiedDate} + ' / '"/>
-        <span th:text="${comment.content}"/>
+    <div style="margin:5px">
+        <span th:text="|후기(|"/>
+        <span id="commentsCount" th:text="${#lists.size(comments)}"/>
+        <span th:text="|)|"/>
     </div>
-
+    <div id="commentParent">
+        <div th:each="comment : ${comments}">
+            <hr>
+            <span th:text="${comment.userName} + ' / '"/>
+            <span th:text="${comment.lastModifiedDateTime} + ' / '"/>
+            <span th:text="${comment.content}"/>
+        </div>
+    </div>
+    <hr>
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
@@ -98,7 +103,7 @@ function addItemToCart(username, itemId) {
 
 var count = document.getElementById("count").value;
 
-    var test = {
+    var form = {
         "userName" : username,
         "itemId" : itemId,
         "count" : count
@@ -113,7 +118,7 @@ var count = document.getElementById("count").value;
         "X-HTTP-Method-Override" : "POST"
     },
     dataType : 'json',
-    data : JSON.stringify(test),
+    data : JSON.stringify(form),
     success : function(){
         if(confirm("장바구니로 이동하시겠습니까?")){
             window.location.href = "http://localhost:8080/cart";
@@ -129,6 +134,43 @@ var count = document.getElementById("count").value;
     });
 
 }
+
+function addComment(){
+
+    var form = {
+        'itemId' : $('#itemId').val(),
+        'content' : $('#commentContent').val()
+    }
+
+    $.ajax({
+
+    type : 'post',
+    url : '/comments/new',
+    headers : {
+        "Content-Type" : "application/json",
+        "X-HTTP-Method-Override" : "POST"
+    },
+    dataType : 'json',
+    data : JSON.stringify(form),
+    success : function(res){
+        var div = $('<div>');
+        $('#commentParent').append(div);
+        $('<hr>').appendTo(div);
+        $('<span>').text(res.userName + ' / ').appendTo(div);
+        $('<span>').text(res.lastModifiedDateTime + ' / ').appendTo(div);
+        $('<span>').text(res.content).appendTo(div);
+        $('#commentContent').val('');
+        let count = parseInt($('#commentsCount').html());
+        $('#commentsCount').html(count + 1);
+    },
+    failure : function(){
+        alert("서버와의 통신에 실패했습니다.");
+    }
+
+    });
+
+}
+
 
 </script>
 </html>

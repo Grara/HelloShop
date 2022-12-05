@@ -49,7 +49,7 @@ public class MemberController {
         Page<MemberDto> results = memberRepository.searchWithPage(condition, pageable);
 
         //페이지 이동 버튼의 시작 페이지 번호
-        //1~10, 11~20 ... 이런식으로 UI에 보여짐
+        //1~10, 11~20 ··· 이런식으로 UI에 보여짐
         int pageStart = results.getNumber() / 10 * 10 + 1;
 
         //페이지 이동 버튼 끝 페이지 번호, 전체 페이지 중 마지막 페이지까지만

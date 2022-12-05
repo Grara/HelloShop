@@ -50,7 +50,7 @@ public class OrderController {
             condition.setStartDate(temp.atStartOfDay());
         }
 
-        //Form에서 전달받은 종료날짜 문자열을 LocalDateTime으로 변환, 시간은 24:00으로
+        //Form에서 전달받은 종료날짜 문자열을 LocalDateTime으로 변환, 시간은 23:59으로
         if(StringUtils.hasText(condition.getEndDateInput())) {
             LocalDate temp = LocalDate.parse(condition.getEndDateInput());
             condition.setEndDate(temp.atTime(23,59));
@@ -60,7 +60,7 @@ public class OrderController {
         Page<OrderDto> results = orderRepository.searchWithPage(condition, pageable);
 
         //페이지 이동 버튼의 시작 페이지 번호
-        //1~10, 11~20 ... 이런식으로 UI에 보여짐
+        //1~10, 11~20 ··· 이런식으로 UI에 보여짐
         int pageStart = results.getNumber() / 10 * 10 + 1;
 
         //페이지 이동 버튼 끝 페이지 번호, 전체 페이지 중 마지막 페이지까지만

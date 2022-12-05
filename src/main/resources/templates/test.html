@@ -2,27 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
     <title>Hello</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <style>
 
 </style>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
-    <button th:if="${pageStart} > 10"
-    >dd</button>
-    <button th:if="${a} > 100">아아</button>
-    <button>dd</button>
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <input id="test" type="text" value="1">
+    <button type="button" onclick="out()">출력</button>
 
-
-    <div th:replace="fragments/footer :: footer" />
+    <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<!--<script src="https://code.jquery.com/jquery-3.6.1.min.js"-->
+<!--        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>-->
 <script>
 
+jQuery(document).ready(function () {
+    $("#test").rating({min: 1, max: 5, step: 1, size: 'lg', showClear: false});
+});
+
+
+function out(){
+    console.log($('#test').val());
+}
 </script>
 
 </html>

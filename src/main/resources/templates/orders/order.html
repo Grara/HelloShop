@@ -147,7 +147,7 @@ function orderCancel(){
         dataType : 'text',
         data : orderId,
         success : function(res){
-            window.location.href = "/orders/cancel-finish";
+            window.location.href = res;
         },
         failure : function(){
             alert("서버와의 통신에 실패했습니다.");
