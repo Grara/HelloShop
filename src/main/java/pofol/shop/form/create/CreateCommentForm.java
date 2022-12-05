@@ -6,4 +6,5 @@ import lombok.Data;
 public class CreateCommentForm {
     private Long itemId;
     private String content;
+    private int rating;
 }

@@ -22,6 +22,7 @@ public class Comment extends BaseEntity{
     private Member member; //후기 작성자
 
     private String content;
+    private int rating;
     private LocalDateTime lastModifiedDateTime;
 
     //----------필드 끝 / Setter 시작----------//
@@ -31,10 +32,11 @@ public class Comment extends BaseEntity{
         item.getComments().add(this);
     }
     //----------Setter 끝 / 생성자 시작----------//
-    public Comment(String content, Member member, Item item){
+    public Comment(Member member, Item item, String content, int rating){
         this.content = content;
         this.member = member;
         this.item = item;
+        this.rating = rating;
     }
     //----------생성자 끝 / 메소드 시작----------//
     @PrePersist

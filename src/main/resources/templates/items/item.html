@@ -30,34 +30,59 @@
                class="btn btn-primary">장바구니에 추가</a>
         </div>
     </div>
+    <hr style="margin-top:70px">
     <form role="form" th:object="${commentForm}">
         <div class="form-group">
-            <label>후기 쓰기</label>
+            <label style="margin-left:10px">후기 쓰기</label>
             <input id="itemId" type="hidden" th:field="*{itemId}">
-            <input id="commentContent" type="text" th:field="*{content}" class="form-control" placeholder="내용을 입력하세요">
+            <div class="form-group">
+                <textarea id="content" class="form-control" cols="20" rows="3" style="margin:10px;" placeholder="내용을 입력해주세요. (10자이상)"></textarea>
+                <div style="margin:10px 10px 10px 10px;">
+                <input id="rating" type="text" value="5" class="form-control" >
+                </div>
+                <button id="commentSubmit" type="button" th:onclick="addComment()" class="btn btn-primary" style="margin:10px;">작성</button>
+            </div>
         </div>
-        <button type="button" th:onclick="addComment()" class="btn btn-primary">작성</button>
     </form>
+    <hr>
     <div style="margin:5px">
         <span th:text="|후기(|"/>
         <span id="commentsCount" th:text="${#lists.size(comments)}"/>
         <span th:text="|)|"/>
     </div>
-    <div id="commentParent">
-        <div th:each="comment : ${comments}">
-            <hr>
-            <span th:text="${comment.userName} + ' / '"/>
-            <span th:text="${comment.lastModifiedDateTime} + ' / '"/>
-            <span th:text="${comment.content}"/>
-        </div>
-    </div>
-    <hr>
+    <table class="table">
+        <thead>
+        <tr align="center">
+            <th width="30px">dddd<br/>dddd </th>
+            <th width="100px">유저명</th>
+            <th width="170px">작성일자</th>
+            <th width="100px">평점</th>
+            <th>내용</th>
+        </tr>
+        </thead>
+        <tbody id="commentsParent">
+        <tr th:each="comment : ${comments}">
+            <td><img th:src="|/images/${comment.profileImageId}|" width="50" height="50"></td>
+            <td th:text="${comment.userName}"></td>
+            <td th:text="${comment.lastModifiedDateTime}"></td>
+            <td><input name="ratingDisplay" id="ratingDisplay" th:value="${comment.rating}"></td>
+            <td style="white-space: pre-line" th:text="${comment.content}"></td>
+
+        </tr>
+        </tbody>
+    </table>
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-<script th:inline="javascript">
+<script>
+jQuery(document).ready(function () {
+    $(":input[id='ratingDisplay']").each(function () {
+        $(this).rating({min: 0, max: 5, step: 1, size: 'sm', showClear: false, displayOnly: true, showCaption: false});
+    });
+
+    $("#rating").rating({min: 0, max: 5, step: 1, showClear: false, showCaption: false});
+});
+
 function buy(name){
     var orderCount = document.getElementById("count").value;
     var items = new Array();
@@ -137,9 +162,19 @@ var count = document.getElementById("count").value;
 
 function addComment(){
 
+    if($('#content').val().length <= 10) {
+        alert('내용을 10자이상 입력해주세요');
+        return false;
+    }
+
+    if(!confirm('댓글을 작성하시겠습니까?')){
+        return false;
+    }
+
     var form = {
         'itemId' : $('#itemId').val(),
-        'content' : $('#commentContent').val()
+        'content' : $('#content').val(),
+        'rating' : $('#rating').val()
     }
 
     $.ajax({
@@ -153,15 +188,36 @@ function addComment(){
     dataType : 'json',
     data : JSON.stringify(form),
     success : function(res){
-        var div = $('<div>');
-        $('#commentParent').append(div);
-        $('<hr>').appendTo(div);
-        $('<span>').text(res.userName + ' / ').appendTo(div);
-        $('<span>').text(res.lastModifiedDateTime + ' / ').appendTo(div);
-        $('<span>').text(res.content).appendTo(div);
-        $('#commentContent').val('');
+        var tr = $('<tr>');
+        $('#commentsParent').append(tr);
+
+        let imgTd = $('<td>');
+        $('<img>').attr('src', '/images/' + res.profileImageId)
+                .attr('width', '50')
+                .attr('height', '50')
+                .appendTo(imgTd);
+
+        imgTd.appendTo(tr);
+
+        $('<td>').text(res.userName).appendTo(tr);
+        $('<td>').text(res.lastModifiedDateTime).appendTo(tr);
+
+        let ratingTd = $('<td>');
+        let ratingInput = $('<input>');
+        ratingInput.attr('type', 'text')
+                .attr('value', res.rating)
+                .attr('id', 'ratingDisplay')
+                .appendTo(ratingTd);
+
+        ratingTd.appendTo(tr);
+
+        $('<td>').text(res.content).attr('style', 'white-space: pre-line').appendTo(tr);
+
+        $('#content').val('');
         let count = parseInt($('#commentsCount').html());
         $('#commentsCount').html(count + 1);
+
+        ratingInput.rating({min: 0, max: 5, step: 1, size: 'sm', showClear: false, displayOnly: true, showCaption: false});
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");
@@ -170,7 +226,5 @@ function addComment(){
     });
 
 }
-
-
 </script>
 </html>
