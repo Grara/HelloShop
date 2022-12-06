@@ -33,12 +33,24 @@ public class Item extends BaseEntity {
 
     private String itemName;
     private String author;
-    private String isbn;
+    private String descriptionTitle;
     private String description;
+
     private int price;
     private int quantity;
+
+    @Setter(AccessLevel.NONE)
     private int totalSales;
-    private int rating;
+
+    @Setter(AccessLevel.NONE)
+    private int totalRating;
+
+    @Setter(AccessLevel.NONE)
+    private float ratingAverage;
+
+    @Setter(AccessLevel.NONE)
+    private int ratingUserCount;
+
     //----------필드 끝 / 생성자 시작----------//
     public Item(String itemName, int price, int quantity) {
         this.itemName = itemName;
@@ -47,25 +59,37 @@ public class Item extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public Item(Member member, String itemName, int price, int quantity){
+    public Item(Member member, String itemName, int price, int quantity) {
         this.member = member;
         this.itemName = itemName;
         this.author = "흥엉이";
         this.price = price;
         this.quantity = quantity;
     }
+
     //----------생성자 끝 / 메소드 시작----------//
     @PrePersist
     void beforePersist() {
-        if (description == null) description = "";
+        if (this.descriptionTitle == null) this.descriptionTitle ="제목없음";
+        if (this.description == null) this.description = "설명을 입력해주세요";
     }
 
     public void reduceQty(int count) throws NotEnoughQuantityException {
-        if(this.quantity < count) throw new NotEnoughQuantityException("현재 재고가 부족합니다.");
-        else this.quantity -= count;
+        if (this.quantity < count) throw new NotEnoughQuantityException("현재 재고가 부족합니다.");
+        else {
+            this.quantity -= count;
+            this.totalSales += count;
+        }
     }
 
     public void addQty(int count) {
         this.quantity += count;
+    }
+
+    public void addRating(int score) { //평점 추가
+        this.totalRating += score; //총합 추가
+        this.ratingUserCount++; //참여자수 1 증가
+        float temp = (float) totalRating / ratingUserCount; //평점 평균
+        this.ratingAverage = Math.round(temp * 10) / 10.0f; //평점 평균을 1자리까지만
     }
 }

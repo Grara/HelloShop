@@ -6,7 +6,7 @@ import pofol.shop.domain.Member;
 
 import java.util.List;
 
-public interface ItemRepository extends JpaRepository<Item,Long> {
+public interface ItemRepository extends JpaRepository<Item,Long>, ItemQueryRepository {
 
     /**
      * 판매자가 같은 Item들을 찾습니다.

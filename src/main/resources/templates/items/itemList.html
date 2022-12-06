@@ -1,28 +1,119 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head th:replace="fragments/header :: header"/>
+<style>
+  .mb-2{
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+
+
+
+</style>
+
 <body>
 <div class="container">
-  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-  <div>
-    <table class="table table-striped">
-      <tr>
-        <th>#</th>
-        <th>상품명</th>
-        <th>저자</th>
-        <th>가격</th>
-      </tr>
-      <tr th:each="item : ${items}">
-        <td th:text="${item.id}"></td>
-        <td>
-          <a th:text="${item.itemName}" th:href="@{/items/{id}(id = ${item.id})}"></a>
-        </td>
-        <td th:text="${item.author}"></td>
-        <td th:text="${item.price}"></td>
-      </tr>
-    </table>
-  </div>
-  <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <div>
+        <form th:object="${search}">
+            <div class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" th:field="*{itemName}" class="formcontrol" placeholder="상품명"/>
+                </div>
+                <div class="form-group mb-2">
+                    <input type="text" th:field="*{author}" class="formcontrol" placeholder="저자명"/>
+                </div>
+            </div>
+            <div class="form-inline">
+                <div class="form-group mb-2">
+                    <label>최소 가격</label>
+                    <input type="number" min="0" th:field="*{minPrice}" class="formcontrol"/>
+                </div>
+                <div class="form-group mb-2">
+                    <label>최대 가격</label>
+                    <input type="number" min="0" th:field="*{maxPrice}" class="formcontrol"/>
+                </div>
+                <div class="form-group mb-2">
+                    <label>정렬기준</label>
+                    <select th:field="*{sortOption}">
+                        <option th:each="option : ${T(pofol.shop.dto.ItemSortOption).values()}" th:value="${option}"
+                                th:text="${option.getValue()}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-2">검색</button>
+        </form>
+    </div>
+
+    <div>
+        <table class="table table-striped">
+            <tr>
+                <th>#</th>
+                <th>상품명</th>
+                <th>저자</th>
+                <th>가격</th>
+            </tr>
+            <tr th:each="item : ${items}">
+                <td th:text="${item.id}"></td>
+                <td>
+                    <a th:text="${item.name}" th:href="@{/items/{id}(id = ${item.id})}"></a>
+                </td>
+                <td th:text="${item.author}"></td>
+                <td th:text="${item.price}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div align="center">
+        <a th:if="${pageStart} > 10"
+           th:href="@{/items(
+                            page=${pageStart - 2},
+                            itemName=${search.itemName},
+                            author=${search.author},
+                            minPrice=${search.minPrice},
+                            maxPrice=${search.maxPrice},
+                            sortOption=${search.sortOption}
+                            )}"
+           th:text="|<<|"
+           class="btn btn-info"
+        ></a>
+
+        <span>
+                <a style="margin:3px;"
+                   th:each="num : ${#numbers.sequence( __${pageStart}__ , __${pageEnd}__ )}"
+                   th:with="isCur = ${ __${num}__ == __${curNumber}__ }"
+                   type="button"
+                   th:class="${isCur ? 'btn btn-primary' : 'btn btn-info'}"
+                   th:text="${num}"
+                   th:href="@{/items(
+                           page=${num-1},
+                           itemName=${search.itemName},
+                           author=${search.author},
+                           minPrice=${search.minPrice},
+                           maxPrice=${search.maxPrice},
+                           sortOption=${search.sortOption}
+                           )}"
+                ></a>
+        </span>
+
+        <a th:if="${pageEnd} < ${totalPage}"
+           th:href="@{/items(
+                           page=${pageEnd},
+                           itemName=${search.itemName},
+                           author=${search.author},
+                           minPrice=${search.minPrice},
+                           maxPrice=${search.maxPrice},
+                           sortOption=${search.sortOption}
+                           )}"
+           th:text="|>>|"
+           class="btn btn-info"
+        ></a>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
 </html>

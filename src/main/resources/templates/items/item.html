@@ -1,22 +1,53 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"/>
+<style>
+.item-info{
+    float:left;
+    width:50%;
+}
+
+.item-info-child{
+    margin-bottom:70px;
+}
+
+.item-text{
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+
+</style>
+
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-    <div>
-        <img th:src="|/images/${fileId}|" width="150" height="150">
+    <div style="height:500px;">
+        <div class="item-info" align="center">
+            <img th:src="|/images/${fileId}|" width="300" height="450">
+        </div>
+        <div class="item-info">
+            <input type="hidden" readonly th:value="${itemDto.id}"/>
+            <div class="item-info-child">
+                <p class="item-text" th:text="${itemDto.name}" th:value="${itemDto.name}"/>
+                <hr>
+            </div>
+            <div class="item-info-child">
+                <p class="item-text" th:text="'저자 : ' + ${itemDto.author}"/>
+                <hr>
+            </div>
+            <div class="item-info-child" align="right">
+                <p class="item-text" th:text="|${itemDto.price} 원|" th:value="${itemDto.price}"/>
+                <hr>
+            </div>
+            <div class="item-info-child">
+                <label class="item-text" th:text="|평점 ${itemDto.rating}|"></label>
+                <input type="number" id="itemRating" th:value="${itemDto.rating}">
+            </div>
+        </div>
     </div>
-    <div id="itemAttr">
-        <input type="hidden" readonly th:value="${itemForm.id}"/>
-        <p th:text="'상품명 : ' + ${itemForm.itemName}" th:value="${itemForm.itemName}"/>
-        <p th:text="'저자 : ' + ${itemForm.author}"/>
-        <p th:text="'설명 : ' + ${itemForm.description}"/>
-        <p th:text="'가격 : ' + ${itemForm.price}" th:value="${itemForm.price}"/>
-    </div>
-
-    <div align="center">
-        <div>
+    <div align="center" style="height:120px;">
+        <div style="height:60px;">
             <input type="number" style="width:50px" min="1" id="count" value="1">
         </div>
         <div style="float: left; width: 50%; padding:10px;" align="right">
@@ -25,22 +56,32 @@
                class="btn btn-primary">바로 구매</a>
         </div>
         <div style="float: left; width: 50%; padding:10px;" align="left">
-            <a href="#" th:data-user="${userName}" th:data-id="${itemForm.id}"
+            <a href="#" th:data-user="${userName}" th:data-id="${itemDto.id}"
                th:onClick="addItemToCart(this.getAttribute('data-user'), this.getAttribute('data-id'))"
                class="btn btn-primary">장바구니에 추가</a>
         </div>
     </div>
+    <div>
+        <hr>
+        <p align="center" class="item-text" th:text="${itemDto.descriptionTitle}"></p>
+        <hr>
+        <p style="white-space: pre-line" th:text="${itemDto.description}"></p>
+    </div>
+
     <hr style="margin-top:70px">
     <form role="form" th:object="${commentForm}">
         <div class="form-group">
             <label style="margin-left:10px">후기 쓰기</label>
             <input id="itemId" type="hidden" th:field="*{itemId}">
             <div class="form-group">
-                <textarea id="content" class="form-control" cols="20" rows="3" style="margin:10px;" placeholder="내용을 입력해주세요. (10자이상)"></textarea>
+                <textarea id="content" class="form-control" cols="20" rows="3" style="margin:10px;"
+                          placeholder="내용을 입력해주세요. (10자이상)"></textarea>
                 <div style="margin:10px 10px 10px 10px;">
-                <input id="rating" type="text" value="5" class="form-control" >
+                    <input id="rating" type="text" value="5" class="form-control">
                 </div>
-                <button id="commentSubmit" type="button" th:onclick="addComment()" class="btn btn-primary" style="margin:10px;">작성</button>
+                <button id="commentSubmit" type="button" th:onclick="addComment()" class="btn btn-primary"
+                        style="margin:10px;">작성
+                </button>
             </div>
         </div>
     </form>
@@ -53,7 +94,7 @@
     <table class="table">
         <thead>
         <tr align="center">
-            <th width="30px">dddd<br/>dddd </th>
+            <th width="30px"></th>
             <th width="100px">유저명</th>
             <th width="170px">작성일자</th>
             <th width="100px">평점</th>
@@ -81,6 +122,7 @@ jQuery(document).ready(function () {
     });
 
     $("#rating").rating({min: 0, max: 5, step: 1, showClear: false, showCaption: false});
+    $("#itemRating").rating({min: 0, max: 5, step: 0.1, showClear: false, showCaption: false, displayOnly: true});
 });
 
 function buy(name){
@@ -226,5 +268,7 @@ function addComment(){
     });
 
 }
+
+
 </script>
 </html>

@@ -26,9 +26,12 @@ public class CommentApiController {
 
     @PostMapping("/comments/new") //Item 상세페이지 Comment 생성 요청
     public ResponseEntity<CommentDto> createComment(@RequestBody CreateCommentForm form, Principal principal) {
-        System.out.println(form.getContent());
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
+
         Item item = itemRepository.findById(form.getItemId()).orElseThrow();
+        item.addRating(form.getRating());
+        itemRepository.save(item);
+
         Comment comment = new Comment(member, item, form.getContent(), form.getRating());
         commentRepository.save(comment);
         CommentDto dto = new CommentDto(comment);

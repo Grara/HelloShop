@@ -13,6 +13,7 @@ public class CreateItemForm {
     private String itemName;
     @NotEmpty(message = "저자는 필수입니다")
     private String author;
+    private String descriptionTitle;
     private String description;
     @Min(value = 0, message = "가격은 0이상이어야 합니다")
     private int price;

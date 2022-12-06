@@ -1,6 +1,8 @@
 package pofol.shop.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,6 +11,8 @@ import pofol.shop.config.DefaultValue;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.enums.Role;
 import pofol.shop.dto.CommentDto;
+import pofol.shop.dto.ItemDto;
+import pofol.shop.dto.ItemSearchCondition;
 import pofol.shop.form.create.CreateCommentForm;
 import pofol.shop.form.create.CreateItemForm;
 import pofol.shop.domain.Comment;
@@ -39,9 +43,21 @@ public class ItemController {
     private final MemberRepository memberRepository;
 
     @GetMapping("/items") //Item 리스트
-    public String list(Model model){
-        List<Item> items = itemRepository.findAll();
-        model.addAttribute("items", items);
+    public String list(@ModelAttribute ItemSearchCondition condition, Model model, Pageable pageable){
+        Page<ItemDto> results = itemRepository.searchWithPage(condition, pageable);
+
+        int pageStart = results.getNumber() / 10 * 10 + 1;
+
+        int pageEnd = Math.min(pageStart + 9, results.getTotalPages());
+        if(pageEnd <= 0) pageEnd = 1;
+
+        model.addAttribute("totalPage", results.getTotalPages());
+        model.addAttribute("pageStart", pageStart);
+        model.addAttribute("pageEnd", pageEnd);
+        model.addAttribute("curNumber", results.getNumber() + 1); //현재 페이지 번호
+        model.addAttribute("search", condition);
+        model.addAttribute("items", results.getContent());
+
         return "items/itemList";
     }
 
@@ -61,6 +77,7 @@ public class ItemController {
         Item item = new Item();
         item.setItemName(form.getItemName());
         item.setAuthor(form.getAuthor());
+        item.setDescriptionTitle(form.getDescriptionTitle());
         item.setDescription(form.getDescription());
         item.setPrice(form.getPrice());
         item.setQuantity(form.getQuantity());
@@ -116,16 +133,9 @@ public class ItemController {
     public String item(@PathVariable("itemId") Long id, Model model, Principal principal) {
 
         Item item = itemRepository.findById(id).orElseThrow();
-        CreateItemForm itemForm = new CreateItemForm();
+        ItemDto itemDto = new ItemDto(item);
 
-        //아이템 정보 데이터
-        itemForm.setId(item.getId());
-        itemForm.setItemName(item.getItemName());
-        itemForm.setAuthor(item.getAuthor());
-        itemForm.setDescription(item.getDescription());
-        itemForm.setPrice(item.getPrice());
-        itemForm.setQuantity(item.getQuantity());
-        model.addAttribute("itemForm", itemForm);
+        model.addAttribute("itemDto", itemDto);
 
         //로그인을 안했으면 username = Guest
         String userName = principal != null ? principal.getName() : "Guest";
