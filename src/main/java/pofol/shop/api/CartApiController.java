@@ -1,6 +1,7 @@
 package pofol.shop.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,13 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 import pofol.shop.domain.Cart;
 import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
+import pofol.shop.dto.ApiResponseBody;
 import pofol.shop.form.create.CreateCartForm;
 import pofol.shop.repository.CartRepository;
 import pofol.shop.repository.ItemRepository;
 import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.CartService;
-import pofol.shop.service.ItemService;
-import pofol.shop.service.MemberService;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public class CartApiController {
     private final ItemRepository itemRepository;
 
     @PostMapping("/cart/new") //Cart 생성 요청
-    public boolean addCart(@RequestBody CreateCartForm form) {
+    public ResponseEntity<ApiResponseBody<Boolean>> addCart(@RequestBody CreateCartForm form) {
         try {
             Member member = memberRepository.findByUserName(form.getUserName()).orElseThrow();
             Item item = itemRepository.findById(form.getItemId()).orElseThrow();
@@ -46,20 +46,34 @@ public class CartApiController {
                 existingCart.addCount(form.getCount());
                 cartRepository.save(existingCart);
             }
-            return true;
+            return ResponseEntity
+                    .ok()
+                    .body(new ApiResponseBody<>(HttpStatus.OK, "장바구니 추가 완료", true));
 
         } catch (Exception e) {
-            return false;
+            return ResponseEntity
+                    .internalServerError()
+                    .body(new ApiResponseBody<>(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), false));
         }
     }
 
     @PostMapping("/cart/delete") //Cart 삭제 요청
-    public boolean delete(@RequestBody List<Long> list){
-        //전달받은 Cart의 id들을 참고하여 해당 Cart들을 삭제
-        for(Long cartId : list){
-            Cart cart = cartRepository.findById(cartId).orElseThrow();
-            cartRepository.delete(cart);
+    public ResponseEntity<ApiResponseBody<Boolean>> delete(@RequestBody List<Long> list) {
+
+        try {
+            //전달받은 Cart의 id들을 참고하여 해당 Cart들을 삭제
+            for (Long cartId : list) {
+                Cart cart = cartRepository.findById(cartId).orElseThrow();
+                cartRepository.delete(cart);
+            }
+            return ResponseEntity
+                    .ok()
+                    .body(new ApiResponseBody<>(HttpStatus.OK, "장바구니 삭제 성공", true));
+
+        }catch (Exception e){
+            return ResponseEntity
+                    .internalServerError()
+                    .body(new ApiResponseBody<>(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), false));
         }
-        return true;
     }
 }
