@@ -30,4 +30,5 @@ public class PersonalInfo {
         this.age = age;
         this.sex = sex;
     }
+
 }

@@ -1,8 +1,10 @@
 package pofol.shop.domain;
 
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;
 import pofol.shop.domain.enums.Role;
@@ -31,7 +33,7 @@ public class Member extends BaseEntity{
     private PersonalInfo personalInfo;
     @Enumerated(EnumType.STRING)
     private Role role; //권한
-
+    private String email;
 
     //----------필드 끝 / 생성자 시작----------//
     public Member(String userName, String password, Address address, PersonalInfo personalInfo) {
@@ -56,5 +58,25 @@ public class Member extends BaseEntity{
         this.address = new Address("서울", "신림", 1010);
         this.personalInfo = new PersonalInfo("노민준", 28, Sex.MALE);
         this.role = role;
+    }
+
+    @Builder
+    public Member(Long id, FileEntity profileImage, String userName, String password, Address address, PersonalInfo personalInfo, Role role, String email) {
+        this.id = id;
+        this.profileImage = profileImage;
+        this.userName = userName;
+        this.password = password;
+        this.address = address;
+        this.personalInfo = personalInfo;
+        this.role = role;
+        this.email = email;
+    }
+
+    //----------생성자 끝 / 메소드 시작----------//
+    public Member update(String userName, String email){
+        this.userName = userName;
+        this.email = email;
+
+        return this;
     }
 }

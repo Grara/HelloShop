@@ -14,4 +14,6 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberQue
      * @return 찾아낸 Member (Optional)
      */
     Optional<Member> findByUserName(String username);
+
+    Optional<Member> findByEmail(String email);
 }

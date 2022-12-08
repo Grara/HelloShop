@@ -33,7 +33,6 @@ public class MemberService implements UserDetailsService {
     private final FileService fileService;
     private final FileRepository fileRepository;
 
-
     /**
      * Member를 새로 가입시키고 DB에 저장합니다.
      * @param member 가입시킬 Member
@@ -77,6 +76,7 @@ public class MemberService implements UserDetailsService {
         FileEntity defaultProfile = fileRepository.findById(DefaultValue.DEFAULT_PROFILE_IMAGE_ID).orElseThrow();
         member.setProfileImage(defaultProfile);
         memberRepository.save(member);
+        System.out.println(passwordEncoder.getClass().getName());
         return member.getId();
     }
 

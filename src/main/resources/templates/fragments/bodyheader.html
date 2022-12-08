@@ -32,6 +32,9 @@
       <a href="/admin">Admin Menu</a>
     </li>
 
+    <li sec:authorize="!isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+      <a href="/oauth2/authorization/google">구글~</a>
+    </li>
 
 
 
