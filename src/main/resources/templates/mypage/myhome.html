@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
-  <title>Hello</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <style>
   .profile {
@@ -11,39 +11,41 @@
   .btn{
     width: 300px;
   }
+
 </style>
 
 <body>
 <div class="container">
-  <div th:replace="fragments/bodyHeader :: bodyHeader" />
-  <div class="jumbotron">
-    <h1>My Page</h1>
-    <div class="profile">
-      <img id="img" th:src="|/images/${fileId}|" width="100" height="100">
-    </div>
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div class="jumbotron">
+        <h1>My Page</h1>
+        <div class="profile">
+            <img id="img" th:src="|/images/${fileId}|" width="100" height="100">
+        </div>
 
-    <p>
-      <a href="#" class="btn btn-lg btn-primary" onclick="javascript:openPop();">프로필 사진 수정</a>
-    </p>
-    <p>
-      <a class="btn btn-lg btn-secondary" href="/mypage/details">상세 정보</a>
-    </p>
-    <p>
-      <a class="btn btn-lg btn-dark" href="/mypage/password-edit">비밀번호 변경</a>
-    </p>
-    <p>
-      <a class="btn btn-lg btn-info" href="/mypage/myitems">판매상품 관리</a>
-    </p>
-    <p>
-      <a class="btn btn-lg btn-info" href="/mypage/myorders">주문내역</a>
-    </p>
-  </div>
-  <div th:replace="fragments/footer :: footer" />
+        <p>
+            <a href="#" class="btn btn-lg btn-primary" onclick="javascript:openPop();">프로필 사진 수정</a>
+        </p>
+        <p>
+            <a class="btn btn-lg btn-secondary" href="/mypage/details">상세 정보</a>
+        </p>
+        <p>
+            <a class="btn btn-lg btn-dark" href="/mypage/password-edit">비밀번호 변경</a>
+        </p>
+        <p>
+            <a class="btn btn-lg btn-info" href="/mypage/myitems">판매상품 관리</a>
+        </p>
+        <p>
+            <a class="btn btn-lg btn-info" href="/mypage/myorders">주문내역</a>
+        </p>
+    </div>
+    <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
 <script>
 function openPop(){
 var popup = window.open("/mypage/details/profile/update", 'pop', 'width=600px, height=300px, resizable=no, scrollbars=yes');
 }
+
 </script>
 </html>

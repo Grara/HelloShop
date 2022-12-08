@@ -76,7 +76,6 @@ public class MemberService implements UserDetailsService {
         FileEntity defaultProfile = fileRepository.findById(DefaultValue.DEFAULT_PROFILE_IMAGE_ID).orElseThrow();
         member.setProfileImage(defaultProfile);
         memberRepository.save(member);
-        System.out.println(passwordEncoder.getClass().getName());
         return member.getId();
     }
 

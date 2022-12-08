@@ -5,6 +5,7 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
+    <!--검색 조건-->
     <div>
         <form th:object="${search}" class="form-inline">
             <div class="form-group mx-sm-1 mb-2">
@@ -26,7 +27,9 @@
             <button type="submit" class="btn btn-primary mb-2">검색</button>
         </form>
     </div>
+    <!--/검색조건-->
 
+    <!--주문목록-->
     <table class="table table-striped">
         <thead>
         <tr>
@@ -50,8 +53,13 @@
         </tr>
         </tbody>
     </table>
+    <!--주문목록-->
 
+    <!--페이지 이동 버튼 목록-->
     <div align="center">
+
+        <!--현재 시작번호에서-1 페이지로 이동-->
+        <!--현재 시작번호가 10보다 크면 표시함-->
         <a th:if="${pageStart} > 10"
            th:text="|<<|"
            class="btn btn-info"
@@ -64,6 +72,7 @@
                    )}"
         ></a>
 
+        <!--페이지 번호 목록-->
         <span>
                 <a style="margin:3px;"
                    th:each="num : ${#numbers.sequence( __${pageStart}__ , __${pageEnd}__ )}"
@@ -79,7 +88,10 @@
                            )}"
                 ></a>
         </span>
+        <!--/페이지 번호 목록-->
 
+        <!--현재 마지막번호+1 페이지로 이동-->
+        <!--현재 마지막 번호가 전체에서 마지막 페이지면 표시안함-->
         <a th:if="${pageEnd} < ${totalPage}"
            th:text="|>>|"
            class="btn btn-info"
@@ -92,6 +104,7 @@
                    )}"
         ></a>
     </div>
+    <!--/페이지 이동 버튼 목록-->
 
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->

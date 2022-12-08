@@ -21,10 +21,12 @@ width: 90%;
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
     <div class="parent" style="height:50px" align="right">
         <button th:if="${order.status.name() == 'ORDER'}"
                 type="button" class="btn btn-primary" th:onClick="orderCancel()">주문 취소</button>
     </div>
+
     <div class="form-group">
         <label>주문번호</label>
         <input type="text" class="form-control" id="orderId" name="orderId" th:value="${order.id}" readonly>
@@ -146,7 +148,8 @@ function orderCancel(){
         },
         dataType : 'text',
         data : orderId,
-        success : function(res){
+        success : function(resOrigin){
+            let res = JSON.parse(resOrigin);
             window.location.href = res.data;
         },
         failure : function(){
@@ -156,9 +159,6 @@ function orderCancel(){
         });
 
     }
-
-
-
 }
 
 </script>

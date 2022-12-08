@@ -31,7 +31,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository{
     public List<Order> search(OrderSearchCondition condition) {
         return queryFactory.select(order)
                 .from(order)
-                .leftJoin(order.member, member)
+                .leftJoin(order.member, member).fetchJoin()
                 .where(
                         statusEq(condition.getOrderStatus()),
                         userNameContains(condition.getUserName()),
@@ -46,7 +46,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository{
         //실제 주문 목록용 쿼리
         List<Order> content = queryFactory
                 .selectFrom(order)
-                .leftJoin(order.member, member)
+                .leftJoin(order.member, member).fetchJoin()
                 .where(
                         statusEq(condition.getOrderStatus()),
                         userNameContains(condition.getUserName()),

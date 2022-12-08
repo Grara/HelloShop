@@ -13,6 +13,8 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <!--폼 시작-->
     <form id="form" action="/members/new" th:object="${createMemberForm}" method="post">
         <div class="form-group">
             <label>회원명</label>
@@ -47,6 +49,7 @@
             <label>나이</label>
             <input type="number" th:field="*{age}" class="form-control" placeholder="나이를 입력하세요">
         </div>
+        <!--성별-->
         <div class="form-group mx-sm-1 mb-2">
             <select th:field="*{sex}" class="form-control">
                 <option th:each="status : ${T(pofol.shop.domain.enums.Sex).values()}"
@@ -73,18 +76,24 @@
         <a href="#" class="btn btn-primary" th:onClick="javascript:join();">
             회원 가입</a>
     </form>
+    <!--폼 종료-->
+
     <br/>
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
 
 <script>
-$('#userName').on('change', function() {
+
+
+$('#userName').on('change', function() { //회원명입력 이벤트 등록
+
+    //회원명이 변경되면 중복확인 초기화
     $('#duplCheck').val(false);
     $('#duplMsg').html('중복확인을 해주세요');
 });
 
-function join(){
+function join(){ //회원가입 폼 제출
     if($('#duplCheck').val()=='false'){
         alert('회원명 중복확인을 해주세요');
         return false;
@@ -93,11 +102,14 @@ function join(){
 }
 
 
-function duplicateCheck(){
+function duplicateCheck(){ //회원명 중복체크
+
     var username = $('#userName').val();
+
+    //입력을 안했을 경우
     if(username == undefined || username == null || username.length == 0){
         $('#duplCheck').val(false);
-        $('#duplMsg').html('사용불가능한 회원명입니다.');
+        $('#duplMsg').html('회원명을 입력해주세요');
         return false;
     }
 
@@ -112,9 +124,9 @@ function duplicateCheck(){
         dataType : 'text',
         data : username,
         success : function(resOrigin){
-            let res = JSON.parse(resOrigin);
-            $('#duplCheck').val(res.data);
-            $('#duplMsg').html(res.message);
+            let res = JSON.parse(resOrigin); //데이터 타입이 text라 parse해줘야함
+            $('#duplCheck').val(res.data); //회원명 사용가능 여부
+            $('#duplMsg').html(res.message); //응답 메세지
         },
         error : function(res){
             alert('에러가 발생했습니다');

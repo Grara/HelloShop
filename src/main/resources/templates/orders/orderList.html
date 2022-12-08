@@ -4,58 +4,68 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <!--검색조건-->
     <div>
-        <div>
-            <form th:object="${search}" class="form-inline">
-                <div class="form-group mb-2">
-                    <input type="text" th:field="*{userName}" class="formcontrol" placeholder="회원명"/>
-                </div>
-                <div class="form-group mx-sm-1 mb-2">
-                    <select th:field="*{orderStatus}" class="form-control">
-                        <option value="">주문상태</option>
-                        <option th:each="status : ${T(pofol.shop.domain.enums.OrderStatus).values()}"
-                                th:value="${status}"
-                                th:text="${status}">option
-                        </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <input type="date" th:field="*{startDateInput}" class="formcontrol"/>
-                </div>
-                <span>~</span>
-                <div class="form-group">
-                    <input type="date" th:field="*{endDateInput}" class="formcontrol"/>
-                </div>
+        <form th:object="${search}" class="form-inline">
+            <div class="form-group mb-2">
+                <input type="text" th:field="*{userName}" class="formcontrol" placeholder="회원명"/>
+            </div>
+            <div class="form-group mx-sm-1 mb-2">
+                <select th:field="*{orderStatus}" class="form-control">
+                    <option value="">주문상태</option>
+                    <option th:each="status : ${T(pofol.shop.domain.enums.OrderStatus).values()}"
+                            th:value="${status}"
+                            th:text="${status}">option
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="date" th:field="*{startDateInput}" class="formcontrol"/>
+            </div>
+            <span>~</span>
+            <div class="form-group">
+                <input type="date" th:field="*{endDateInput}" class="formcontrol"/>
+            </div>
 
 
-                <button type="submit" class="btn btn-primary mb-2">검색</button>
-            </form>
-        </div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <td>주문번호</td>
-                <td>결제금액</td>
-                <td>일시</td>
-                <td>주문상태</td>
-                <td></td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${orders}">
-                <td th:text="${order.id}"></td>
-                <td th:text="${order.orderTotalPrice}"></td>
-                <td th:text="${order.orderDate}"></td>
-                <td th:text="${order.status}"></td>
-                <td>
-                    <a th:href="|/orders/${order.id}|" class="btn btn-primary">상세정보</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <button type="submit" class="btn btn-primary mb-2">검색</button>
+        </form>
     </div>
+    <!--/검색조건-->
 
+    <!--주문 목록-->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>주문번호</td>
+            <td>주문한 회원명</td>
+            <td>결제금액</td>
+            <td>일시</td>
+            <td>주문상태</td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.userName}"></td>
+            <td th:text="${order.orderTotalPrice}"></td>
+            <td th:text="${order.orderDate}"></td>
+            <td th:text="${order.status}"></td>
+            <td>
+                <a th:href="|/orders/${order.id}|" class="btn btn-primary">상세정보</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!--/주문 목록-->
+
+    <!--페이지 이동 버튼 목록-->
     <div align="center">
+
+        <!--현재 시작번호에서-1 페이지로 이동-->
+        <!--현재 시작번호가 10보다 크면 표시함-->
         <a th:if="${pageStart} > 10"
            th:text="|<<|"
            class="btn btn-info"
@@ -69,6 +79,7 @@
                    )}"
         ></a>
 
+        <!--페이지 번호 목록-->
         <span>
                 <a style="margin:3px;"
                    th:each="num : ${#numbers.sequence( __${pageStart}__ , __${pageEnd}__ )}"
@@ -86,6 +97,8 @@
                 ></a>
         </span>
 
+        <!--현재 마지막번호+1 페이지로 이동-->
+        <!--현재 마지막 번호가 전체에서 마지막 페이지면 표시안함-->
         <a th:if="${pageEnd} < ${totalPage}"
            th:text="|>>|"
            class="btn btn-info"
@@ -98,7 +111,9 @@
                    endDateInput=${search.endDateInput}
                    )}"
         ></a>
+
     </div>
+    <!--/페이지 이동 버튼 목록-->
 
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->

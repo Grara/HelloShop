@@ -11,12 +11,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class OrderDto {
     private Long id;
+    private String userName;
     private int orderTotalPrice;
     private LocalDateTime orderDate;
     private OrderStatus status;
 
     public OrderDto(Order order){
         this.id = order.getId();
+        this.userName = order.getMember().getUserName();
         this.orderTotalPrice = order.getOrderTotalPrice();
         this.orderDate = order.getOrderDate();
         this.status = order.getStatus();

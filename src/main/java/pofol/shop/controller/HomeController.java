@@ -27,9 +27,7 @@ public class HomeController {
 
     @GetMapping("/test")
     public String test1(Model model){
-        model.addAttribute("a", 10);
-        model.addAttribute("b", 11);
-        model.addAttribute("pageStart", 1);
+        model.addAttribute("a", "/orders");
         return "test";
     }
 

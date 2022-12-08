@@ -12,6 +12,8 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <!--Form 시작-->
     <form role="form" action="/items/new" th:object="${createItemForm}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label>상품명</label>
@@ -56,8 +58,8 @@
         <div style="padding:10px">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-
     </form>
+    <!--Form종료-->
     <br/>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
@@ -65,27 +67,28 @@
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script>
-function readURL(input) {
-		if (input.files && input.files[0]) {
-			var reader = new FileReader();
-			reader.onload = function(e) {
-				$('#img').attr('src', e.target.result);
-			}
-			reader.readAsDataURL(input.files[0]);
-		}
-	}
+function readURL(input) { //이미지를 등록하면 미리보기 이미지 변경
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#img').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
-	$(":input[name='thumbnail']").change(function() {
-		if( $(":input[name='thumbnail']").val() == '' ) {
-			$('#img').attr('src' , '/images/2');
-		}
-		$('#img').css({ 'display' : '' });
-		readURL(this);
-	});
+//파일업로드 이벤트 등록
+$(":input[name='thumbnail']").change(function() {
+    if( $(":input[name='thumbnail']").val() == '' ) {
+        $('#img').attr('src' , '/images/2');
+    }
+    $('#img').css({ 'display' : '' });
+    readURL(this);
+});
 
-	function imgAreaError(){
-		$('#img').css({ 'display' : 'none' });
-	}
+function imgAreaError(){
+    $('#img').css({ 'display' : 'none' });
+}
 
 </script>
 </html>

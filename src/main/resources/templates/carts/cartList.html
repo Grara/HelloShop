@@ -10,11 +10,14 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <!--선택버튼-->
     <div class="parent" style="height:50px" align="right">
         <button type="button" class="btn btn-primary" th:onClick="javascript:deleteChecked();">선택한 항목 삭제</button>
         <label for="allSelect">전체선택</label>
         <input id="allSelect" name="allSelect" type="checkbox" onclick="javascript:allSelect(this);" checked>
     </div>
+
+    <!--장바구니 목록-->
     <table class="table table-striped">
         <tr class="table-primary">
             <th></th>
@@ -34,21 +37,27 @@
                        onclick="javascript:itemSelect();"></td>
         </tr>
     </table>
+
+    <!--주문이동 버튼-->
     <button type="button" th:data-username="${username}"
        class="btn btn-primary"
        th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</button>
+
+
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script>
-  function buy(param){
-    var userName = param;
-    var items = new Array();
+  function buy(userName){ //주문화면으로 이동
+
+    var items = new Array(); //아이템 배열
+
+    //
     $('[name=item]').each(function(){
       var checkBox = $(this).children().last().children();
-      var isChecked = checkBox.is(':checked');
+
+      //해당 아이템을 선택했는지 확인인
+      var isChecked = chckBox.is(':checked');
       if(isChecked){
         var item = {};
         item.cartId = checkBox.val();
@@ -61,6 +70,7 @@
       }
     });
 
+    //주문시트 생성 폼
     var form = {
       "userName" : userName,
       "items" : items
@@ -76,8 +86,11 @@
     },
     dataType : 'json',
     data : JSON.stringify(form),
-    success : function(res){
-        window.location.href = 'http://localhost:8080/orderSheet/' + res;
+
+    //주문시트 생성이 성공하면 해당 주문시트 URL로 이동
+    success : function(resOrigin){
+        let res = JSON.parse(resOrigin);
+        window.location.href = 'http://localhost:8080/orderSheet/' + res.data;
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");
@@ -87,7 +100,8 @@
     return false;
 }
 
-function allSelect(chk){
+
+function allSelect(chk){ //전체 선택 체크 이벤트
   if(chk.checked){
     $('input:checkbox').prop('checked',true);
   }
@@ -96,24 +110,24 @@ function allSelect(chk){
   }
 }
 
-function itemSelect(){
+function itemSelect(){ //개별 아이템 선택 체크 이벤트
   var allSelected = true;
   $('[id=itemCheck]').each(function(){
-    if(!$(this).prop('checked')) {
+    if(!$(this).prop('checked')) { //하나라도 체크를 안했으면 전체 선택 체크 해제
       $('#allSelect').prop('checked', false);
       allSelected = false;
     }
   });
 
-  if(allSelected) $('#allSelect').prop('checked', true);
+  if(allSelected) $('#allSelect').prop('checked', true); //모든 아이템을 체크했으면 전체 선택 체크
 
 }
 
-function deleteChecked(){
+function deleteChecked(){ //선택한 아이템 삭제
 
   var deleteList = new Array();
 
-  $('[name=item]').each(function(){
+  $('[name=item]').each(function(){ //선택한 아이템을 배열에 넣음
     let checkBox = $(this).children().last().children();
     let isChecked = checkBox.is(':checked');
 
@@ -137,13 +151,12 @@ function deleteChecked(){
     dataType : 'json',
     data : JSON.stringify(deleteList),
     success : function(res){
-        if(res){
+        if(res.data){ //응답이 true면 선택했던 아이템들 삭제
           $('[name=item]').each(function(){
-            let checkBox = $(this).children().last().children();
-            let isChecked = checkBox.is(':checked');
-
-            if(isChecked){
-                $(this).remove();
+              let checkBox = $(this).children().last().children();
+              let isChecked = checkBox.is(':checked');
+              if(isChecked){
+                    $(this).remove();
               }
           });
         }

@@ -59,7 +59,6 @@ public class CartApiController {
 
     @PostMapping("/cart/delete") //Cart 삭제 요청
     public ResponseEntity<ApiResponseBody<Boolean>> delete(@RequestBody List<Long> list) {
-
         try {
             //전달받은 Cart의 id들을 참고하여 해당 Cart들을 삭제
             for (Long cartId : list) {

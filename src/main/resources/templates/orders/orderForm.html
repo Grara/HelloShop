@@ -33,6 +33,7 @@ input::-webkit-inner-spin-button {
         <span><h3>배송정보 입력</h3></span>
     </div>
 
+    <!--입력 폼-->
     <div>
     <form action="#" th:action="@{/orders/new}" th:object="${createOrderForm}" method="post">
         <input type="hidden" th:field="*{sheetId}">
@@ -117,6 +118,8 @@ input::-webkit-inner-spin-button {
         <button type="submit" class="btn btn-primary">주문</button>
     </form>
     </div>
+    <!--/입력 폼-->
+
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>

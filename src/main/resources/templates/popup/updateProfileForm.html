@@ -31,7 +31,7 @@ function closeThis() {
     window.close();
 }
 
-function readURL(input) {
+function readURL(input) { //미리보기 이미지 변경
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
@@ -41,7 +41,7 @@ function readURL(input) {
     }
 }
 
-$("#uploadImg").change(function() {
+$("#uploadImg").change(function() { //파일 업로드 이벤트 등록
     if( $("#uploadImg").val() == '' ) {
         $('#img').attr('src' , '/images/1');
     }

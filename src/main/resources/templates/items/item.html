@@ -22,7 +22,12 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <!--상품 이미지와 정보-->
     <div style="height:500px;">
+        <input id="data-for-order" type="hidden" th:data-name="${itemDto.name}"
+               th:data-price="${itemDto.price}"
+               th:data-id="${itemDto.id}">
+
         <div class="item-info" align="center">
             <img th:src="|/images/${fileId}|" width="300" height="450">
         </div>
@@ -46,6 +51,9 @@
             </div>
         </div>
     </div>
+    <!--/상품 이미지와 제목, 가격, 평점 정보-->
+
+    <!--수량선택과 바로구매, 장바구니 추가 버튼-->
     <div align="center" style="height:120px;">
         <div style="height:60px;">
             <input type="number" style="width:50px" min="1" id="count" value="1">
@@ -61,13 +69,18 @@
                class="btn btn-primary">장바구니에 추가</a>
         </div>
     </div>
+    <!--/수량선택과 바로구매, 장바구니 추가 버튼-->
+
+    <!--상품 설명-->
     <div>
         <hr>
         <p align="center" class="item-text" th:text="${itemDto.descriptionTitle}"></p>
         <hr>
         <p style="white-space: pre-line" th:text="${itemDto.description}"></p>
     </div>
+    <!--상품 설명-->
 
+    <!--후기 입력 Form-->
     <hr style="margin-top:70px">
     <form role="form" th:object="${commentForm}">
         <div class="form-group">
@@ -77,7 +90,7 @@
                 <textarea id="content" class="form-control" cols="20" rows="3" style="margin:10px;"
                           placeholder="내용을 입력해주세요. (10자이상)"></textarea>
                 <div style="margin:10px 10px 10px 10px;">
-                    <input id="rating" type="text" value="5" class="form-control">
+                    <input id="rating" type="text" value="5" class="form-control"> <!--별점 입력-->
                 </div>
                 <button id="commentSubmit" type="button" th:onclick="addComment()" class="btn btn-primary"
                         style="margin:10px;">작성
@@ -85,12 +98,19 @@
             </div>
         </div>
     </form>
+    <!--후기 입력 Form-->
+
     <hr>
+
+    <!--현재 작성된 후기 카운트-->
     <div style="margin:5px">
         <span th:text="|후기(|"/>
         <span id="commentsCount" th:text="${#lists.size(comments)}"/>
         <span th:text="|)|"/>
     </div>
+    <!--현재 작성된 후기 카운트-->
+
+    <!--작성된 후기 목록-->
     <table class="table">
         <thead>
         <tr align="center">
@@ -112,11 +132,14 @@
         </tr>
         </tbody>
     </table>
+    <!--작성된 후기 목록-->
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
 <script>
-jQuery(document).ready(function () {
+
+
+jQuery(document).ready(function () { //j쿼리를 이용한 별점 세팅
     $(":input[id='ratingDisplay']").each(function () {
         $(this).rating({min: 0, max: 5, step: 1, size: 'sm', showClear: false, displayOnly: true, showCaption: false});
     });
@@ -125,23 +148,25 @@ jQuery(document).ready(function () {
     $("#itemRating").rating({min: 0, max: 5, step: 0.1, showClear: false, showCaption: false, displayOnly: true});
 });
 
-function buy(name){
+function buy(name){ //바로구매
     var orderCount = document.getElementById("count").value;
     var items = new Array();
     var item = {};
-    $('#itemAttr').each(function(){
-        item.itemId = $(this).children().eq(0).val();
-        item.itemName = $(this).children().eq(1).attr('value');
-        item.price = $(this).children().eq(4).attr('value');
-        item.count = orderCount;
-        item.totalPrice = item.price * item.count;
-        items.push(item);
-    });
+
+    item.itemId = $('#data-for-order').attr('data-id');
+    item.itemName = $('#data-for-order').attr('data-name');
+    item.price = $('#data-for-order').attr('data-price');
+    item.count = orderCount;
+    item.totalPrice = item.price * item.count;
+
+    items.push(item);
 
     var form = {
       "userName" : name,
       "items" : items
     }
+
+    console.log(form);
 
     $.ajax({
 
@@ -153,8 +178,8 @@ function buy(name){
     },
     dataType : 'json',
     data : JSON.stringify(form),
-    success : function(res){
-        window.location.href = 'http://localhost:8080/orderSheet/' + res;
+    success : function(res){ //생성된 주문시트 url로 이동
+        window.location.href = 'http://localhost:8080/orderSheet/' + res.data;
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");
@@ -166,10 +191,11 @@ function buy(name){
 
 }
 
-function addItemToCart(username, itemId) {
+function addItemToCart(username, itemId) { //장바구니 추가
 
 var count = document.getElementById("count").value;
 
+    //Cart 생성 폼
     var form = {
         "userName" : username,
         "itemId" : itemId,
@@ -187,7 +213,7 @@ var count = document.getElementById("count").value;
     dataType : 'json',
     data : JSON.stringify(form),
     success : function(){
-        if(confirm("장바구니로 이동하시겠습니까?")){
+        if(confirm("장바구니로 이동하시겠습니까?")){ //장바구니로 이동
             window.location.href = "http://localhost:8080/cart";
         }
         else{
@@ -202,7 +228,7 @@ var count = document.getElementById("count").value;
 
 }
 
-function addComment(){
+function addComment(){ //후기 생성
 
     if($('#content').val().length <= 10) {
         alert('내용을 10자이상 입력해주세요');
@@ -213,6 +239,7 @@ function addComment(){
         return false;
     }
 
+    //후기 생성 폼
     var form = {
         'itemId' : $('#itemId').val(),
         'content' : $('#content').val(),
@@ -229,37 +256,8 @@ function addComment(){
     },
     dataType : 'json',
     data : JSON.stringify(form),
-    success : function(res){
-        var tr = $('<tr>');
-        $('#commentsParent').append(tr);
-
-        let imgTd = $('<td>');
-        $('<img>').attr('src', '/images/' + res.profileImageId)
-                .attr('width', '50')
-                .attr('height', '50')
-                .appendTo(imgTd);
-
-        imgTd.appendTo(tr);
-
-        $('<td>').text(res.userName).appendTo(tr);
-        $('<td>').text(res.lastModifiedDateTime).appendTo(tr);
-
-        let ratingTd = $('<td>');
-        let ratingInput = $('<input>');
-        ratingInput.attr('type', 'text')
-                .attr('value', res.rating)
-                .attr('id', 'ratingDisplay')
-                .appendTo(ratingTd);
-
-        ratingTd.appendTo(tr);
-
-        $('<td>').text(res.content).attr('style', 'white-space: pre-line').appendTo(tr);
-
-        $('#content').val('');
-        let count = parseInt($('#commentsCount').html());
-        $('#commentsCount').html(count + 1);
-
-        ratingInput.rating({min: 0, max: 5, step: 1, size: 'sm', showClear: false, displayOnly: true, showCaption: false});
+    success : function(){
+        window.location.reload(); //작성이 성공했으면 새로고침
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");

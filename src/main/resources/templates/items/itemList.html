@@ -16,8 +16,10 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
+    <!--검색창-->
     <div>
         <form th:object="${search}">
+            <!--첫번째 줄-->
             <div class="form-inline">
                 <div class="form-group mb-2">
                     <input type="text" th:field="*{itemName}" class="formcontrol" placeholder="상품명"/>
@@ -26,6 +28,9 @@
                     <input type="text" th:field="*{author}" class="formcontrol" placeholder="저자명"/>
                 </div>
             </div>
+            <!--/첫번째 줄-->
+
+            <!--두번째 줄-->
             <div class="form-inline">
                 <div class="form-group mb-2">
                     <label>최소 가격</label>
@@ -43,11 +48,14 @@
                     </select>
                 </div>
             </div>
+            <!--/두번째 줄-->
 
             <button type="submit" class="btn btn-primary mb-2">검색</button>
         </form>
     </div>
+    <!--/검색창-->
 
+    <!--상품 목록-->
     <div>
         <table class="table table-striped">
             <tr>
@@ -66,8 +74,13 @@
             </tr>
         </table>
     </div>
+    <!--/상품 목록-->
 
+    <!--페이지 이동 버튼-->
+    <!--1~10, 11~20, 21~30 ... 이런식으로 표시됨-->
     <div align="center">
+        <!--현재 시작번호에서-1 페이지로 이동-->
+        <!--현재 시작번호가 10보다 크면 표시함-->
         <a th:if="${pageStart} > 10"
            th:href="@{/items(
                             page=${pageStart - 2},
@@ -81,6 +94,7 @@
            class="btn btn-info"
         ></a>
 
+        <!--페이지 번호 목록-->
         <span>
                 <a style="margin:3px;"
                    th:each="num : ${#numbers.sequence( __${pageStart}__ , __${pageEnd}__ )}"
@@ -99,6 +113,8 @@
                 ></a>
         </span>
 
+        <!--현재 마지막번호+1 페이지로 이동-->
+        <!--현재 마지막 번호가 전체에서 마지막 페이지면 표시안함-->
         <a th:if="${pageEnd} < ${totalPage}"
            th:href="@{/items(
                            page=${pageEnd},
@@ -111,7 +127,9 @@
            th:text="|>>|"
            class="btn btn-info"
         ></a>
+
     </div>
+    <!--페이지 이동 버튼-->
 
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
