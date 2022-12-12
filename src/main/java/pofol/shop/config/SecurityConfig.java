@@ -2,20 +2,21 @@ package pofol.shop.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import pofol.shop.service.CustomOAuth2MemberService;
+import pofol.shop.service.LoginService;
 
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig{
 
-    private final CustomOAuth2MemberService customOAuth2MemberService;
+    private final LoginService loginService;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
     @Bean
     public WebSecurityCustomizer configure(){
@@ -37,9 +38,17 @@ public class SecurityConfig {
                 .and()
                     .logout().logoutSuccessUrl("/")
                 .and()
-                    .oauth2Login().userInfoEndpoint().userService(customOAuth2MemberService);
+                    .oauth2Login()
+                        .defaultSuccessUrl("/members/new-oauth2")
+                        .userInfoEndpoint().userService(loginService);
+
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
 }

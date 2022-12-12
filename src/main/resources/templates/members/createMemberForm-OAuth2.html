@@ -9,13 +9,15 @@
       width: 30%;
   }
 
+
+
 </style>
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
     <!--폼 시작-->
-    <form id="form" action="/members/new" th:object="${createMemberForm}" method="post">
+    <form id="form" th:object="${createMemberForm}" method="post">
         <div class="form-group">
             <label>회원명</label>
             <input type="hidden" name="duplCheck" id="duplCheck" value="false">
@@ -27,27 +29,15 @@
             <span id="duplMsg"></span>
             <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color:red;"/>
         </div>
-        <div class="form-group">
-            <label>비밀번호</label>
-            <input type="password" th:field="*{password}" class="form-control" placeholder="회원명을 입력하세요"
-                   th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'">
-            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"/>
-        </div>
-        <div class="form-group">
-            <label>비밀번호 확인</label>
-            <input type="password" th:field="*{passwordCheck}" class="form-control" placeholder="회원명을 입력하세요"
-                   th:class="${#fields.hasErrors('passwordCheck')}? 'form-control fieldError' : 'form-control'">
-            <p th:if="${#fields.hasErrors('passwordCheck')}" th:errors="*{passwordCheck}" style="color:red;"/>
-        </div>
+
         <div class="form-group">
             <label>이메일</label>
-            <input type="text" th:field="*{email}" class="form-control" placeholder="이메일을 입력하세요">
+            <input type="text" th:field="*{email}" class="form-control" readonly>
         </div>
         <div class="form-group">
             <label>실명</label>
-            <input type="text" th:field="*{realName}" class="form-control" placeholder="실명을 입력하세요"
-                   th:class="${#fields.hasErrors('realName')}? 'form-control fieldError' : 'form-control'">
-            <p th:if="${#fields.hasErrors('realName')}" th:errors="*{realName}" style="color:red;"/>
+            <input type="text" th:field="*{realName}" class="form-control" readonly>
+
         </div>
         <div class="form-group">
             <label>나이</label>
@@ -88,7 +78,6 @@
 </body>
 
 <script>
-
 
 $('#userName').on('change', function() { //회원명입력 이벤트 등록
 

@@ -60,11 +60,6 @@ public class MypageController {
 
     @GetMapping("/mypage") //마이페이지 홈
     public String mypageHome(Model model, Principal principal, Authentication authentication){
-//        System.out.println("#######################");
-//        System.out.println(principal.getName());
-//        OAuth2User user2 = (OAuth2User) authentication.getPrincipal();
-//        user2.getAttributes().put("sub", "")
-//        System.out.println(user2.getAttributes());
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
 

@@ -3,6 +3,7 @@ package pofol.shop.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import pofol.shop.domain.enums.Role;
 import pofol.shop.dto.CommentDto;
 import pofol.shop.dto.ItemDto;
 import pofol.shop.dto.ItemSearchCondition;
+import pofol.shop.dto.UserAdapter;
 import pofol.shop.form.create.CreateCommentForm;
 import pofol.shop.form.create.CreateItemForm;
 import pofol.shop.domain.Comment;
@@ -130,7 +132,7 @@ public class ItemController {
     }
 
     @GetMapping("/items/{itemId}") //Item 상세 페이지 화면
-    public String item(@PathVariable("itemId") Long id, Model model, Principal principal) {
+    public String item(@PathVariable("itemId") Long id, Model model, @AuthenticationPrincipal UserAdapter principal) {
 
         Item item = itemRepository.findById(id).orElseThrow();
         ItemDto itemDto = new ItemDto(item);

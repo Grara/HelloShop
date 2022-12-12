@@ -2,17 +2,15 @@ package pofol.shop.service;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.enums.Role;
 
 import java.util.Map;
 
 @Getter
+@ToString
 public class OAuthAttributes {
 
     private Map<String, Object> attributes;
@@ -31,10 +29,28 @@ public class OAuthAttributes {
     public static OAuthAttributes of(String registrationId,
                                      String userNameAttributeName,
                                      Map<String, Object> attributes){
-        return ofGoogle(userNameAttributeName, attributes);
+        if(registrationId.equals("google")) {
+            return ofGoogle(userNameAttributeName, attributes);
+        }
+
+
+        return ofNaver(userNameAttributeName, attributes);
+
+    }
+
+    private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> res = (Map<String, Object>) attributes.get("response");
+
+        return OAuthAttributes.builder()
+                .name((String) res.get("name"))
+                .email((String) res.get("email"))
+                .attributes(res)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
+
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
@@ -47,7 +63,7 @@ public class OAuthAttributes {
                 .userName(name)
                 .email(email)
                 .password(encoder.encode("1234"))
-                .role(Role.ROLE_USER)
+                .role(Role.ROLE_GUEST)
                 .build();
     }
 

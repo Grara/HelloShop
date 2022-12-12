@@ -1,5 +1,5 @@
 package pofol.shop.domain.enums;
 
 public enum Role {
-    ROLE_USER, ROLE_ADMIN
+    ROLE_GUEST, ROLE_USER, ROLE_ADMIN
 }

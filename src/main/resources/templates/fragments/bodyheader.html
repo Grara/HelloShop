@@ -3,28 +3,28 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div class="header" th:fragment="bodyHeader">
-  <ul class="nav nav-pills pull-right">
+  <ul class="nav nav-pills pull-right" style="margin-bottom:20px;">
     <li style="list-style: none;">
       <a class="link" href="/">Home</a>
     </li>
     <!--스프링시큐리티 연동-->
-    <li sec:authorize="isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+    <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" style="list-style: none; float: left; margin-left: 20px">
       <a href="/logout">Logout</a>
     </li>
 
-    <li sec:authorize="isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+    <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" style="list-style: none; float: left; margin-left: 20px">
       <a href="/mypage">MyPage</a>
     </li>
 
-    <li sec:authorize="isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+    <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" style="list-style: none; float: left; margin-left: 20px">
       <a href="/cart">장바구니</a>
     </li>
 
-    <li sec:authorize="!isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+    <li sec:authorize="hasRole('ROLE_GUEST') || !isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
       <a href="/login">Sign in</a>
     </li>
 
-    <li sec:authorize="!isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+    <li sec:authorize="hasRole('ROLE_GUEST') || !isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
       <a href="/members/new">Sign up</a>
     </li>
 
@@ -32,11 +32,13 @@
       <a href="/admin">Admin Menu</a>
     </li>
 
-    <li sec:authorize="!isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
+    <li sec:authorize="hasRole('ROLE_GUEST') || !isAuthenticated()" style="list-style: none; float: left; margin-left: 20px">
       <a href="/oauth2/authorization/google">구글~</a>
     </li>
 
-
+    <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_USER')" style="list-style: none; float: left; margin-left: 20px">
+      <a th:text="|${#authentication.name} 님 환영합니다!|"></a>
+    </li>
 
   </ul>
   <a href="/"><h3 class="text-muted">HELLO SHOP</h3></a>

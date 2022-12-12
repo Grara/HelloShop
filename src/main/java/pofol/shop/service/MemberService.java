@@ -1,12 +1,6 @@
 package pofol.shop.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,23 +8,19 @@ import pofol.shop.config.DefaultValue;
 import pofol.shop.domain.FileEntity;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.enums.Role;
+
 import pofol.shop.repository.FileRepository;
 import pofol.shop.repository.MemberRepository;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService implements UserDetailsService {
+public class MemberService{
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final FileService fileService;
     private final FileRepository fileRepository;
 
     /**
@@ -79,18 +69,5 @@ public class MemberService implements UserDetailsService {
         return member.getId();
     }
 
-    @Override
-    //UserDetailsService의 메소드 구현
-    //로그인 시 자동으로 시큐리티에서 관리할 유저정보를 생성
-    public UserDetails loadUserByUsername(String username) {
-        Optional<Member> byUserName = memberRepository.findByUserName(username);
-        //유저이름을 찾은 뒤 없으면 에러를 던짐
-        Member findMember = byUserName.orElseThrow(() -> new UsernameNotFoundException(username));
-        return new User(findMember.getUserName(), findMember.getPassword(), createAuthorities(findMember.getRole().toString()));
-    }
 
-    //인가정보 생성
-    private Collection<? extends GrantedAuthority> createAuthorities(String role) {
-        return Arrays.asList(new SimpleGrantedAuthority(role));
-    }
 }

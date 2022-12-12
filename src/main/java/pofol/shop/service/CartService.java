@@ -8,7 +8,6 @@ import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
 import pofol.shop.repository.CartRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 

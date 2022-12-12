@@ -7,10 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 import pofol.shop.domain.FileEntity;
 import pofol.shop.repository.FileRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
