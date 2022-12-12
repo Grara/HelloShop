@@ -32,15 +32,23 @@ public class InitRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        FileEntity file1 = new FileEntity();
-        file1.setSavePath("C:/test/DEFAULT_PROFILE_IMAGE.jpeg");
-        DefaultValue.DEFAULT_PROFILE_IMAGE_ID = fileService.initFile(file1);
+        FileEntity profileImage = new FileEntity();
+        profileImage.setSavePath("C:/test/DEFAULT_PROFILE_IMAGE.jpeg");
+        DefaultValue.DEFAULT_PROFILE_IMAGE_ID = fileService.initFile(profileImage);
 
-        FileEntity file2 = new FileEntity();
-        file2.setSavePath("C:/test/DEFAULT_ITEM_THUMBNAIL.png");
-        DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID = fileService.initFile(file2);
+        FileEntity thumbnailImage = new FileEntity();
+        thumbnailImage.setSavePath("C:/test/DEFAULT_ITEM_THUMBNAIL.png");
+        DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID = fileService.initFile(thumbnailImage);
 
-//        for (int i = 0; i < 30; i++) {
+        FileEntity btnNaver = new FileEntity();
+        btnNaver.setSavePath("C:/test/btn_login_naver.png");
+        DefaultValue.BTN_LOGIN_NAVER_ID = fileService.initFile(btnNaver);
+
+        FileEntity btnGoogle = new FileEntity();
+        btnGoogle.setSavePath("C:/test/btn_login_google.png");
+        DefaultValue.BTN_LOGIN_GOOGLE_ID = fileService.initFile(btnGoogle);
+
+//        for (int i = 0; i < 120; i++) {
 //            String j = Integer.toString(i);
 //            memberService.createInitMember("user" + j, "1234", Role.ROLE_USER);
 //        }
@@ -50,10 +58,9 @@ public class InitRunner implements ApplicationRunner {
         Member findMember = memberRepository.findById(userId).orElseThrow();
 
 
-
-        Item item1 = new Item(findMember,"JAVA", 10000, 100);
-        Item item2 = new Item(findMember,"SPRING", 12000, 100);
-        Item item3 = new Item(findMember,"JPA", 15000, 100);
+        Item item1 = new Item(findMember, "JAVA", 10000, 100);
+        Item item2 = new Item(findMember, "SPRING", 12000, 100);
+        Item item3 = new Item(findMember, "JPA", 15000, 100);
         Item item4 = new Item("JPA", 15000, 100);
         itemRepository.save(item1);
         itemRepository.save(item2);
@@ -64,6 +71,7 @@ public class InitRunner implements ApplicationRunner {
         Cart cart1 = new Cart(findMember, item1, 1);
         Cart cart2 = new Cart(findMember, item2, 2);
         Cart cart3 = new Cart(findMember, item3, 3);
+
         cartRepository.save(cart1);
         cartRepository.save(cart2);
         cartRepository.save(cart3);

@@ -11,12 +11,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pofol.shop.domain.Member;
 import pofol.shop.dto.MemberDto;
 import pofol.shop.dto.UserAdapter;
+import pofol.shop.form.LoginForm;
 import pofol.shop.form.TestForm;
 import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.MemberService;
@@ -40,12 +39,21 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/test")
+    @GetMapping("/login")
     public String test1(Model model, @AuthenticationPrincipal UserAdapter adapter, Authentication authentication) {
 
 
         model.addAttribute("a", "/orders");
         return "test";
+    }
+
+    @GetMapping("/login-form")
+    public String loginForm(@RequestParam(value = "error", required = false)boolean error, Model model){
+        System.out.println(error);
+        LoginForm form = new LoginForm();
+        model.addAttribute("loginForm", form);
+        model.addAttribute("hasError", error);
+        return "loginForm";
     }
 
 }

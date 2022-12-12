@@ -61,8 +61,7 @@ public class Member extends BaseEntity{
     }
 
     @Builder
-    public Member(Long id, FileEntity profileImage, String userName, String password, Address address, PersonalInfo personalInfo, Role role, String email) {
-        this.id = id;
+    public Member(FileEntity profileImage, String userName, String password, Address address, PersonalInfo personalInfo, Role role, String email) {
         this.profileImage = profileImage;
         this.userName = userName;
         this.password = password;
@@ -71,8 +70,8 @@ public class Member extends BaseEntity{
         this.role = role;
         this.email = email;
     }
-
     //----------생성자 끝 / 메소드 시작----------//
+
     public Member update(String userName, String email){
         this.userName = userName;
         this.email = email;

@@ -1,16 +1,14 @@
 package pofol.shop.domain;
 
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
 @Entity
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "cartitem_id")
@@ -28,13 +26,16 @@ public class Cart extends BaseEntity{
 
     private int totalPrice;
     //----------필드 끝 / 생성자 시작----------//
+    @Builder
     public Cart(Member member, Item item, int count) {
         this.member = member;
         this.item = item;
         this.count = count;
         this.totalPrice = item.getPrice() * count;
     }
+
     //----------생성자 끝 / 메소드 시작----------//
+
     public void addCount(int count){
         this.count += count;
     }

@@ -3,6 +3,7 @@ package pofol.shop.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
 import pofol.shop.dto.ApiResponseBody;
 import pofol.shop.dto.CommentDto;
+import pofol.shop.dto.UserAdapter;
 import pofol.shop.form.create.CreateCommentForm;
 import pofol.shop.repository.CommentRepository;
 import pofol.shop.repository.ItemRepository;
@@ -27,7 +29,7 @@ public class CommentApiController {
     private final MemberRepository memberRepository;
 
     @PostMapping("/comments/new") //Item 상세페이지 Comment 생성 요청
-    public ResponseEntity<ApiResponseBody<CommentDto>> createComment(@RequestBody CreateCommentForm form, Principal principal) {
+    public ResponseEntity<ApiResponseBody<CommentDto>> createComment(@RequestBody CreateCommentForm form, @AuthenticationPrincipal UserAdapter principal) {
         try {
             Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
 

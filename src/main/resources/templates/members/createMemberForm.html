@@ -58,7 +58,7 @@
             <select th:field="*{sex}" class="form-control">
                 <option th:each="status : ${T(pofol.shop.domain.enums.Sex).values()}"
                         th:value="${status}"
-                        th:text="${status}">option
+                        th:text="${status.getValue()}">option
                 </option>
             </select>
         </div>

@@ -26,6 +26,7 @@ import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.FileService;
 import pofol.shop.service.ItemService;
 import pofol.shop.service.MemberService;
+import pofol.shop.service.UtilService;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -43,20 +44,13 @@ public class ItemController {
     private final FileService fileService;
     private final FileRepository fileRepository;
     private final MemberRepository memberRepository;
+    private final UtilService utilService;
 
     @GetMapping("/items") //Item 리스트
     public String list(@ModelAttribute ItemSearchCondition condition, Model model, Pageable pageable){
         Page<ItemDto> results = itemRepository.searchWithPage(condition, pageable);
+        utilService.pagingCommonTask(results, model);
 
-        int pageStart = results.getNumber() / 10 * 10 + 1;
-
-        int pageEnd = Math.min(pageStart + 9, results.getTotalPages());
-        if(pageEnd <= 0) pageEnd = 1;
-
-        model.addAttribute("totalPage", results.getTotalPages());
-        model.addAttribute("pageStart", pageStart);
-        model.addAttribute("pageEnd", pageEnd);
-        model.addAttribute("curNumber", results.getNumber() + 1); //현재 페이지 번호
         model.addAttribute("search", condition);
         model.addAttribute("items", results.getContent());
 
@@ -70,7 +64,7 @@ public class ItemController {
     }
 
     @PostMapping("/items/new") //Item 등록 요청
-    public String create(@Valid CreateItemForm form, BindingResult result, Principal principal){
+    public String create(@Valid CreateItemForm form, BindingResult result, @AuthenticationPrincipal UserAdapter principal){
 
         if (result.hasErrors()) {
             return "items/createItemForm";
@@ -99,7 +93,7 @@ public class ItemController {
     }
 
     @GetMapping("/items/edit") //Item 수정 폼 화면
-    public String editForm(@RequestParam Long id, Model model, Principal principal){
+    public String editForm(@RequestParam Long id, Model model, @AuthenticationPrincipal UserAdapter principal){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         Item item = itemRepository.findById(id).orElseThrow();

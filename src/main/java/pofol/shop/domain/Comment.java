@@ -40,7 +40,7 @@ public class Comment extends BaseEntity{
     }
     //----------생성자 끝 / 메소드 시작----------//
     @PrePersist
-    public void Setting(){
+    public void prePersist(){
         this.lastModifiedDateTime = LocalDateTime.now();
     }
 }

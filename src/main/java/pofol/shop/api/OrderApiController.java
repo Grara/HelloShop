@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import pofol.shop.domain.Order;
 import pofol.shop.domain.OrderSheet;
 import pofol.shop.domain.enums.OrderStatus;
 import pofol.shop.dto.ApiResponseBody;
+import pofol.shop.dto.UserAdapter;
 import pofol.shop.form.create.CreateOrderSheetForm;
 import pofol.shop.repository.MemberRepository;
 import pofol.shop.repository.OrderRepository;
@@ -59,7 +61,7 @@ public class OrderApiController {
     }
 
     @PostMapping("/orders/cancel") //주문취소 요청
-    public ResponseEntity<ApiResponseBody<String>> delete(@RequestBody String id, Principal principal) {
+    public ResponseEntity<ApiResponseBody<String>> delete(@RequestBody String id, @AuthenticationPrincipal UserAdapter principal) {
         try {
             Order order = orderRepository.findById(Long.parseLong(id)).orElseThrow();
             if (!order.getMember().getUserName().equals(principal.getName())) {

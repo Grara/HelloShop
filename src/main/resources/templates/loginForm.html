@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<style>
+  .info {
+      width: 30%;
+  }
+  .profile {
+    padding: 10px;
+  }
+  .form-control {
+      width: 100%;
+  }
+  .form-group{
+    align: left;
+    width: 30%;
+  }
+  .btn-img{
+    background-image: url(/images/3); /* 16px x 16px */
+    background-color: transparent; /* make the button transparent */
+    background-repeat: no-repeat;  /* make the background image appear only once */
+    background-position: 0px 0px;  /* equivalent to 'top left' */
+    border: none;           /* assuming we don't want any borders */
+    cursor: pointer;        /* make the cursor like hovering over an <a> element */
+    height: 16px;           /* make this the size of your image */
+    padding-left: 16px;     /* make text start to the right of the image */
+    vertical-align: middle; /* align the text vertically centered */
+  }
+
+
+
+</style>
+<body>
+<div class="container">
+    <div>
+        <a href="/" style="width:180px; display:block;"><h3 class="text-muted">HELLO SHOP</h3></a>
+    </div>
+    <div class="jumbotron">
+
+        <div class="outer" align="center">
+            <h2>로그인</h2>
+            <!--입력 폼-->
+            <form method="post" th:object="${loginForm}" action="/login">
+                <div th:if="${hasError}" class="alert alert-danger">아이디 또는 비밀번호를 잘못 입력했습니다.</div>
+                <div class="form-group">
+                    <label>회원명</label>
+                    <input type="text" th:field="*{username}" class="form-control" placeholder="회원명"
+                           th:class="${#fields.hasErrors('username')}? 'form-control fieldError' : 'form-control'">
+                    <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color:red;"/>
+                </div>
+
+                <div class="form-group">
+                    <label>비밀번호</label>
+                    <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호"
+                           th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'">
+                    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"/>
+                </div>
+
+                <p>
+                    <button class="btn btn-primary" type="submit">로그인</button>
+                    <a class="btn btn-info" href="/members/new">회원 가입</a>
+                </p>
+
+            </form>
+            <!--/입력 폼-->
+            <hr>
+            <h2>소셜 로그인</h2>
+            <p>
+                <input type="image" onclick="location.href='/oauth2/authorization/naver'" src="images/3"
+                       width="180" height="43">
+
+                <input type="image" onclick="location.href='/oauth2/authorization/google'" src="images/4"
+                       width="180" height="45">
+            </p>
+        </div> <!-- /outer -->
+
+
+    </div> <!-- /jumbotron -->
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+<script>
+$('.form-group').attr('align','left');
+
+
+
+</script>
+</html>

@@ -66,7 +66,7 @@
 
         <!--현재 시작번호에서-1 페이지로 이동-->
         <!--현재 시작번호가 10보다 크면 표시함-->
-        <a th:if="${pageStart} > 10"
+        <a th:if="${pageStart} > 1"
            th:text="|<<|"
            class="btn btn-info"
            th:href="@{/orders

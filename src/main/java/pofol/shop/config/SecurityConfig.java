@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import pofol.shop.service.LoginService;
 
 
@@ -35,8 +36,12 @@ public class SecurityConfig{
                         .anyRequest().permitAll()
                 .and()
                     .formLogin()
+                        .loginPage("/login-form")
+                        .loginProcessingUrl("/login")
+                        .failureUrl("/login-form?error=true")
                 .and()
-                    .logout().logoutSuccessUrl("/")
+                    .logout()
+                        .logoutSuccessUrl("/")
                 .and()
                     .oauth2Login()
                         .defaultSuccessUrl("/members/new-oauth2")

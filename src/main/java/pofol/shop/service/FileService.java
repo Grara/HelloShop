@@ -34,6 +34,9 @@ public class FileService {
         String extention = file.getOriginName().substring(file.getOriginName().lastIndexOf("."));
         file.setSaveName(uuid + extention);
         file.setSavePath(FILE_DIR + file.getSaveName());
+
+
+
         uploadFile.transferTo(new File(file.getSavePath()));
         fileRepository.save(file);
         return file.getId();

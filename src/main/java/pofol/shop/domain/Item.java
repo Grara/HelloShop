@@ -1,9 +1,6 @@
 package pofol.shop.domain;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import pofol.shop.exception.NotEnoughQuantityException;
 
 import javax.persistence.*;
@@ -66,10 +63,21 @@ public class Item extends BaseEntity {
         this.price = price;
         this.quantity = quantity;
     }
+    @Builder
+    public Item(Member member, FileEntity thumbnailFile, String itemName, String author, String descriptionTitle, String description, int price, int quantity) {
+        this.member = member;
+        this.thumbnailFile = thumbnailFile;
+        this.itemName = itemName;
+        this.author = author;
+        this.descriptionTitle = descriptionTitle;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+    }
 
     //----------생성자 끝 / 메소드 시작----------//
     @PrePersist
-    void beforePersist() {
+    void prePersist() {
         if (this.descriptionTitle == null) this.descriptionTitle ="제목없음";
         if (this.description == null) this.description = "설명을 입력해주세요";
     }

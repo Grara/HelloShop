@@ -17,7 +17,7 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
     <!--폼 시작-->
-    <form id="form" th:object="${createMemberForm}" method="post">
+    <form id="form" th:object="${createOAuth2MemberForm}" method="post">
         <div class="form-group">
             <label>회원명</label>
             <input type="hidden" name="duplCheck" id="duplCheck" value="false">

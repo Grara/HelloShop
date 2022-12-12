@@ -23,6 +23,7 @@ import pofol.shop.domain.Order;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.dto.OrderDto;
 import pofol.shop.dto.OrderSearchCondition;
+import pofol.shop.dto.UserAdapter;
 import pofol.shop.form.update.UpdateImageForm;
 import pofol.shop.form.update.UpdateMyDetailForm;
 import pofol.shop.form.update.UpdatePasswordForm;
@@ -30,10 +31,7 @@ import pofol.shop.repository.FileRepository;
 import pofol.shop.repository.ItemRepository;
 import pofol.shop.repository.MemberRepository;
 import pofol.shop.repository.OrderRepository;
-import pofol.shop.service.FileService;
-import pofol.shop.service.ItemService;
-import pofol.shop.service.MemberService;
-import pofol.shop.service.OrderService;
+import pofol.shop.service.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -48,18 +46,16 @@ import static pofol.shop.config.DefaultValue.DEFAULT_PROFILE_IMAGE_ID;
 @RequiredArgsConstructor
 public class MypageController {
 
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final FileService fileService;
     private final FileRepository fileRepository;
-    private final ItemService itemService;
     private final ItemRepository itemRepository;
-    private final OrderService orderService;
     private final OrderRepository orderRepository;
+    private final UtilService utilService;
 
     @GetMapping("/mypage") //마이페이지 홈
-    public String mypageHome(Model model, Principal principal, Authentication authentication){
+    public String mypageHome(Model model, @AuthenticationPrincipal UserAdapter principal){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
 
@@ -74,7 +70,7 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/details") //개인정보 화면
-    public String mypageDetails(Model model, Principal principal){
+    public String mypageDetails(Model model, @AuthenticationPrincipal UserAdapter principal){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         UpdateMyDetailForm form = new UpdateMyDetailForm(member);
@@ -86,7 +82,7 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/details/edit") //개인정보 수정 폼 화면
-    public String myDetailsEditForm(Model model, Principal principal){
+    public String myDetailsEditForm(Model model, @AuthenticationPrincipal UserAdapter principal){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         UpdateMyDetailForm form = new UpdateMyDetailForm(member);
@@ -105,10 +101,7 @@ public class MypageController {
         }
 
         Member member = memberRepository.findByUserName(form.getUserName()).orElseThrow();
-        Address address = new Address();
-        address.setAddress1(form.getAddress1());
-        address.setAddress2(form.getAddress2());
-        address.setZipcode(form.getZipcode());
+        Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
         member.setAddress(address);
 
         memberRepository.save(member);
@@ -117,14 +110,14 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/password-edit") //비밀번호 변경 폼 화면
-    public String passwordEditForm(Model model, Principal principal){
+    public String updatePasswordForm(Model model, @AuthenticationPrincipal UserAdapter principal){
 
         model.addAttribute("updatePasswordForm", new UpdatePasswordForm());
         return "mypage/updatePasswordForm";
     }
 
     @PostMapping("/mypage/password-edit") //비밀번호 변경 요청
-    public String passwordEdit(@Valid UpdatePasswordForm form, BindingResult result, Principal principal){
+    public String updatePassword(@Valid UpdatePasswordForm form, BindingResult result, @AuthenticationPrincipal UserAdapter principal){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
 
@@ -153,12 +146,12 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/details/profile/update") //프로필 변경 폼 화면(팝업창)
-    public String updateProfileImageForm(Principal principal){
+    public String updateProfileImageForm(@AuthenticationPrincipal UserAdapter principal){
         return "popup/updateProfileForm";
     }
 
     @PostMapping("/mypage/details/profile/update") //프로필 변경 요청
-    public String updateProfile(UpdateImageForm form, Principal principal, Model model){
+    public String updateProfile(UpdateImageForm form, @AuthenticationPrincipal UserAdapter principal, Model model){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         long returnId = 0l; //모델에 전달할 FileEntity id값
@@ -187,7 +180,7 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/myitems") //내가 판매하는 아이템 리스트 화면
-    public String myItemList(Model model, Principal principal){
+    public String myItemList(Model model, @AuthenticationPrincipal UserAdapter principal){
 
         Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
         List<Item> items = itemRepository.findListByMember(member);
@@ -214,14 +207,7 @@ public class MypageController {
         }
 
         Page<OrderDto> results = orderRepository.searchWithPage(condition, pageable);
-        int pageStart = results.getNumber() / 10 * 10 + 1;
-        int pageEnd = Math.min(pageStart + 9, results.getTotalPages());
-        if(pageEnd <= 0) pageEnd = 1;
-
-        model.addAttribute("totalPage", results.getTotalPages());
-        model.addAttribute("pageStart", pageStart);
-        model.addAttribute("pageEnd", pageEnd);
-        model.addAttribute("curNumber", results.getNumber() + 1);
+        utilService.pagingCommonTask(results, model);
         model.addAttribute("search", condition);
         model.addAttribute("orders", results.getContent());
 
