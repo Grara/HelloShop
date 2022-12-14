@@ -112,14 +112,14 @@ public class ItemController {
         form.setQuantity(item.getQuantity());
         model.addAttribute("itemForm", form);
 
-        return "/items/updateItemForm";
+        return "items/updateItemForm";
     }
 
     @PostMapping("/items/edit") //Item 수정 요청
     public String edit(@Valid CreateItemForm form, BindingResult result){
 
         if (result.hasErrors()) {
-            return "/items/updateItemForm";
+            return "items/updateItemForm";
         }
         itemService.edit(form.getId(), form.getItemName(), form.getPrice(), form.getQuantity());
         return "redirect:/mypage/myitems";
@@ -153,7 +153,7 @@ public class ItemController {
         //Item에 달린 Comment List 데이터
         List<CommentDto> commentDtos = item.getComments().stream().map(CommentDto::new).collect(Collectors.toList());
         model.addAttribute("comments", commentDtos);
-        return "/items/item";
+        return "items/item";
     }
 
 

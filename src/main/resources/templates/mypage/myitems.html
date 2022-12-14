@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
     <div>
         <!--아이템 목록-->
         <table class="table table-striped">
@@ -33,7 +33,7 @@
         </table>
         <!--/아이템 목록-->
     </div>
-    <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
 </html>

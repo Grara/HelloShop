@@ -1,20 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"/>
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
 <style>
   .mb-2{
     margin-right: 10px;
     margin-left: 10px;
   }
-
-
-
-
 </style>
 
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
 
     <!--검색창-->
     <div>
@@ -131,7 +127,8 @@
     </div>
     <!--페이지 이동 버튼-->
 
-    <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
+
 </div> <!-- /container -->
 </body>
 </html>

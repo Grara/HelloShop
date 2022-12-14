@@ -65,7 +65,7 @@ public class MypageController {
 
         model.addAttribute("userName", member.getUserName());
 
-        return "/mypage/myhome";
+        return "mypage/myhome";
 
     }
 
@@ -78,7 +78,7 @@ public class MypageController {
 
         model.addAttribute("form", form);
 
-        return "/mypage/mydetails";
+        return "mypage/mydetails";
     }
 
     @GetMapping("/mypage/details/edit") //개인정보 수정 폼 화면
@@ -90,14 +90,14 @@ public class MypageController {
 
         model.addAttribute("updateMyDetailForm", form);
 
-        return "/mypage/updateMydetailForm";
+        return "mypage/updateMydetailForm";
     }
 
     @PostMapping("/mypage/details/edit") //개인정보 수정 요청
     public String EditMyDetail(@Valid UpdateMyDetailForm form, BindingResult result){
 
         if(result.hasErrors()){
-            return "/mypage/updateMydetailForm";
+            return "mypage/updateMydetailForm";
         }
 
         Member member = memberRepository.findByUserName(form.getUserName()).orElseThrow();
@@ -211,6 +211,6 @@ public class MypageController {
         model.addAttribute("search", condition);
         model.addAttribute("orders", results.getContent());
 
-        return "/mypage/myorders";
+        return "mypage/myorders";
     }
 }

@@ -67,7 +67,7 @@ public class OrderController {
 
         model.addAttribute("search", condition);
         model.addAttribute("orders", results.getContent());
-        return "/orders/orderList";
+        return "orders/orderList";
     }
 
     @GetMapping("/orderSheet/{id}")//주문 생성폼 화면

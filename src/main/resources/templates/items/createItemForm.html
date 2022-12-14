@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
 <style>
  .fieldError {
  border-color: #bd2130;
@@ -11,7 +11,7 @@
 </style>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
 
     <!--Form 시작-->
     <form role="form" action="/items/new" th:object="${createItemForm}" method="post" enctype="multipart/form-data">
@@ -61,7 +61,7 @@
     </form>
     <!--Form종료-->
     <br/>
-    <div th:replace="fragments/footer :: footer" />
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"

@@ -53,7 +53,7 @@ public class MemberController {
 
         model.addAttribute("createOAuth2MemberForm", form);
 
-        return "/members/createMemberForm-Oauth2";
+        return "members/createMemberForm-Oauth2";
 
     }
 

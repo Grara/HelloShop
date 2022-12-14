@@ -6,12 +6,12 @@
 </head>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
     <div class="jumbotron">
         <h1>상품의 수량이 부족합니다. 장바구니, 혹은 상품페이지를 다시 확인해주세요</h1>
 
     </div>
-    <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
 </html>

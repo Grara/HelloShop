@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"/>
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
 <style>
  .info {
       width: 30%;
@@ -19,7 +19,7 @@
 </style>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
 
     <div class="outer" align="center">
         <!--프로필 이미지-->
@@ -70,7 +70,7 @@
         </form>
         <!--/입력 폼-->
     </div> <!-- /outer -->
-    <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"
