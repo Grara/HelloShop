@@ -62,7 +62,7 @@ public class MemberController {
 
         //값 입력에 문제가 있으면 다시 수정하도록함
         if (result.hasErrors()) {
-            return "members/createMemberForm-Oauth2";
+            return "members/createMemberForm-OAuth2";
         }
 
         if(!principal.getAttribute("email").equals(form.getEmail())){
