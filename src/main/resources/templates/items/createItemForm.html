@@ -1,15 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
+
+<body>
 <style>
- .fieldError {
+ .fieldError{
  border-color: #bd2130;
  }
- .form-control {
+ .form-control{
       width: 30%;
   }
 </style>
-<body>
 <div class="container">
     <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
 
@@ -64,9 +65,9 @@
     <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
 <script>
+
 function readURL(input) { //이미지를 등록하면 미리보기 이미지 변경
     if (input.files && input.files[0]) {
         var reader = new FileReader();

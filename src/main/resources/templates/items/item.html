@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
+<body>
 <style>
 .item-info{
     float:left;
@@ -15,11 +16,7 @@
     font-weight: bold;
     font-size: 1.5em;
 }
-
-
 </style>
-
-<body>
 <div class="container">
     <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
     <!--상품 이미지와 정보-->

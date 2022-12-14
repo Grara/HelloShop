@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
+
+<body>
 <style>
  .info {
       width: 30%;
@@ -17,7 +19,6 @@
   }
 
 </style>
-<body>
 <div class="container">
     <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
 
