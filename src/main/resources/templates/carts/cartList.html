@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
     <title>Hello</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
@@ -9,7 +9,7 @@
 </style>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
     <!--선택버튼-->
     <div class="parent" style="height:50px" align="right">
         <button type="button" class="btn btn-primary" th:onClick="javascript:deleteChecked();">선택한 항목 삭제</button>
@@ -44,7 +44,7 @@
        th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</button>
 
 
-    <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
 <script>

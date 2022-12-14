@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
     <title>Hello</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
@@ -15,7 +15,7 @@
 
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
     <div class="jumbotron">
         <h1>Admin</h1>
         <p>
@@ -26,7 +26,7 @@
             <a class="btn btn-lg btn-dark" href="/orders">전체 주문 목록</a>
         </p>
     </div>
-    <div th:replace="fragments/footer :: footer" />
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
 <script>

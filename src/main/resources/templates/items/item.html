@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"/>
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
 <style>
 .item-info{
     float:left;
@@ -21,7 +21,7 @@
 
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
     <!--상품 이미지와 정보-->
     <div style="height:500px;">
         <input id="data-for-order" type="hidden" th:data-name="${itemDto.name}"
@@ -133,7 +133,7 @@
         </tbody>
     </table>
     <!--작성된 후기 목록-->
-    <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
 <script>
