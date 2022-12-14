@@ -1,6 +1,7 @@
 package pofol.shop;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -29,23 +30,25 @@ public class InitRunner implements ApplicationRunner {
     private final CartService cartService;
     private final CartRepository cartRepository;
     private final FileService fileService;
+    @Value("${fileDir}")
+    private String FILE_DIR;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         FileEntity profileImage = new FileEntity();
-        profileImage.setSavePath("C:/test/DEFAULT_PROFILE_IMAGE.jpeg");
+        profileImage.setSavePath(FILE_DIR + "DEFAULT_PROFILE_IMAGE.jpeg");
         DefaultValue.DEFAULT_PROFILE_IMAGE_ID = fileService.initFile(profileImage);
 
         FileEntity thumbnailImage = new FileEntity();
-        thumbnailImage.setSavePath("C:/test/DEFAULT_ITEM_THUMBNAIL.png");
+        thumbnailImage.setSavePath(FILE_DIR + "DEFAULT_ITEM_THUMBNAIL.png");
         DefaultValue.DEFAULT_ITEM_THUMBNAIL_ID = fileService.initFile(thumbnailImage);
 
         FileEntity btnNaver = new FileEntity();
-        btnNaver.setSavePath("C:/test/btn_login_naver.png");
+        btnNaver.setSavePath(FILE_DIR + "btn_login_naver.png");
         DefaultValue.BTN_LOGIN_NAVER_ID = fileService.initFile(btnNaver);
 
         FileEntity btnGoogle = new FileEntity();
-        btnGoogle.setSavePath("C:/test/btn_login_google.png");
+        btnGoogle.setSavePath(FILE_DIR + "btn_login_google.png");
         DefaultValue.BTN_LOGIN_GOOGLE_ID = fileService.initFile(btnGoogle);
 
 //        for (int i = 0; i < 120; i++) {

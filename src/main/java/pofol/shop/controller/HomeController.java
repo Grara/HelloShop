@@ -49,7 +49,6 @@ public class HomeController {
 
     @GetMapping("/login-form")
     public String loginForm(@RequestParam(value = "error", required = false)boolean error, Model model){
-        System.out.println(error);
         LoginForm form = new LoginForm();
         model.addAttribute("loginForm", form);
         model.addAttribute("hasError", error);

@@ -2,6 +2,7 @@ package pofol.shop.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import pofol.shop.service.LoginService;
 
 
-@EnableWebSecurity
+@Configuration
 @RequiredArgsConstructor
 public class SecurityConfig{
 
@@ -30,9 +31,13 @@ public class SecurityConfig{
         http
                 .csrf().disable()
                     .authorizeRequests()
-                        .antMatchers("/admin", "/members", "/orders").hasRole("ADMIN")
+                        .antMatchers("/admin", "/members", "/orders")
+                            .hasRole("ADMIN")
                         .antMatchers("/orders/new", "/cart/new", "/orderSheet",
-                                "/items/new", "/mypage").hasAnyRole("ADMIN", "USER")
+                                "/items/new", "/mypage")
+                            .hasAnyRole("ADMIN", "USER")
+                        .antMatchers("/login")
+                            .denyAll()
                         .anyRequest().permitAll()
                 .and()
                     .formLogin()
@@ -44,6 +49,7 @@ public class SecurityConfig{
                         .logoutSuccessUrl("/")
                 .and()
                     .oauth2Login()
+                        .loginPage("/login-form")
                         .defaultSuccessUrl("/members/new-oauth2")
                         .userInfoEndpoint().userService(loginService);
 
