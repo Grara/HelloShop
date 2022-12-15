@@ -13,9 +13,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pofol.shop.dto.MemberDto;
 import pofol.shop.dto.MemberSearchCondition;
 import pofol.shop.dto.UserAdapter;
+import pofol.shop.form.LoginForm;
 import pofol.shop.form.create.CreateMemberForm;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.embedded.Address;
@@ -37,6 +39,13 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
     private final UtilService utilService;
 
+    @GetMapping("/login-form") //로그인화면
+    public String loginForm(@RequestParam(value = "error", required = false)boolean error, Model model){
+        LoginForm form = new LoginForm();
+        model.addAttribute("loginForm", form);
+        model.addAttribute("hasError", error);
+        return "loginForm";
+    }
 
     @GetMapping("/members/new-oauth2") //OAuth2로그인 성공 시
     public String oauth2LoginSuccess(@AuthenticationPrincipal UserAdapter principal, Model model) {

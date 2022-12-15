@@ -2,6 +2,7 @@ package pofol.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,9 @@ import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.MemberService;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -32,6 +35,7 @@ public class HomeController {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final AuthenticationManager authenticationManager;
+    private final Environment env;
 
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserAdapter adapter) {
@@ -39,20 +43,17 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/login")
-    public String test1(Model model, @AuthenticationPrincipal UserAdapter adapter, Authentication authentication) {
 
 
-        model.addAttribute("a", "/orders");
-        return "test";
-    }
-
-    @GetMapping("/login-form")
-    public String loginForm(@RequestParam(value = "error", required = false)boolean error, Model model){
-        LoginForm form = new LoginForm();
-        model.addAttribute("loginForm", form);
-        model.addAttribute("hasError", error);
-        return "loginForm";
+    @ResponseBody
+    @GetMapping("/profile")
+    public String profile(){
+        List<String> profiles = Arrays.asList(env.getActiveProfiles());
+        List<String> realProfiles = Arrays.asList("real1", "real2");
+        System.out.println(profiles);
+        System.out.println(realProfiles);
+        String defaultProfile = profiles.isEmpty() ? "default" : profiles.get(0);
+        return profiles.stream().filter(realProfiles::contains).findAny().orElse(defaultProfile);
     }
 
 }

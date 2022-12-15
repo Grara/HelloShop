@@ -33,5 +33,5 @@ chmod +x $JAR_NAME
 
 echo "> $JAR_NAME 실행"
 
-nohup java -jar -Dspring.config.location=/home/ec2-user/app/helloshop/application.yml,/home/ec2-user/app/helloshop/application-oauth.yml $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+nohup java -jar -Dspring.config.location=/home/ec2-user/app/helloshop/application.yml -Dspring.profiles.active=real1 > $REPOSITORY/nohup.out 2>&1 &
 
