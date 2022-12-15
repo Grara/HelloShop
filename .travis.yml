@@ -19,6 +19,7 @@ notifications:
       - nomj18@gmail.com
 
 before_deploy:
+  - chmod +x gradlew
   - zip -r helloshop-webservice *
   - mkdir -p deploy
   - mv helloshop-webservice.zip deploy/helloshop-webservice.zip
