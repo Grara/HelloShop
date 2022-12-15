@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 *.yml
 !.travis.yml
+!.appspec.yml
 
 ### STS ###
 .apt_generated
