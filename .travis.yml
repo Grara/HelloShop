@@ -16,7 +16,7 @@ script: "./gradlew clean build"
 notifications:
   email:
     recipients:
-      - nomj18@gamil.com
+      - nomj18@gmail.com
 
 before_deploy:
   - zip -r helloshop-webservice *
