@@ -9,7 +9,9 @@ function find_idle_profile(){
     CURRENT_PROFILE=$(curl -s http://localhost/profile)
   fi
 
-  if [ ${CURRENT_PROFILE } == real1 ]; then
+  echo "> 현재 프로파일: ${CURRENT_PROFILE}"
+
+  if [ ${CURRENT_PROFILE} == real1 ]; then
     IDLE_PROFILE=real2
   else
     IDLE_PROFILE=real1
