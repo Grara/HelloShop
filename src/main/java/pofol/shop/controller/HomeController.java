@@ -2,6 +2,8 @@ package pofol.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +39,9 @@ public class HomeController {
     private final AuthenticationManager authenticationManager;
     private final Environment env;
 
+    @Value("${server.port}")
+    private int port;
+
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserAdapter adapter) {
 
@@ -54,6 +59,15 @@ public class HomeController {
         System.out.println(realProfiles);
         String defaultProfile = profiles.isEmpty() ? "default" : profiles.get(0);
         return profiles.stream().filter(realProfiles::contains).findAny().orElse(defaultProfile);
+    }
+
+    @ResponseBody
+    @GetMapping("/info")
+    public String info(){
+        List<String> profiles = Arrays.asList(env.getActiveProfiles());
+        List<String> realProfiles = Arrays.asList("real1", "real2");
+        String defaultProfile = profiles.isEmpty() ? "default" : profiles.get(0);
+        return profiles.stream().filter(realProfiles::contains).findAny().orElse(defaultProfile) + "/ port:" + port;
     }
 
 }
