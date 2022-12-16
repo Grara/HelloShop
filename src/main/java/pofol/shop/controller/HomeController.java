@@ -24,10 +24,9 @@ import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.MemberService;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -67,7 +66,16 @@ public class HomeController {
         List<String> profiles = Arrays.asList(env.getActiveProfiles());
         List<String> realProfiles = Arrays.asList("real1", "real2");
         String defaultProfile = profiles.isEmpty() ? "default" : profiles.get(0);
-        return profiles.stream().filter(realProfiles::contains).findAny().orElse(defaultProfile) + "/ port:" + port;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+        Date date = new Date();
+        TimeZone tz = TimeZone.getTimeZone("Asia/Seoul");
+        sdf.setTimeZone(tz);
+        String text = sdf.format(date);
+
+        return profiles.stream().filter(realProfiles::contains).findAny().orElse(defaultProfile) + " / port:" + port + " / time:" + text;
+
+
     }
+
 
 }

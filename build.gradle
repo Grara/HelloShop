@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.TimeZone;
+
 buildscript {
 	ext {
 		queryDslVersion = "5.0.0"
@@ -15,8 +18,14 @@ jar{
 	enabled = false
 }
 
+SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm")
+Date date = new Date()
+TimeZone tz = TimeZone.getTimeZone("Asia/Seoul")
+sdf.setTimeZone(tz)
+String timeText = sdf.format(date)
+
 group = 'pofol'
-version = '0.0.3-SNAPSHOT-' + new Date().format("yyyyMMddHHmm")
+version = '0.0.3-SNAPSHOT-' + timeText
 sourceCompatibility = '11'
 
 configurations {
