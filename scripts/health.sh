@@ -25,7 +25,7 @@ do
     echo "> Health check: ${RESPONSE}"
   fi
 
-  if[ ${RETRY_COUNT} -eq 10 ]; then
+  if [ ${RETRY_COUNT} -eq 10 ]; then
     echo "> Health check 실패"
     echo "> 엔진엑스에 연결하지않고 배포를 종료합니다."
   fi
