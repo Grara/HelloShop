@@ -3,84 +3,84 @@
 <head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
 <body>
 <style>
- .fieldError {
- border-color: #bd2130;
- }
- .form-control {
-      width: 30%;
-  }
 </style>
 <div class="container">
-    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
+    <div>
+        <a href="/" style="width:180px; display:block;"><h3 class="text-muted">HELLO SHOP</h3></a>
+    </div>
 
-    <!--폼 시작-->
-    <form id="form" th:object="${createOAuth2MemberForm}" method="post">
-        <div class="form-group">
-            <label>회원명</label>
-            <input type="hidden" name="duplCheck" id="duplCheck" value="false">
-            <input id="userName" type="text" th:field="*{userName}" class="form-control" placeholder="회원명을 입력하세요"
-                   th:class="${#fields.hasErrors('userName')}? 'form-control fieldError' : 'form-control'">
-            <span> <a href="#" class="btn btn-primary" th:onClick="javascript:duplicateCheck();">
-                중복확인</a>
-            </span>
-            <span id="duplMsg"></span>
-            <p th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color:red;"/>
-        </div>
+    <div align="center">
+        <!--폼 시작-->
+        <form id="form" th:object="${createOAuth2MemberForm}" method="post">
+            <div class="form-group sm">
+                <label>회원명</label>
+                <input type="hidden" name="duplCheck" id="duplCheck" value="false">
+                <input id="userName" type="text" th:field="*{userName}" class="form-control" placeholder="회원명을 입력하세요"
+                       th:class="${#fields.hasErrors('userName')}? 'form-control fieldError' : 'form-control'">
+            </div>
+            <div class="form-group sm">
+                <button type="button" class="btn btn-primary btn-sm" th:onClick="javascript:duplicateCheck();">
+                    중복확인
+                </button>
+            </div>
+            <div class="form-group sm">
+                <span style="color:red;" id="duplMsg"></span>
+            </div>
+            <div class="form-group sm">
+                <label>이메일</label>
+                <input type="text" th:field="*{email}" class="form-control" readonly>
+            </div>
+            <div class="form-group sm">
+                <label>실명</label>
+                <input type="text" th:field="*{realName}" class="form-control" readonly>
 
-        <div class="form-group">
-            <label>이메일</label>
-            <input type="text" th:field="*{email}" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-            <label>실명</label>
-            <input type="text" th:field="*{realName}" class="form-control" readonly>
+            </div>
+            <div class="form-group sm">
+                <label>나이</label>
+                <input type="number" th:field="*{age}" class="form-control" placeholder="나이를 입력하세요">
+            </div>
+            <!--성별-->
+            <div class="form-group mx-sm-1 mb-2 sm">
+                <select th:field="*{sex}" class="form-control">
+                    <option th:each="status : ${T(pofol.shop.domain.enums.Sex).values()}"
+                            th:value="${status}"
+                            th:text="${status}">option
+                    </option>
+                </select>
+            </div>
+            <div class="form-group sm">
+                <label>기본주소</label>
+                <input type="text" th:field="*{address1}" class="form-control" placeholder="기본주소를 입력하세요"
+                       th:class="${#fields.hasErrors('address1')}? 'form-control fieldError' : 'form-control'">
+                <p th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}" style="color:red;"/>
+            </div>
+            <div class="form-group sm">
+                <label>상세주소</label>
+                <input type="text" th:field="*{address2}" class="form-control" placeholder="상세주소를 입력하세요">
+            </div>
+            <div class="form-group sm">
+                <label>우편번호</label>
+                <input type="number" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요">
+            </div>
 
-        </div>
-        <div class="form-group">
-            <label>나이</label>
-            <input type="number" th:field="*{age}" class="form-control" placeholder="나이를 입력하세요">
-        </div>
-        <!--성별-->
-        <div class="form-group mx-sm-1 mb-2">
-            <select th:field="*{sex}" class="form-control">
-                <option th:each="status : ${T(pofol.shop.domain.enums.Sex).values()}"
-                        th:value="${status}"
-                        th:text="${status}">option
-                </option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>기본주소</label>
-            <input type="text" th:field="*{address1}" class="form-control" placeholder="기본주소를 입력하세요"
-                   th:class="${#fields.hasErrors('address1')}? 'form-control fieldError' : 'form-control'">
-            <p th:if="${#fields.hasErrors('address1')}" th:errors="*{address1}" style="color:red;"/>
-        </div>
-        <div class="form-group">
-            <label>상세주소</label>
-            <input type="text" th:field="*{address2}" class="form-control" placeholder="상세주소를 입력하세요">
-        </div>
-        <div class="form-group">
-            <label>우편번호</label>
-            <input type="number" th:field="*{zipcode}" class="form-control" placeholder="우편번호를 입력하세요">
-        </div>
-
-        <a href="#" class="btn btn-primary" th:onClick="javascript:join();">
-            회원 가입</a>
-    </form>
-    <!--폼 종료-->
-
+            <a href="#" class="btn btn-primary" th:onClick="javascript:join();">
+                회원 가입</a>
+        </form>
+        <!--폼 종료-->
+    </div>
     <br/>
-    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}"/>
 </div> <!-- /container -->
 </body>
 
 <script>
+$('.form-group').attr('align','left'); //입력칸 정렬
 
 $('#userName').on('change', function() { //회원명입력 이벤트 등록
 
     //회원명이 변경되면 중복확인 초기화
     $('#duplCheck').val(false);
-    $('#duplMsg').html('중복확인을 해주세요');
+    $('#duplMsg').html('중복확인을 해주세요').css({'color' : 'red'});
 });
 
 function join(){ //회원가입 폼 제출
@@ -99,7 +99,7 @@ function duplicateCheck(){ //회원명 중복체크
     //입력을 안했을 경우
     if(username == undefined || username == null || username.length == 0){
         $('#duplCheck').val(false);
-        $('#duplMsg').html('회원명을 입력해주세요');
+        $('#duplMsg').html('회원명을 입력해주세요').css({'color' : 'red'});
         return false;
     }
 
@@ -117,6 +117,10 @@ function duplicateCheck(){ //회원명 중복체크
             let res = JSON.parse(resOrigin); //데이터 타입이 text라 parse해줘야함
             $('#duplCheck').val(res.data); //회원명 사용가능 여부
             $('#duplMsg').html(res.message); //응답 메세지
+            if(res.status == 'OK'){
+                $('#duplMsg').css({'color' : 'green'});
+            }
+            else $('#duplMsg').css({'color' : 'red'});
         },
         error : function(res){
             alert('에러가 발생했습니다');
@@ -128,6 +132,7 @@ function duplicateCheck(){ //회원명 중복체크
 
     return false;
 }
+
 
 </script>
 

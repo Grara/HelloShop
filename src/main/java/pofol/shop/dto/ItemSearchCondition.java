@@ -4,12 +4,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class ItemSearchCondition {
     private String itemName;
     private String author;
-    private int minPrice;
-    private int maxPrice;
+    private Integer minPrice;
+    private Integer maxPrice;
     private ItemSortOption sortOption = ItemSortOption.NONE;
 
+    public void removeNull(){
+        if(minPrice == null) minPrice = 0;
+        if(maxPrice == null) maxPrice = 0;
+    }
 }

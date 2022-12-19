@@ -77,11 +77,11 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
         return StringUtils.hasText(author) ? item.author.contains(author) : null;
     }
 
-    private BooleanExpression priceGoe(int minPrice) {
+    private BooleanExpression priceGoe(Integer minPrice) {
         return item.price.goe(minPrice);
     }
 
-    private BooleanExpression priceLoe(int maxPrice) {
+    private BooleanExpression priceLoe(Integer maxPrice) {
         if(maxPrice == 0) return null;
         return item.price.loe(maxPrice);
     }

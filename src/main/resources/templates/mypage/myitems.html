@@ -3,37 +3,39 @@
 <head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
 <body>
 <div class="container">
-    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
-    <div>
-        <!--아이템 목록-->
-        <table class="table table-striped">
-            <tr>
-                <th>#</th>
-                <th>상품명</th>
-                <th>저자</th>
-                <th>가격</th>
-                <th>재고수량</th>
-                <th></th>
-            </tr>
-            <tr th:each="item : ${items}">
-                <td th:text="${item.id}"></td>
-                <td>
-                    <a th:text="${item.itemName}" th:href="@{/items/{id}(id = ${item.id})}"></a>
-                </td>
-                <td th:text="${item.author}"></td>
-                <td th:text="${item.price}"></td>
-                <td th:text="${item.quantity}"></td>
-                <td>
-                    <form role="form" action="/items/edit" method="get">
-                        <input type="hidden" th:name="id" th:value="${item.id}">
-                        <button type="submit" class="btn btn-primary">수정</button>
-                    </form>
-                </td>
-            </tr>
-        </table>
-        <!--/아이템 목록-->
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}"/>
+    <div class="mypage-container">
+        <div th:replace="~{fragments/mypageSide::mypageSide(~{::body}, 'home')}"/>
+        <div class="mypage-div-center" style="width:75%;">
+            <div class="mypage-center-title" align="center">판매상품 관리</div>
+            <!--아이템 목록-->
+            <table class="table table-striped">
+                <tr>
+                    <th>상품명</th>
+                    <th>저자</th>
+                    <th>가격</th>
+                    <th>재고수량</th>
+                    <th></th>
+                </tr>
+                <tr th:each="item : ${items}">
+                    <td>
+                        <a th:text="${item.itemName}" th:href="@{/items/{id}(id = ${item.id})}"></a>
+                    </td>
+                    <td th:text="${item.author}"></td>
+                    <td th:text="${item.price}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td>
+                        <form role="form" action="/items/edit" method="get">
+                            <input type="hidden" th:name="id" th:value="${item.id}">
+                            <button type="submit" class="btn btn-primary">수정</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            <!--/아이템 목록-->
+        </div>
     </div>
-    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}"/>
 </div> <!-- /container -->
 </body>
 </html>

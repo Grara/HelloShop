@@ -39,8 +39,10 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
-        Map<String, Object> res = (Map<String, Object>) attributes.get("response");
-
+        System.out.println(userNameAttributeName);
+        System.out.println(attributes);
+        Map<String, Object> res = (Map<String, Object>) attributes.get(userNameAttributeName);
+        System.out.println(res);
         return OAuthAttributes.builder()
                 .name((String) res.get("name"))
                 .email((String) res.get("email"))
@@ -50,7 +52,8 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
-
+        System.out.println(userNameAttributeName);
+        System.out.println(attributes);
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))

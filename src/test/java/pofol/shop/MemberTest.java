@@ -1,14 +1,10 @@
 package pofol.shop;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.Member;
-import pofol.shop.domain.embedded.PersonalInfo;
-import pofol.shop.domain.enums.Sex;
 import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.MemberService;
 

@@ -9,9 +9,13 @@
     margin-right: 10px;
     margin-left: 10px;
   }
+  label{
+    margin-right:10px;
+  }
+
 </style>
 <div class="container">
-    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}"/>
 
     <!--검색창-->
     <div>
@@ -19,10 +23,12 @@
             <!--첫번째 줄-->
             <div class="form-inline">
                 <div class="form-group mb-2">
-                    <input type="text" th:field="*{itemName}" class="formcontrol" placeholder="상품명"/>
+                    <label>상품명</label>
+                    <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명"/>
                 </div>
                 <div class="form-group mb-2">
-                    <input type="text" th:field="*{author}" class="formcontrol" placeholder="저자명"/>
+                    <label>저자</label>
+                    <input type="text" th:field="*{author}" class="form-control" placeholder="저자명"/>
                 </div>
             </div>
             <!--/첫번째 줄-->
@@ -31,11 +37,11 @@
             <div class="form-inline">
                 <div class="form-group mb-2">
                     <label>최소 가격</label>
-                    <input type="number" min="0" th:field="*{minPrice}" class="formcontrol"/>
+                    <input type="number" min="0" th:field="*{minPrice}" class="form-control"/>
                 </div>
                 <div class="form-group mb-2">
                     <label>최대 가격</label>
-                    <input type="number" min="0" th:field="*{maxPrice}" class="formcontrol"/>
+                    <input type="number" min="0" th:field="*{maxPrice}" class="form-control"/>
                 </div>
                 <div class="form-group mb-2">
                     <label>정렬기준</label>
@@ -128,7 +134,7 @@
     </div>
     <!--페이지 이동 버튼-->
 
-    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}"/>
 
 </div> <!-- /container -->
 </body>

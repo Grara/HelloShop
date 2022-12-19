@@ -4,72 +4,64 @@
 
 <body>
 <style>
- .info {
-      width: 30%;
-  }
-  .profile {
-    padding: 10px;
-  }
-  .form-control {
-      width: 100%;
-  }
-  .form-group{
-    align: left;
-    width: 30%;
-  }
-
 </style>
 <div class="container">
-    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
+    <div th:replace="~{fragments/bodyheader::bodyHeader(~{::body}, 'home')}"/>
+    <div class="mypage-container">
+        <div th:replace="~{fragments/mypageSide::mypageSide(~{::body}, 'home')}"/>
+        <div class="mypage-div-center" align="center">
+            <div class="mypage-center-title">상세 정보</div>
+            <!--프로필 이미지-->
+            <div class="profile" align="center" style="margin:10px;">
+                <img id="img" th:src="|/images/${form.profileId}|" width="100" height="100">
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary btn-sm" onclick="javascript:openPop();">프로필 변경</button>
+            </div>
+            <div class="form-group">
+                <label>회원명</label>
+                <input type="text" th:value="${form.userName}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>실명</label>
+                <input type="text" th:value="${form.realName}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>성별</label>
+                <input type="text" th:value="${form.sex}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>나이</label>
+                <input type="text" th:value="${form.age}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>기본주소</label>
+                <input type="text" th:value="${form.address1}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>상세주소</label>
+                <input type="text" th:value="${form.address2}" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>우편번호</label>
+                <input type="text" th:value="${form.zipcode}" class="form-control" readonly>
+            </div>
 
-    <div class="outer" align="center">
-        <!--프로필 이미지-->
-        <div class="profile" align="center">
-            <img th:src="|/images/${form.profileId}|" width="100" height="100">
+            <!--수정화면으로 이동-->
+            <p>
+                <a class="btn btn-lg btn-secondary" href="/mypage/details/edit">수정</a>
+            </p>
         </div>
-        <div class="form-group">
-            <label>회원명</label>
-            <input type="text" th:value="${form.userName}" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-            <label>실명</label>
-            <input type="text" th:value="${form.realName}" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-            <label>성별</label>
-            <input type="text" th:value="${form.sex}" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-            <label>나이</label>
-            <input type="text" th:value="${form.age}" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-            <label>기본주소</label>
-            <input type="text" th:value="${form.address1}" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-            <label>상세주소</label>
-            <input type="text" th:value="${form.address2}" class="form-control" readonly>
-        </div>
-        <div class="form-group">
-            <label>우편번호</label>
-            <input type="text" th:value="${form.zipcode}" class="form-control" readonly>
-        </div>
-
-        <!--수정화면으로 이동-->
-        <p>
-            <a class="btn btn-lg btn-secondary" href="/mypage/details/edit">수정</a>
-        </p>
-
+        <div style="float: left; width: 35%; padding:10px;"></div>
     </div>
-
-    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}"/>
 </div> <!-- /container -->
 </body>
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script>
 $('.form-group').attr('align','left');
+function openPop(){
+var popup = window.open("/mypage/details/profile/update", 'pop', 'width=600px, height=300px, resizable=no, scrollbars=yes');
+}
 </script>
 
 </html>

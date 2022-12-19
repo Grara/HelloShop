@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
+import static pofol.shop.config.DefaultValue.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,6 +49,7 @@ public class ItemController {
 
     @GetMapping("/items") //Item 리스트
     public String list(@ModelAttribute ItemSearchCondition condition, Model model, Pageable pageable){
+        condition.removeNull();
         Page<ItemDto> results = itemRepository.searchWithPage(condition, pageable);
         utilService.pagingCommonTask(results, model);
 
@@ -60,6 +62,7 @@ public class ItemController {
     @GetMapping("/items/new") //Item 등록 폼 화면
     public String createForm(Model model){
         model.addAttribute("createItemForm", new CreateItemForm());
+        model.addAttribute("defaultImageId", DEFAULT_ITEM_THUMBNAIL_ID);
         return "items/createItemForm";
     }
 

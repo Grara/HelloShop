@@ -4,62 +4,57 @@
 
 <body>
 <style>
- .fieldError{
- border-color: #bd2130;
- }
- .form-control{
-      width: 30%;
-  }
 </style>
 <div class="container">
     <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
-
+    <div align="center">
     <!--Form 시작-->
     <form role="form" action="/items/new" th:object="${createItemForm}" method="post" enctype="multipart/form-data">
-        <div class="form-group">
+        <div class="form-group sm">
             <label>상품명</label>
             <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"
                    th:class="${#fields.hasErrors('itemName')}? 'form-control fieldError' : 'form-control'">
             <p th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}" style="color:red;"/>
         </div>
-        <div class="form-group">
+        <div class="form-group sm">
             <label>저자</label>
             <input type="text" th:field="*{author}" class="form-control" placeholder="저자를 입력하세요"
                    th:class="${#fields.hasErrors('author')}? 'form-control fieldError' : 'form-control'">
             <p th:if="${#fields.hasErrors('author')}" th:errors="*{author}" style="color:red;"/>
         </div>
-        <div class="form-group">
+        <div class="form-group sm">
             <label>설명 제목</label>
             <input type="text" th:field="*{descriptionTitle}" class="form-control" placeholder="설명 제목을 입력하세요">
         </div>
-        <div class="form-group">
+        <div class="form-group sm">
             <label>설명</label>
             <textarea th:field="*{description}" class="form-control" placeholder="설명 본문을 입력하세요">
             </textarea>
         </div>
-        <div class="form-group">
+        <div class="form-group sm">
             <label>가격</label>
             <input type="number" th:field="*{price}" class="form-control" placeholder="가격을 입력하세요"
                    th:class="${#fields.hasErrors('price')}? 'form-control fieldError' : 'form-control'">
             <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" style="color:red;"/>
         </div>
-        <div class="form-group">
+        <div class="form-group sm">
             <label>수량</label>
             <input type="number" th:field="*{quantity}" class="form-control" placeholder="수량을 입력하세요"
                    th:class="${#fields.hasErrors('quantity')}? 'form-control fieldError' : 'form-control'">
             <p th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" style="color:red;"/>
         </div>
-        <div class="form-group">
+        <div class="form-group sm" align="center">
             <label>상품 이미지</label>
             <input type="file" id="thumbnail" name="thumbnail" accept="image/*" class="form-control"
-            style="width:20%; height:45px;">
+            style="width:100%; height:45px;">
         </div>
-        <img id="img" src="/images/2" width="100" height="100"/>
-
+        <img id="img" th:src="|/images/${defaultImageId}|" width="100" height="100"/>
+        <input id="defaultImageId" type="hidden" th:value="${defaultImageId}">
         <div style="padding:10px">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
+    </div>
     <!--Form종료-->
     <br/>
     <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
@@ -67,6 +62,7 @@
 </body>
 
 <script>
+$('.form-group').attr('align','left'); //입력칸 정렬
 
 function readURL(input) { //이미지를 등록하면 미리보기 이미지 변경
     if (input.files && input.files[0]) {
@@ -81,7 +77,8 @@ function readURL(input) { //이미지를 등록하면 미리보기 이미지 변
 //파일업로드 이벤트 등록
 $(":input[name='thumbnail']").change(function() {
     if( $(":input[name='thumbnail']").val() == '' ) {
-        $('#img').attr('src' , '/images/2');
+        let defaultImageId = $("#defaultImageId").val();
+        $('#img').attr('src' , '/images/' + defaultImageId);
     }
     $('#img').css({ 'display' : '' });
     readURL(this);

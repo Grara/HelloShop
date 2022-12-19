@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import pofol.shop.service.AccessDeniedHandlerImpl;
 import pofol.shop.service.LoginService;
 
 
@@ -19,7 +20,7 @@ public class SecurityConfig{
 
     private final LoginService loginService;
     private final AuthenticationConfiguration authenticationConfiguration;
-
+    private final AccessDeniedHandlerImpl accessDeniedHandlerImpl;
     @Bean
     public WebSecurityCustomizer configure(){
         //ignoring에 들어간 url은 시큐리티 적용이 안됨, 리소스를 정상적으로 불러들이기위한 코드
@@ -35,10 +36,12 @@ public class SecurityConfig{
                             .hasRole("ADMIN")
                         .antMatchers("/orders/new", "/cart/new", "/orderSheet",
                                 "/items/new", "/mypage")
-                            .hasAnyRole("ADMIN", "USER")
+                            .access("hasAnyRole('ADMIN', 'USER')")
                         .antMatchers("/login")
                             .denyAll()
                         .anyRequest().permitAll()
+                .and()
+                    .exceptionHandling().accessDeniedHandler(accessDeniedHandlerImpl)
                 .and()
                     .formLogin()
                         .loginPage("/login-form")

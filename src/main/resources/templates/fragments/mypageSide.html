@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="mypageSide(content, paramActive)">
+    <div style="float: left; width: 25%; padding:30px; height:100%; background-color:#f8f9fa; height:900px;" align="left">
+        <div style="color: black; font-size: 2.0em; font-weight:bold; padding-bottom: 50px;">
+            MENU
+        </div>
+
+        <div class="mypage side">
+            <a href="/mypage/details" class="mypage side"> 상세 정보 </a>
+        </div>
+        <div class="mypage side">
+            <a href="/mypage/password-edit" class="mypage side"> 비밀번호 변경 </a>
+        </div>
+        <div class="mypage side">
+            <a href="/mypage/myitems" class="mypage side"> 판매상품 관리 </a>
+        </div>
+        <div class="mypage side">
+            <a href="/mypage/myorders" class="mypage side"> 주문내역 </a>
+        </div>
+    </div>
+    <div style="float: left; width: 10%; padding: 30px;"></div>
+</div>
+</html>

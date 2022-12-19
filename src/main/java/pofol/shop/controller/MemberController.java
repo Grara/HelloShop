@@ -62,8 +62,9 @@ public class MemberController {
 
         model.addAttribute("createOAuth2MemberForm", form);
 
-        return "members/createMemberForm-OAuth2";
+        SecurityContextHolder.getContext().setAuthentication(null);
 
+        return "members/createMemberForm-OAuth2";
     }
 
     @PostMapping("/members/new-oauth2") //OAuth2 회원가입 요청
@@ -78,6 +79,8 @@ public class MemberController {
             return "redirect:/";
         }
 
+        SecurityContextHolder.getContext().setAuthentication(null);
+
         try {
             Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
             PersonalInfo personalInfo = new PersonalInfo(form.getRealName(), form.getAge(), form.getSex());
@@ -91,7 +94,7 @@ public class MemberController {
                     .build();
 
             memberService.signUp(member);
-            SecurityContextHolder.getContext().setAuthentication(null);
+
 
             return "redirect:/login-form";
         } catch (Exception e) {

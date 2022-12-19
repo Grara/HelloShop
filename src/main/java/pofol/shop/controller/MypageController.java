@@ -40,7 +40,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
-import static pofol.shop.config.DefaultValue.DEFAULT_PROFILE_IMAGE_ID;
+import static pofol.shop.config.DefaultValue.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,21 +53,6 @@ public class MypageController {
     private final ItemRepository itemRepository;
     private final OrderRepository orderRepository;
     private final UtilService utilService;
-
-    @GetMapping("/mypage") //마이페이지 홈
-    public String mypageHome(Model model, @AuthenticationPrincipal UserAdapter principal){
-
-        Member member = memberRepository.findByUserName(principal.getName()).orElseThrow();
-
-        if (member.getProfileImage() != null) { //프로필 이미지 파일 id 추가
-            model.addAttribute("fileId", member.getProfileImage().getId());
-        }
-
-        model.addAttribute("userName", member.getUserName());
-
-        return "mypage/myhome";
-
-    }
 
     @GetMapping("/mypage/details") //개인정보 화면
     public String mypageDetails(Model model, @AuthenticationPrincipal UserAdapter principal){
@@ -146,7 +131,8 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/details/profile/update") //프로필 변경 폼 화면(팝업창)
-    public String updateProfileImageForm(@AuthenticationPrincipal UserAdapter principal){
+    public String updateProfileImageForm(Model model){
+        model.addAttribute("defaultImageId", DEFAULT_PROFILE_IMAGE_ID);
         return "popup/updateProfileForm";
     }
 
