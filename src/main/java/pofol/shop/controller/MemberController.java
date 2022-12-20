@@ -40,7 +40,7 @@ public class MemberController {
     private final UtilService utilService;
 
     @GetMapping("/login-form") //로그인화면
-    public String loginForm(@RequestParam(value = "error", required = false)boolean error, Model model){
+    public String loginForm(@RequestParam(value = "error", required = false) boolean error, Model model) {
         LoginForm form = new LoginForm();
         model.addAttribute("loginForm", form);
         model.addAttribute("hasError", error);
@@ -68,20 +68,19 @@ public class MemberController {
     }
 
     @PostMapping("/members/new-oauth2") //OAuth2 회원가입 요청
-    public String createOauth2(@Valid CreateOAuth2MemberForm form, BindingResult result, @AuthenticationPrincipal UserAdapter principal) {
-
-        //값 입력에 문제가 있으면 다시 수정하도록함
-        if (result.hasErrors()) {
-            return "members/createMemberForm-OAuth2";
-        }
-
-        if(!principal.getAttribute("email").equals(form.getEmail())){
-            return "redirect:/";
-        }
-
-        SecurityContextHolder.getContext().setAuthentication(null);
+    public String createOauth2(@Valid CreateOAuth2MemberForm form, BindingResult result, @AuthenticationPrincipal UserAdapter principal) throws Exception {
 
         try {
+            //값 입력에 문제가 있으면 다시 수정하도록함
+            if (result.hasErrors()) {
+                return "members/createMemberForm-OAuth2";
+            }
+            if (!principal.getAttribute("email").equals(form.getEmail())) {
+                return "redirect:/";
+            }
+
+            SecurityContextHolder.getContext().setAuthentication(null);
+
             Address address = new Address(form.getAddress1(), form.getAddress2(), form.getZipcode());
             PersonalInfo personalInfo = new PersonalInfo(form.getRealName(), form.getAge(), form.getSex());
             Member member = Member.builder()

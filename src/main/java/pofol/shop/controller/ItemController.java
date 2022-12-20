@@ -60,7 +60,7 @@ public class ItemController {
     }
 
     @GetMapping("/items/new") //Item 등록 폼 화면
-    public String createForm(Model model){
+    public String createForm(Model model ,@AuthenticationPrincipal UserAdapter principal){
         model.addAttribute("createItemForm", new CreateItemForm());
         model.addAttribute("defaultImageId", DEFAULT_ITEM_THUMBNAIL_ID);
         return "items/createItemForm";
@@ -158,6 +158,4 @@ public class ItemController {
         model.addAttribute("comments", commentDtos);
         return "items/item";
     }
-
-
 }

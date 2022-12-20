@@ -1,10 +1,17 @@
 package pofol.shop;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import pofol.shop.aop.TimeLogAop;
 import pofol.shop.config.DefaultValue;
 import pofol.shop.controller.HomeController;
 import pofol.shop.domain.Cart;
@@ -19,9 +26,12 @@ import pofol.shop.service.CartService;
 import pofol.shop.service.FileService;
 import pofol.shop.service.MemberService;
 
+import javax.annotation.PostConstruct;
+
+@Order(1)
 @Component
 @RequiredArgsConstructor
-public class TestInitRunner implements ApplicationRunner {
+public class TestInitRunner implements ApplicationRunner, ApplicationListener<ContextClosedEvent> {
 
 
     private final MemberService memberService;
@@ -31,11 +41,15 @@ public class TestInitRunner implements ApplicationRunner {
     private final CartRepository cartRepository;
     private final FileService fileService;
     private final HomeController homeController;
+    Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+    Logger logger2 = LoggerFactory.getLogger(TimeLogAop.class);
+
     @Value("${fileDir}")
     private String FILE_DIR;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        logger2.info("@@@@@@@@@@@@@@@@@@@스프링 시작@@@@@@@@@@@@@@@@@@@");
         if(homeController.profile().equals("test")) {
             FileEntity profileImage = new FileEntity();
             profileImage.setSavePath(FILE_DIR + "DEFAULT_PROFILE_IMAGE.jpeg");
@@ -81,5 +95,11 @@ public class TestInitRunner implements ApplicationRunner {
             cartRepository.save(cart2);
             cartRepository.save(cart3);
         }
+    }
+
+    @Override
+    public void onApplicationEvent(ContextClosedEvent event) {
+        logger.info("@@@@@@@@@@@@@@@@@@@스프링 종료@@@@@@@@@@@@@@@@@@@");
+        logger2.info("@@@@@@@@@@@@@@@@@@@스프링 종료@@@@@@@@@@@@@@@@@@@");
     }
 }

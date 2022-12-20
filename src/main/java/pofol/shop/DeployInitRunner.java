@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import static pofol.shop.config.DefaultValue.*;
 import pofol.shop.controller.HomeController;
 import pofol.shop.repository.FileRepository;
 
+@Order(2)
 @Component
 @RequiredArgsConstructor
 public class DeployInitRunner implements ApplicationRunner {
