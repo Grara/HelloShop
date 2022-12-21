@@ -41,6 +41,7 @@ public class MemberController {
 
     @GetMapping("/login-form") //로그인화면
     public String loginForm(@RequestParam(value = "error", required = false) boolean error, Model model) {
+        SecurityContextHolder.getContext().setAuthentication(null);
         LoginForm form = new LoginForm();
         model.addAttribute("loginForm", form);
         model.addAttribute("hasError", error);
@@ -61,8 +62,6 @@ public class MemberController {
                 .build();
 
         model.addAttribute("createOAuth2MemberForm", form);
-
-        SecurityContextHolder.getContext().setAuthentication(null);
 
         return "members/createMemberForm-OAuth2";
     }

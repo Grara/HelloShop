@@ -8,6 +8,7 @@ build/
 !.travis.yml
 !appspec.yml
 logs
+keystore.p12
 
 ### STS ###
 .apt_generated

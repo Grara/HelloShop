@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header">
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
     <title>Hello</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
@@ -9,10 +9,10 @@
 </style>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-    <a th:href="${a}">ddd</a>
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
+        <div th:if="${#strings.equals(test.name, 'dd')}">dddd</div>
 
-    <div th:replace="fragments/footer :: footer"/>
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
 <script>

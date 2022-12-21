@@ -4,13 +4,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.data.convert.DtoInstantiatingConverter;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pofol.shop.domain.Member;
+import pofol.shop.dto.TestDto;
 import pofol.shop.dto.UserAdapter;
+import pofol.shop.repository.MemberRepository;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -19,6 +26,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class HomeController {
     private final Environment env;
+    private final MemberRepository memberRepository;
 
     @Value("${server.port}")
     private int port;
@@ -31,6 +39,11 @@ public class HomeController {
             SecurityContextHolder.getContext().setAuthentication(null);
         }
         return "home";
+    }
+
+    @GetMapping("/login")
+    public String goToLoginForm(){
+        return "redirect:/login-form";
     }
 
     @ResponseBody
@@ -56,8 +69,17 @@ public class HomeController {
 
         return profiles.stream().filter(realProfiles::contains).findAny().orElse(defaultProfile) + " / port:" + port + " / time:" + text;
 
-
     }
 
+    @GetMapping("/test")
+    public String test(Model model, HttpServletRequest request){
+        Member member = memberRepository.findByUserName("user").get();
+        HttpSession session = request.getSession();
+        session.setAttribute("user", new TestDto(member));
+
+        TestDto dd = new TestDto("dd");
+        model.addAttribute("test", dd);
+        return "test";
+    }
 
 }

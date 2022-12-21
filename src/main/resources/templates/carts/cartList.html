@@ -57,7 +57,7 @@
       var checkBox = $(this).children().last().children();
 
       //해당 아이템을 선택했는지 확인인
-      var isChecked = chckBox.is(':checked');
+      var isChecked = checkBox.is(':checked');
       if(isChecked){
         var item = {};
         item.cartId = checkBox.val();
@@ -88,8 +88,8 @@
     data : JSON.stringify(form),
 
     //주문시트 생성이 성공하면 해당 주문시트 URL로 이동
-    success : function(resOrigin){
-        let res = JSON.parse(resOrigin);
+    success : function(res){
+
         window.location.href = 'http://localhost:8080/orderSheet/' + res.data;
     },
     failure : function(){

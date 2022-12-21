@@ -27,6 +27,8 @@ import pofol.shop.service.FileService;
 import pofol.shop.service.MemberService;
 
 import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+import java.sql.Connection;
 
 @Order(1)
 @Component
@@ -41,6 +43,9 @@ public class TestInitRunner implements ApplicationRunner, ApplicationListener<Co
     private final CartRepository cartRepository;
     private final FileService fileService;
     private final HomeController homeController;
+    private final DataSource dataSource;
+
+
     Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
     Logger logger2 = LoggerFactory.getLogger(TimeLogAop.class);
 
@@ -49,6 +54,7 @@ public class TestInitRunner implements ApplicationRunner, ApplicationListener<Co
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
         logger2.info("@@@@@@@@@@@@@@@@@@@스프링 시작@@@@@@@@@@@@@@@@@@@");
         if(homeController.profile().equals("test")) {
             FileEntity profileImage = new FileEntity();

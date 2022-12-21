@@ -43,6 +43,34 @@ public class TimeLogAop {
         }
     }
 
+    @Around("execution(* pofol.shop.api..*(..))")
+    public Object logApiController(ProceedingJoinPoint joinPoint) throws Throwable {
+        boolean condition = !(joinPoint.toString().contains("File") || joinPoint.toString().contains("Crud"));
+
+        long start = System.currentTimeMillis();
+        if (condition) {
+            logger.info("----------------------------------------------------------------");
+            logger.info("START: " + joinPoint.toString());
+        }
+
+        try {
+            return joinPoint.proceed();
+
+        } catch (Exception e) {
+            logger.info("!!!!!!!!!!!!!!!!!!!!!!!에러발생!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            logger.info("발생지점: " + joinPoint.toString());
+            logger.info("에러종류: " + e.getClass().getSimpleName() + " / " + "에러메시지: " + e.getMessage() + " / " + "자세한 내용은 error.log참조");
+            throw e;
+
+        } finally {
+            if (condition) {
+                long finish = System.currentTimeMillis();
+                long processingTime = finish - start;
+                logger.info("END: " + joinPoint.toString() + " " + processingTime + "ms");
+            }
+        }
+    }
+
     @Around("execution(* pofol.shop.service..*(..))")
     public Object logService(ProceedingJoinPoint joinPoint) throws Throwable {
         boolean condition = !(joinPoint.toString().contains("File") || joinPoint.toString().contains("Crud"));
