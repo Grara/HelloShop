@@ -1,4 +1,4 @@
-package pofol.shop.dto;
+package pofol.shop.dto.security;
 
 import lombok.Data;
 import lombok.Getter;

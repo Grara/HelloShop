@@ -28,54 +28,51 @@
                 </div>
                 <button type="submit" class="btn btn-primary mb-2">검색</button>
             </form>
-        </div>
-        <!--/검색조건-->
 
-        <!--주문목록-->
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <td>주문번호</td>
-                <td>결제금액</td>
-                <td>일시</td>
-                <td>주문상태</td>
-                <td></td>
-                <td></td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${orders}">
-                <td th:text="${order.id}"></td>
-                <td th:text="${order.orderTotalPrice}"></td>
-                <td th:text="${order.orderDate}"></td>
-                <td th:text="${order.status}"></td>
-                <td>
-                    <a th:href="|/orders/${order.id}|" class="btn btn-primary">상세정보</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <!--주문목록-->
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <td>주문번호</td>
+                    <td>결제금액</td>
+                    <td>일시</td>
+                    <td>주문상태</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.orderTotalPrice}"></td>
+                    <td th:text="${order.orderDate}"></td>
+                    <td th:text="${order.status}"></td>
+                    <td>
+                        <a th:href="|/orders/${order.id}|" class="btn btn-primary">상세정보</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!--주문목록-->
 
-        <!--페이지 이동 버튼 목록-->
-        <div align="center">
+            <!--페이지 이동 버튼 목록-->
+            <div align="center">
 
-            <!--현재 시작번호에서-1 페이지로 이동-->
-            <!--현재 시작번호가 10보다 크면 표시함-->
-            <a th:if="${pageStart} > 1"
-               th:text="|<<|"
-               class="btn btn-info"
-               th:href="@{/mypage/myorders
+                <!--현재 시작번호에서-1 페이지로 이동-->
+                <!--현재 시작번호가 10보다 크면 표시함-->
+                <a th:if="${pageStart} > 1"
+                   th:text="|<<|"
+                   class="btn btn-info"
+                   th:href="@{/mypage/myorders
                    (
                    page=${pageStart - 2},
                    orderStatus=${search.orderStatus},
                    startDateInput=${search.startDateInput},
                    endDateInput=${search.endDateInput}
                    )}"
-            ></a>
+                ></a>
 
-            <!--페이지 번호 목록-->
-            <span>
+                <!--페이지 번호 목록-->
+                <span>
                 <a style="margin:3px;"
                    th:each="num : ${#numbers.sequence( __${pageStart}__ , __${pageEnd}__ )}"
                    th:with="isCur = ${ __${num}__ == __${curNumber}__ }"
@@ -90,23 +87,28 @@
                            )}"
                 ></a>
         </span>
-            <!--/페이지 번호 목록-->
+                <!--/페이지 번호 목록-->
 
-            <!--현재 마지막번호+1 페이지로 이동-->
-            <!--현재 마지막 번호가 전체에서 마지막 페이지면 표시안함-->
-            <a th:if="${pageEnd} < ${totalPage}"
-               th:text="|>>|"
-               class="btn btn-info"
-               th:href="@{/mypage/myorders
+                <!--현재 마지막번호+1 페이지로 이동-->
+                <!--현재 마지막 번호가 전체에서 마지막 페이지면 표시안함-->
+                <a th:if="${pageEnd} < ${totalPage}"
+                   th:text="|>>|"
+                   class="btn btn-info"
+                   th:href="@{/mypage/myorders
                    (
                    page=${pageEnd},
                    orderStatus=${search.orderStatus},
                    startDateInput=${search.startDateInput},
                    endDateInput=${search.endDateInput}
                    )}"
-            ></a>
+                ></a>
+            </div>
+            <!--/페이지 이동 버튼 목록-->
         </div>
-        <!--/페이지 이동 버튼 목록-->
+        <!--/검색조건-->
+
+        <!--주문목록-->
+
     </div>
     <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}"/>
 </div> <!-- /container -->
@@ -119,6 +121,7 @@
  document.body.appendChild(form);
  form.submit();
  }
+
 
 
 

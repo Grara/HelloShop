@@ -19,16 +19,13 @@
                 </tr>
                 <tr th:each="item : ${items}">
                     <td>
-                        <a th:text="${item.itemName}" th:href="@{/items/{id}(id = ${item.id})}"></a>
+                        <a th:text="${item.itemName}" th:href="|/items/${item.id}|"></a>
                     </td>
                     <td th:text="${item.author}"></td>
                     <td th:text="${item.price}"></td>
                     <td th:text="${item.quantity}"></td>
                     <td>
-                        <form role="form" action="/items/edit" method="get">
-                            <input type="hidden" th:name="id" th:value="${item.id}">
-                            <button type="submit" class="btn btn-primary">수정</button>
-                        </form>
+                        <a class="btn btn-primary" th:text="수정" th:href="|/items/${item.id}/edit|"></a>
                     </td>
                 </tr>
             </table>

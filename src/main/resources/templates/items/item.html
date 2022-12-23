@@ -168,7 +168,7 @@ function buy(name){ //바로구매
     $.ajax({
 
     type : 'post',
-    url : "/orderSheet/new",
+    url : "/orderSheet",
     headers : {
         "Content-Type" : "application/json",
         "X-HTTP-Method-Override" : "POST"
@@ -176,7 +176,7 @@ function buy(name){ //바로구매
     dataType : 'json',
     data : JSON.stringify(form),
     success : function(res){ //생성된 주문시트 url로 이동
-        window.location.href = 'http://localhost:8080/orderSheet/' + res.data;
+        window.location.href = '/orderSheet/' + res.data;
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");
@@ -202,7 +202,7 @@ var count = document.getElementById("count").value;
     $.ajax({
 
     type : 'post',
-    url : '/cart/new',
+    url : '/cart',
     headers : {
         "Content-Type" : "application/json",
         "X-HTTP-Method-Override" : "POST"
@@ -211,7 +211,7 @@ var count = document.getElementById("count").value;
     data : JSON.stringify(form),
     success : function(){
         if(confirm("장바구니로 이동하시겠습니까?")){ //장바구니로 이동
-            window.location.href = "http://localhost:8080/cart";
+            window.location.href = "/cart";
         }
         else{
             return false;
@@ -246,7 +246,7 @@ function addComment(){ //후기 생성
     $.ajax({
 
     type : 'post',
-    url : '/comments/new',
+    url : '/comments',
     headers : {
         "Content-Type" : "application/json",
         "X-HTTP-Method-Override" : "POST"

@@ -1,14 +1,13 @@
 package pofol.shop.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.enums.OrderStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -26,6 +25,10 @@ public class Order extends BaseEntity{
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL) //단방향 일대일
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
+
+    @OneToMany(mappedBy = "order") //단방향 일대다
+    @Setter(AccessLevel.NONE) //연관관계의 주인이 아님
+    private List<OrderItem> orderItems;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -68,5 +71,12 @@ public class Order extends BaseEntity{
         order.setOrderTotalPrice(totalPrice);
         order.setOrderDate(LocalDateTime.now());
         return order;
+    }
+
+    public void cancel(){
+        this.setStatus(OrderStatus.CANCEL);
+        for(OrderItem item : orderItems){
+            item.cancel();
+        }
     }
 }

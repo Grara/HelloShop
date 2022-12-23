@@ -11,9 +11,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pofol.shop.domain.enums.Role;
-import pofol.shop.dto.OrderDto;
-import pofol.shop.dto.OrderSearchCondition;
-import pofol.shop.dto.UserAdapter;
+import pofol.shop.dto.business.OrderDto;
+import pofol.shop.dto.business.OrderSearchCondition;
+import pofol.shop.dto.security.UserAdapter;
 import pofol.shop.exception.NotEnoughQuantityException;
 import pofol.shop.form.create.CreateOrderForm;
 import pofol.shop.domain.*;
@@ -28,11 +28,16 @@ import pofol.shop.service.UtilService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+/**
+ * 주문과 관련된 뷰를 반환하는 Controller입니다.
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-10-21
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-14
+ */
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
@@ -45,7 +50,15 @@ public class OrderController {
     private final UtilService utilService;
     private ObjectMapper mapper = new ObjectMapper();
 
-
+    /**
+     * 전체 주문목록 리스트 화면을 반환합니다.
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-10-21
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-14
+     * @param condition : 검색 조건
+     * @param pageable : 페이징 정보
+     */
     @GetMapping("/orders") //전체 주문 목록, 어드민만 접근 가능
     public String list(@ModelAttribute OrderSearchCondition condition, Model model, Pageable pageable){
 
@@ -70,10 +83,19 @@ public class OrderController {
         return "orders/orderList";
     }
 
+    /**
+     * 주문을 생성하는 주문시트 화면을 반환합니다.
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-10-21
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-11-30
+     * @param id : 주문시트의 id
+     * @param principal : 현재 로그인 세션 정보
+     */
     @GetMapping("/orderSheet/{id}")//주문 생성폼 화면
     public String createForm(@PathVariable("id") Long id,
                              Model model,
-                             Principal principal)throws Exception{
+                             @AuthenticationPrincipal UserAdapter principal)throws Exception{
         
         //id에 해당하는 주문시트를 가져옴
         OrderSheet sheet = orderSheetRepository.findById(id).orElseThrow();
@@ -95,7 +117,16 @@ public class OrderController {
         return "orders/orderForm";
     }
 
-    @PostMapping("/orders/new")//주문 생성 요청
+    /**
+     * 주문 생성 요청을 처리한 후 뷰를 반환합니다.
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-11-19
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-11-13
+     * @param form : 주문 생성에 필요한 데이터 폼
+     * @param principal : 현재 로그인 세션 정보
+     */
+    @PostMapping("/orders/new") //인가때문에 /orders 사용안하고 이걸로 사용함
     public String order(@Valid CreateOrderForm form, BindingResult result, @AuthenticationPrincipal UserAdapter principal){
 
         //Form에 입력한 값에 문제가 있다면 다시 폼 화면으로
@@ -139,6 +170,15 @@ public class OrderController {
         return "errors/alreadyOrder";
     }
 
+    /**
+     * 주문의 상세 정보 조회 페이지를 반환합니다.
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-11-30
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-11-30
+     * @param id : 주문 생성에 필요한 데이터 폼
+     * @param principal : 현재 로그인 세션 정보
+     */
     @GetMapping("/orders/{id}")//주문 상세 정보 조회 화면
     public String orderDetail(@PathVariable("id")Long id, Model model, @AuthenticationPrincipal UserAdapter principal){
         Order order = orderRepository.findById(id).orElseThrow();
@@ -154,6 +194,13 @@ public class OrderController {
         return "orders/order";
     }
 
+    /**
+     * 주문 완료 페이지를 반환합니다.
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-11-30
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-11-30
+     */
     @GetMapping("/orders/cancel-finish")
     public String orderCancelFinish(){
         return "orders/orderCancelFinish";

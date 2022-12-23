@@ -70,7 +70,7 @@
             <tr th:each="item : ${items}">
                 <td th:text="${item.id}"></td>
                 <td>
-                    <a th:text="${item.name}" th:href="@{/items/{id}(id = ${item.id})}"></a>
+                    <a th:text="${item.name}" th:href="|items/${item.id}|"></a>
                 </td>
                 <td th:text="${item.author}"></td>
                 <td th:text="${item.price}"></td>

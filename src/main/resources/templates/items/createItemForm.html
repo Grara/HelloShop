@@ -9,7 +9,7 @@
     <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
     <div align="center">
     <!--Form 시작-->
-    <form role="form" action="/items/new" th:object="${createItemForm}" method="post" enctype="multipart/form-data">
+    <form role="form" action="/items" th:object="${createItemForm}" method="post" enctype="multipart/form-data">
         <div class="form-group sm">
             <label>상품명</label>
             <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"

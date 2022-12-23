@@ -63,7 +63,7 @@ public class SecurityConfig{
                     .authorizeRequests()
                         .antMatchers("/admin", "/members", "/orders")
                             .hasRole("ADMIN")
-                        .antMatchers("/orders/new", "/cart/new", "/orderSheet",
+                        .antMatchers("/orders/new", "/cart", "/orderSheet",
                                 "/items/new", "/mypage")
                             .access("hasAnyRole('ADMIN', 'USER')")
                         .anyRequest()

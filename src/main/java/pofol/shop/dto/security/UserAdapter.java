@@ -1,15 +1,15 @@
-package pofol.shop.dto;
+package pofol.shop.dto.security;
 
 
 import lombok.Getter;
 import lombok.ToString;
-import pofol.shop.domain.Member;
+import pofol.shop.dto.business.MemberDto;
 
 import java.util.Map;
 
 @Getter
 @ToString
-public class UserAdapter extends CustomMemberDetails {
+public class UserAdapter extends CustomUserDetails {
     private MemberDto member;
     private Map<String,Object> attributes;
 

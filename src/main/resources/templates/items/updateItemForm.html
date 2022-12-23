@@ -12,7 +12,7 @@
     <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
 
     <!--폼 시작-->
-    <form role="form" action="/items/edit" th:object="${itemForm}" method="post">
+    <form role="form" th:action="|/items/${itemForm.id}/edit|" th:object="${itemForm}" method="post">
         <input type="hidden" th:field="*{id}" />
         <div class="form-group">
             <label>상품명</label>
@@ -34,7 +34,7 @@
                    th:class="${#fields.hasErrors('quantity')}? 'form-control fieldError' : 'form-control'">
             <p th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}" style="color:red;"/>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">수정</button>
     </form>
     <!--폼 종료-->
     <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />

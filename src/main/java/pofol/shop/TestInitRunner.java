@@ -80,6 +80,7 @@ public class TestInitRunner implements ApplicationRunner, ApplicationListener<Co
 
             Long userId = memberService.createInitMember("user", "1234", Role.ROLE_USER);
             memberService.createInitMember("admin", "1234", Role.ROLE_ADMIN);
+            memberService.createInitMember("guest", "1234", Role.ROLE_GUEST);
             Member findMember = memberRepository.findById(userId).orElseThrow();
 
 

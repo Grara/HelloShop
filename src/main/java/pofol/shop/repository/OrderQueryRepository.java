@@ -3,8 +3,8 @@ package pofol.shop.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pofol.shop.domain.Order;
-import pofol.shop.dto.OrderDto;
-import pofol.shop.dto.OrderSearchCondition;
+import pofol.shop.dto.business.OrderDto;
+import pofol.shop.dto.business.OrderSearchCondition;
 
 import java.util.List;
 

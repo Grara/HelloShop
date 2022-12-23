@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pofol.shop.domain.Cart;
-import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
      * @param member Cart들을 지닌 Member
      * @return 찾은 Cart List
      */
-    List<Cart> findByMember(Member member);
+    List<Cart> findListByMember(Member member);
 
 
     /**
@@ -26,6 +25,9 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
      * @return 찾은 Cart List
      */
     @Query("select c from Cart c left join fetch c.item where c.member = :member")
-    List<Cart> findByMemberFetchItem(@Param("member") Member member);
+    List<Cart> findListByMemberFetchItem(@Param("member") Member member);
 
+
+    @Query("select c from Cart c left join fetch c.member where c.id = :id")
+    Optional<Cart> findByIdFetchMember(@Param("id") Long id);
 }

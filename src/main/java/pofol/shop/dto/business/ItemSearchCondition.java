@@ -1,7 +1,6 @@
-package pofol.shop.dto;
+package pofol.shop.dto.business;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class ItemSearchCondition {

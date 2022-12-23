@@ -35,4 +35,9 @@ public class OrderItem extends BaseEntity{
         this.count = count;
         this.totalPrice = item.getPrice() * count;
     }
+
+    //----------생서자 끝 / 메소드 시작----------//
+    public void cancel(){
+        this.item.addQty(this.count);
+    }
 }

@@ -1,28 +1,25 @@
-package pofol.shop.dto;
+package pofol.shop.dto.security;
 
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import pofol.shop.domain.Member;
+import pofol.shop.dto.business.MemberDto;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 
-public class CustomMemberDetails implements UserDetails, OAuth2User {
+public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private MemberDto member;
     private Map<String, Object> attributes;
 
-    public CustomMemberDetails(MemberDto member) {
+    public CustomUserDetails(MemberDto member) {
         this.member = member;
     }
 
-    public CustomMemberDetails(MemberDto member, Map<String, Object> attributes) {
+    public CustomUserDetails(MemberDto member, Map<String, Object> attributes) {
         this.member = member;
         this.attributes = attributes;
     }

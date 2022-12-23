@@ -8,8 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import pofol.shop.domain.Order;
 import pofol.shop.domain.enums.OrderStatus;
-import pofol.shop.dto.OrderDto;
-import pofol.shop.dto.OrderSearchCondition;
+import pofol.shop.dto.business.OrderDto;
+import pofol.shop.dto.business.OrderSearchCondition;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;

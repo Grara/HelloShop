@@ -24,7 +24,7 @@ public class CartService {
      * @return 찾아낸 Cart의 id를 담은 Optional, <br/> Cart가 없을경우 Optional.empty() 반환
      */
     public Optional<Long> findDuplicateCart(Member member, Item item) {
-        List<Cart> findCarts = cartRepository.findByMember(member);
+        List<Cart> findCarts = cartRepository.findListByMember(member);
         for (Cart findCart : findCarts) {
             if (findCart.getItem().equals(item)) {
                 return Optional.ofNullable(findCart.getId());

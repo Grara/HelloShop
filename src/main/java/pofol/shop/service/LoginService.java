@@ -12,8 +12,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import pofol.shop.domain.Member;
-import pofol.shop.dto.MemberDto;
-import pofol.shop.dto.UserAdapter;
+import pofol.shop.dto.business.MemberDto;
+import pofol.shop.dto.security.UserAdapter;
 import pofol.shop.repository.MemberRepository;
 
 

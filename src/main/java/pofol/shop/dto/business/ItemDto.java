@@ -1,4 +1,4 @@
-package pofol.shop.dto;
+package pofol.shop.dto.business;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;

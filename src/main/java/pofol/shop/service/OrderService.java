@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.*;
-import pofol.shop.dto.OrderItemDto;
+import pofol.shop.dto.business.OrderItemDto;
 import pofol.shop.repository.*;
 
 import javax.persistence.EntityNotFoundException;

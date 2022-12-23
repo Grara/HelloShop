@@ -141,7 +141,7 @@ function orderCancel(){
         $.ajax({
 
         type : 'post',
-        url : "/orders/cancel",
+        url : "/orders/" + orderId + "/cancel",
         headers : {
             "Content-Type" : "text/html; charset=utf-8",
             "X-HTTP-Method-Override" : "POST"

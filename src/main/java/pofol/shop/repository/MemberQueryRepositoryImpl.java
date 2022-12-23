@@ -1,23 +1,18 @@
 package pofol.shop.repository;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
 import pofol.shop.domain.Member;
-import pofol.shop.domain.QMember;
-import pofol.shop.dto.MemberDto;
-import pofol.shop.dto.MemberSearchCondition;
+import pofol.shop.dto.business.MemberDto;
+import pofol.shop.dto.business.MemberSearchCondition;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static pofol.shop.domain.QMember.member;
 
