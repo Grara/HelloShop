@@ -12,6 +12,7 @@ import pofol.shop.dto.*;
 import pofol.shop.dto.business.ItemDto;
 import pofol.shop.dto.business.ItemSearchCondition;
 import pofol.shop.dto.business.ItemSortOption;
+import pofol.shop.dto.business.QItemDto;
 
 import javax.persistence.EntityManager;
 import java.util.List;
