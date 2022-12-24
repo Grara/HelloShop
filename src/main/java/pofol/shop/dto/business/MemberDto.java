@@ -7,6 +7,14 @@ import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;
 import pofol.shop.domain.enums.Role;
 
+/**
+ * 회원에 대한 DTO클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-11-20
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-12
+ */
 @Data
 @NoArgsConstructor
 public class MemberDto {

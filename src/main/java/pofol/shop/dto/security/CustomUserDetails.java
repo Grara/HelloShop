@@ -10,15 +10,25 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * 폼 로그인, OAuth2 로그인 시 등록되는 유저 세션 정보입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-12-12
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-12
+ */
 public class CustomUserDetails implements UserDetails, OAuth2User {
 
     private MemberDto member;
     private Map<String, Object> attributes;
 
+    //폼 로그인 시
     public CustomUserDetails(MemberDto member) {
         this.member = member;
     }
 
+    //OAuth로그인 시
     public CustomUserDetails(MemberDto member, Map<String, Object> attributes) {
         this.member = member;
         this.attributes = attributes;

@@ -6,6 +6,14 @@ import pofol.shop.exception.NotEnoughQuantityException;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * 상품에 대한 정보를 나타내는 엔티티 클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-10-21
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-13
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -76,12 +84,31 @@ public class Item extends BaseEntity {
     }
 
     //----------생성자 끝 / 메소드 시작----------//
+
+    /**
+     * 저장하기전에 설명 제목과 본문이 비었다면 기본 설정을 해줍니다.
+     *
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-07
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-07
+     */
     @PrePersist
     void prePersist() {
         if (this.descriptionTitle == null) this.descriptionTitle ="제목없음";
         if (this.description == null) this.description = "설명을 입력해주세요";
     }
 
+    /**
+     * 재고를 감소시킵니다.
+     *
+     * @param count 감소시킬 수량
+     * @throws NotEnoughQuantityException 재고가 부족할 경우 발생합니다.
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-11-21
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-07
+     */
     public void reduceQty(int count) throws NotEnoughQuantityException {
         if (this.quantity < count) throw new NotEnoughQuantityException("현재 재고가 부족합니다.");
         else {
@@ -90,10 +117,28 @@ public class Item extends BaseEntity {
         }
     }
 
+    /**
+     * 재고를 증가시킵니다.
+     *
+     * @param count 증가시킬 수량
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-10-21
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-10-21
+     */
     public void addQty(int count) {
         this.quantity += count;
     }
 
+    /**
+     * 총 평점을 추가합니다.
+     *
+     * @param score 증가시킬 평점
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-07
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-07
+     */
     public void addRating(int score) { //평점 추가
         this.totalRating += score; //총합 추가
         this.ratingUserCount++; //참여자수 1 증가

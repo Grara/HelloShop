@@ -46,7 +46,7 @@
                 <div class="form-group mb-2">
                     <label>정렬기준</label>
                     <select th:field="*{sortOption}">
-                        <option th:each="option : ${T(pofol.shop.dto.ItemSortOption).values()}" th:value="${option}"
+                        <option th:each="option : ${T(pofol.shop.dto.business.ItemSortOption).values()}" th:value="${option}"
                                 th:text="${option.getValue()}"></option>
                     </select>
                 </div>

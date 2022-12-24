@@ -12,7 +12,14 @@ import pofol.shop.domain.enums.Sex;
 
 import javax.persistence.*;
 
-
+/**
+ * 회원에 대한 엔티티 클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-10-21
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-08
+ */
 @Data
 @Entity
 @NoArgsConstructor
@@ -73,6 +80,16 @@ public class Member extends BaseEntity{
     }
     //----------생성자 끝 / 메소드 시작----------//
 
+    /**
+     * 회원의 이름과 이메일을 수정합니다.
+     *
+     * @param userName 수정 후 적용할 회원명
+     * @param email 수정 후 적용할 이메일
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-08
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-08
+     */
     public Member update(String userName, String email){
         this.userName = userName;
         this.email = email;

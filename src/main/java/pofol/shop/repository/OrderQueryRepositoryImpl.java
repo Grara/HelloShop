@@ -19,6 +19,15 @@ import java.util.stream.Collectors;
 import static pofol.shop.domain.QOrder.order;
 import static pofol.shop.domain.QMember.member;
 
+/**
+ * 주문 관련 DB작업 중 복잡한 쿼리를 수행하는 메소드를 구현한 DAO 클래스입니다. <br/>
+ * OrderRepository 객체를 통해서 메소드를 사용할 수 있습니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-11-21
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-01
+ */
 public class OrderQueryRepositoryImpl implements OrderQueryRepository{
 
     private final JPAQueryFactory queryFactory;
@@ -41,6 +50,18 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository{
                 .fetch();
     }
 
+    /**
+     * 검색 조건에 맞춰서 Order를 가져온 후 OrderDto로 변환시켜줍니다. <br/>
+     * 이후 OrderDto리스트와 페이징 정보를 반환합니다.
+     *
+     * @param condition 검색조건
+     * @param pageable  페이징 정보
+     * @return OrderDto리스트와 페이징 정보를 함께 담고있는 PageImpl객체
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-01
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-01
+     */
     @Override
     public Page<OrderDto> searchWithPage(OrderSearchCondition condition, Pageable pageable) {
         //실제 주문 목록용 쿼리

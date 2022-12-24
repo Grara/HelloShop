@@ -19,7 +19,14 @@ import pofol.shop.service.LoginService;
 
 import java.util.Collections;
 
-
+/**
+ * 스프링 시큐리티와 관련된 설정을 하는 클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-10-23
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-21
+ */
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig{
@@ -31,17 +38,34 @@ public class SecurityConfig{
     PortResolverImpl portResolver = new PortResolverImpl();
     LoginUrlAuthenticationEntryPoint entryPoint = new LoginUrlAuthenticationEntryPoint("/login");
     @Value("${server.port}")
-    private String port;
+    private String port; //애플리케이션 포트번호
 
+    /**
+     * 시큐리티 적용을 제외할 url을 설정합니다.
+     *
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-10-23
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-10-23
+     */
     @Bean
     public WebSecurityCustomizer configure(){
         //ignoring에 들어간 url은 시큐리티 적용이 안됨, 리소스를 정상적으로 불러들이기위한 코드
         return web -> web.ignoring().antMatchers("/resources/**");
     }
+
+    /**
+     * 스프링 시큐리티 설정을 커스텀합니다.
+     *
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-10-23
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-21
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        String portArgs = port.substring(2);
-        portMapper.setPortMappings(Collections.singletonMap(portArgs,"443"));
+        String portArgs = port.substring(2); //현재 애플리케이션 포트번호 뒤에 2자리
+        portMapper.setPortMappings(Collections.singletonMap(portArgs,"443")); //8080이면 8443이랑 매핑
         portResolver.setPortMapper(portMapper);
         entryPoint.setPortMapper(portMapper);
         entryPoint.setPortResolver(portResolver);
@@ -51,43 +75,49 @@ public class SecurityConfig{
 
         //시큐리티 적용url, 로그인, 로그아웃 커스텀
         http
-                .exceptionHandling()
+                .exceptionHandling()//예외 핸들링 설정
                     .authenticationEntryPoint(entryPoint)
+                    .accessDeniedHandler(accessDeniedHandlerImpl) //권한부족일 때 예외 핸들링
                 .and()
-                    .csrf()
+                    .csrf()//csrf토큰 안씀
                         .disable()
-                .headers()
+                .headers() //헤더 설정
                     .frameOptions()
-                        .sameOrigin()
+                        .sameOrigin() //같은 origin에서는 x frame 허용
                 .and()
-                    .authorizeRequests()
-                        .antMatchers("/admin", "/members", "/orders")
-                            .hasRole("ADMIN")
+                    .authorizeRequests() //url별로 접근 가능 권한 설정
+                        .antMatchers("/admin", "/members", "/orders") //정확히 이 url일 경우
+                            .hasRole("ADMIN") //어드민만 접근 가능
                         .antMatchers("/orders/new", "/cart", "/orderSheet",
-                                "/items/new", "/mypage")
-                            .access("hasAnyRole('ADMIN', 'USER')")
-                        .anyRequest()
-                            .permitAll()
+                                "/items/new", "/mypage") //정확히 이 url일 경우
+                            .access("hasAnyRole('ADMIN', 'USER')") //어드민이나 유저일 경우 접근 가능
+                        .anyRequest() //나머지는
+                            .permitAll() //전부가능
                 .and()
-                    .exceptionHandling().accessDeniedHandler(accessDeniedHandlerImpl)
+                    .formLogin() //시큐리티 기본 폼 로그인 설정
+                        .loginPage("/login-form") //로그인 페이지
+                        .loginProcessingUrl("/login") //로그인 요청 url, 스프링시큐리티의 기본 url로 설정
+                        .failureUrl("/login-form?error=true") //로그인 실패시 이동 url
                 .and()
-                    .formLogin()
-                        .loginPage("/login-form")
-                        .loginProcessingUrl("/login")
-                        .failureUrl("/login-form?error=true")
+                    .logout() //로그아웃 설정
+                        .logoutSuccessUrl("/") //로그아웃 성공 시 이동 url
                 .and()
-                    .logout()
-                        .logoutSuccessUrl("/")
-                .and()
-                    .oauth2Login()
-                        .loginPage("/login-form")
-                        .defaultSuccessUrl("/members/new-oauth2")
-                        .userInfoEndpoint().userService(loginService);
-
+                    .oauth2Login() //OAuth2 로그인 설정
+                        .loginPage("/login-form") //로그인 페이지
+                        .defaultSuccessUrl("/members/new-oauth2") //OAuth2로그인 성공 시 이동 url
+                        .userInfoEndpoint().userService(loginService); //세션 정보 등록 서비스
 
         return http.build();
     }
 
+    /**
+     * AuthenticationManager를 빈으로 등록합니다.
+     *
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-12
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-12
+     */
     @Bean
     public AuthenticationManager authenticationManager() throws Exception{
         return authenticationConfiguration.getAuthenticationManager();

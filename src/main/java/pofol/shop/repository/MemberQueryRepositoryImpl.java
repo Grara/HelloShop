@@ -16,11 +16,20 @@ import java.util.stream.Collectors;
 
 import static pofol.shop.domain.QMember.member;
 
-public class MemberQueryRepositoryImpl implements MemberQueryRepository{
+/**
+ * 회원 관련 DB작업 중 복잡한 쿼리를 수행하는 메소드를 구현한 DAO 클래스입니다. <br/>
+ * MemberRepository 객체를 통해서 메소드를 사용할 수 있습니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-11-30
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-01
+ */
+public class MemberQueryRepositoryImpl implements MemberQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public MemberQueryRepositoryImpl(EntityManager em){
+    public MemberQueryRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
@@ -35,6 +44,18 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository{
                 .fetch();
     }
 
+    /**
+     * 검색 조건에 맞춰서 Member를 가져온 후 MemberDto로 변환시켜줍니다. <br/>
+     * 이후 MemberDto리스트와 페이징 정보를 반환합니다.
+     *
+     * @param condition 검색조건
+     * @param pageable  페이징 정보
+     * @return MemberDto리스트와 페이징 정보를 함께 담고있는 PageImpl객체
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-01
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-01
+     */
     @Override
     public Page<MemberDto> searchWithPage(MemberSearchCondition condition, Pageable pageable) {
         //회원 목록용 쿼리

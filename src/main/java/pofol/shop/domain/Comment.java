@@ -1,5 +1,6 @@
 package pofol.shop.domain;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +8,14 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * 상품 후기를 나타내는 엔티티 클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-10-21
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-05
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -39,6 +48,15 @@ public class Comment extends BaseEntity{
         this.rating = rating;
     }
     //----------생성자 끝 / 메소드 시작----------//
+
+    /**
+     * DB에 저장하기전에 마지막 수정시간을 현재로 기록합니다.
+     *
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-11-19
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-13
+     */
     @PrePersist
     public void prePersist(){
         this.lastModifiedDateTime = LocalDateTime.now();

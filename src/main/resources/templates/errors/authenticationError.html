@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header.html::header(~{::head}, 'home')}">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
+    <div class="jumbotron">
+        <h1>로그인이 안됐거나 다른 회원에 의한 요청입니다.</h1>
+
+    </div>
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
+</div> <!-- /container -->
+</body>
+</html>

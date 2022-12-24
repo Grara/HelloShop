@@ -8,13 +8,16 @@ import pofol.shop.dto.business.OrderSearchCondition;
 
 import java.util.List;
 
+/**
+ * OrderQueryRepositoryImpl을 만들기 위한 인터페이스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-11-30
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-01
+ */
 public interface OrderQueryRepository {
 
-    /**
-     * 주어진 검색조건으로 Order를 찾습니다.
-     * @param condition 검색조건
-     * @return 찾아낸 Order List
-     */
     List<Order> search(OrderSearchCondition condition);
 
     Page<OrderDto> searchWithPage(OrderSearchCondition condition, Pageable pageable);

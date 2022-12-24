@@ -5,6 +5,14 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * 주문아이템에 대한 엔티티 클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-10-21
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-24
+ */
 @Entity
 @Data
 @NoArgsConstructor
@@ -37,6 +45,15 @@ public class OrderItem extends BaseEntity{
     }
 
     //----------생서자 끝 / 메소드 시작----------//
+
+    /**
+     * 주문이 취소되었을 때, 상품의 재고를 복구시킵니다.
+     *
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-24
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-24
+     */
     public void cancel(){
         this.item.addQty(this.count);
     }

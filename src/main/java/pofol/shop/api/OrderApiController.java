@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.Order;
 import pofol.shop.domain.OrderSheet;
-import pofol.shop.domain.enums.OrderStatus;
 import pofol.shop.dto.ApiResponseBody;
 import pofol.shop.dto.security.UserAdapter;
 import pofol.shop.form.create.CreateOrderSheetForm;
 import pofol.shop.repository.MemberRepository;
 import pofol.shop.repository.OrderRepository;
 import pofol.shop.repository.OrderSheetRepository;
+import pofol.shop.service.business.MemberService;
+import pofol.shop.service.business.OrderService;
 
 /**
  * 주문과 관련된 API요청을 처리하는 Controller 클래스입니다.
+ *
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-11-10
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
@@ -32,25 +34,28 @@ import pofol.shop.repository.OrderSheetRepository;
 public class OrderApiController {
 
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
     private final OrderSheetRepository orderSheetRepository;
     private ObjectMapper mapper = new ObjectMapper(); //JSON - 객체 간 매퍼
 
 
     /**
      * 새로운 주문시트를 생성합니다.
+     *
+     * @param form 주문시트 생성에 필요한 데이터 폼
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-11-10
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
      * @lastModifiedDate : 2022-12-07
-     * @param form : 주문시트 생성에 필요한 데이터 폼
      */
     @PostMapping("/orderSheet") //주문시트 생성 요청
-    public ResponseEntity<ApiResponseBody<Long>> createOrderSheet(@RequestBody CreateOrderSheetForm form){
+    public ResponseEntity<ApiResponseBody<Long>> createOrderSheet(@RequestBody CreateOrderSheetForm form) {
 
         try {
             OrderSheet sheet = new OrderSheet();
-            Member member = memberRepository.findByUserName(form.getUserName()).orElseThrow();
+            Member member = memberService.findByUserName(form.getUserName());
 
             //Form을 JSON으로 변환해서 DB에 저장
 
@@ -64,7 +69,7 @@ public class OrderApiController {
                     .body(new ApiResponseBody<>(HttpStatus.OK, "주문시트 생성 완료", id));
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity
                     .internalServerError()
                     .body(new ApiResponseBody<>(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null));
@@ -74,34 +79,30 @@ public class OrderApiController {
 
     /**
      * 주문을 취소합니다.
+     *
+     * @param id 취소할 주문의 id
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-11-30
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
      * @lastModifiedDate : 2022-12-07
-     * @param id : 취소할 주문의 id
      */
     @PostMapping("/orders/{orderId}/cancel") //주문취소 요청
     public ResponseEntity<ApiResponseBody<String>> delete(@PathVariable("orderId") Long id,
                                                           @AuthenticationPrincipal UserAdapter principal) {
 
-        try {
-            Order order = orderRepository.findById((id)).orElseThrow();
-            if (!order.getMember().getUserName().equals(principal.getName())) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new ApiResponseBody<>(HttpStatus.FORBIDDEN, "주문을 한 회원이 아닙니다", null));
-            }
-
-            order.cancel();
-            orderRepository.save(order);
+        Order order = orderService.findById((id));
+        if (!order.getMember().getUserName().equals(principal.getName())) {
             return ResponseEntity
-                    .ok()
-                    .body(new ApiResponseBody<>(HttpStatus.OK, "취소 성공", "/orders/cancel-finish"));
-
-        }catch (Exception e){
-            return ResponseEntity
-                    .internalServerError()
-                    .body(new ApiResponseBody<>(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null));
+                    .badRequest()
+                    .body(new ApiResponseBody<>(HttpStatus.FORBIDDEN, "주문을 한 회원이 아닙니다", null));
         }
+
+        order.cancel();
+        orderRepository.save(order);
+        return ResponseEntity
+                .ok()
+                .body(new ApiResponseBody<>(HttpStatus.OK, "취소 성공", "/orders/cancel-finish"));
+
+
     }
 }

@@ -6,11 +6,20 @@ import org.springframework.util.Assert;
 
 import javax.persistence.*;
 
+/**
+ * 장바구니에 담은 아이템을 나타내는 엔티티 클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-10-21
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-11-30
+ */
 @Entity
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Cart extends BaseEntity{
-    @Id @GeneratedValue
+public class Cart extends BaseEntity {
+    @Id
+    @GeneratedValue
     @Column(name = "cartitem_id")
     private Long id;
 
@@ -25,6 +34,7 @@ public class Cart extends BaseEntity{
     private int count;
 
     private int totalPrice;
+
     //----------필드 끝 / 생성자 시작----------//
     @Builder
     public Cart(Member member, Item item, int count) {
@@ -36,8 +46,16 @@ public class Cart extends BaseEntity{
 
     //----------생성자 끝 / 메소드 시작----------//
 
-    public void addCount(int count){
+    /**
+     * 현재 객체에 수량을 더합니다.
+     *
+     * @param count 더할 수량
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-10-21
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-11-05
+     */
+    public void addCount(int count) {
         this.count += count;
     }
-
 }

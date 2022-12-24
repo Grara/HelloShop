@@ -18,6 +18,15 @@ import java.util.List;
 
 import static pofol.shop.domain.QItem.item;
 
+/**
+ * 상품 관련 DB작업 중 복잡한 쿼리를 수행하는 메소드를 구현한 DAO 클래스입니다. <br/>
+ * ItemRepository 객체를 통해서 메소드를 사용할 수 있습니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-12-07
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-12-07
+ */
 public class ItemQueryRepositoryImpl implements ItemQueryRepository {
 
     private final JPAQueryFactory queryFactory;
@@ -26,6 +35,19 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
+
+    /**
+     * 검색 조건에 맞춰서 Item을 가져온 후 ItemDto로 변환시켜줍니다. <br/>
+     * 이후 ItemDto리스트와 페이징 정보를 반환합니다.
+     *
+     * @param condition 검색조건
+     * @param pageable  페이징 정보
+     * @return ItemDto리스트와 페이징 정보를 함께 담고있는 PageImpl객체
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-07
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-07
+     */
     @Override
     public Page<ItemDto> searchWithPage(ItemSearchCondition condition, Pageable pageable) {
         //회원 목록용 쿼리
@@ -67,26 +89,26 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private BooleanExpression itemNameContains(String itemName) { //조건에 있는 회원명의 포함 여부
+    private BooleanExpression itemNameContains(String itemName) { //검색조건에 있는 회원명의 포함 여부
         return StringUtils.hasText(itemName) ? item.itemName.contains(itemName) : null;
     }
 
-    private BooleanExpression authorContains(String author) {
+    private BooleanExpression authorContains(String author) { //검색조건에 있는 저자이름의 포함 여부
         return StringUtils.hasText(author) ? item.author.contains(author) : null;
     }
 
-    private BooleanExpression priceGoe(Integer minPrice) {
+    private BooleanExpression priceGoe(Integer minPrice) { //검색조건에 있는 최소 가격 이상인지
         return item.price.goe(minPrice);
     }
 
-    private BooleanExpression priceLoe(Integer maxPrice) {
-        if(maxPrice == 0) return null;
+    private BooleanExpression priceLoe(Integer maxPrice) { //검색조건에 있는 최대 가격 이하인지
+        if (maxPrice == 0) return null;
         return item.price.loe(maxPrice);
     }
 
-    private OrderSpecifier<?> sortOption(ItemSortOption option){
+    private OrderSpecifier<?> sortOption(ItemSortOption option) { //조건의 정렬기준에 따라 정렬
 
-        switch (option){
+        switch (option) {
             case NONE:
                 return new OrderSpecifier(Order.DESC, item.id);
             case TOTAL_SALES:
@@ -94,7 +116,6 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
             case RATING:
                 return new OrderSpecifier(Order.DESC, item.ratingAverage);
         }
-
         return null;
     }
 }

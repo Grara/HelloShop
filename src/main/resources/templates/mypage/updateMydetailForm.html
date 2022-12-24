@@ -31,7 +31,6 @@
         <form method="post" action="/mypage/details/edit" th:object="${updateMyDetailForm}"
               enctype="multipart/form-data">
             <input type="hidden" th:field="${updateMyDetailForm.profileId}">
-
             <div class="form-group">
                 <label>회원명</label>
                 <input type="text" th:field="*{userName}" class="form-control" readonly>

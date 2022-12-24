@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.Member;
 import pofol.shop.repository.MemberRepository;
-import pofol.shop.service.MemberService;
+import pofol.shop.service.business.MemberService;
 
 import javax.persistence.EntityManager;
 

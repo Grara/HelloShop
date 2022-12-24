@@ -20,6 +20,7 @@
     </div>
 
     <form action="/mypage/details/profile/update" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="userName" th:value="${#authentication.name}">
         <input id="uploadImg" name="uploadImg" type="file" accept="image/*" style="width:20%; height:45px;"
                class="form-control">
         <div style="padding:20px;">

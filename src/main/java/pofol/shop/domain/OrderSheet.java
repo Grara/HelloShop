@@ -5,6 +5,14 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * 주문시트에 대한 엔티티 클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-11-10
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-11-30
+ */
 @Entity
 @Data
 @NoArgsConstructor

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pofol.shop.domain.*;
 import pofol.shop.domain.embedded.Address;
 import pofol.shop.repository.MemberRepository;
-import pofol.shop.service.OrderService;
+import pofol.shop.service.business.OrderService;
 
 import javax.persistence.EntityManager;
 

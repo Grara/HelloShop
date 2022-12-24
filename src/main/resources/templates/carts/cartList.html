@@ -9,7 +9,7 @@
 </style>
 <body>
 <div class="container">
-    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
+    <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}"/>
     <!--선택버튼-->
     <div class="parent" style="height:50px" align="right">
         <button type="button" class="btn btn-primary" th:onClick="javascript:deleteChecked();">선택한 항목 삭제</button>
@@ -40,14 +40,15 @@
 
     <!--주문이동 버튼-->
     <button type="button" th:data-username="${username}"
-       class="btn btn-primary"
-       th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로</button>
+            class="btn btn-primary"
+            th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로
+    </button>
 
 
-    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
+    <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}"/>
 </div> <!-- /container -->
 </body>
-<script>
+<script th:inline="javascript">
   function buy(userName){ //주문화면으로 이동
 
     var items = new Array(); //아이템 배열
@@ -125,6 +126,10 @@ function itemSelect(){ //개별 아이템 선택 체크 이벤트
 
 function deleteChecked(){ //선택한 아이템 삭제
 
+  if(!confirm('선택한 상품들을 장바구니에서 삭제하시겠습니까?')){
+        return false;
+    }
+
   var deleteList = new Array();
 
   $('[name=item]').each(function(){ //선택한 아이템을 배열에 넣음
@@ -136,9 +141,10 @@ function deleteChecked(){ //선택한 아이템 삭제
       }
   });
 
-  if(!confirm('선택한 상품들을 장바구니에서 삭제하시겠습니까?')){
-        return false;
-    }
+  var form = {
+    "userName" : [[${#authentication.name}]],
+    "cartIds" : deleteList
+  }
 
   $.ajax({
 
@@ -149,7 +155,7 @@ function deleteChecked(){ //선택한 아이템 삭제
         "X-HTTP-Method-Override" : "POST"
     },
     dataType : 'json',
-    data : JSON.stringify(deleteList),
+    data : JSON.stringify(form),
     success : function(res){
         if(res.data){ //응답이 true면 선택했던 아이템들 삭제
           $('[name=item]').each(function(){
@@ -173,6 +179,7 @@ function deleteChecked(){ //선택한 아이템 삭제
     return false;
 
 }
+
 
 </script>
 </html>

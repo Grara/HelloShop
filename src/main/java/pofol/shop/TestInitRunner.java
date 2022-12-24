@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.annotation.Order;
@@ -22,13 +21,11 @@ import pofol.shop.domain.enums.Role;
 import pofol.shop.repository.CartRepository;
 import pofol.shop.repository.ItemRepository;
 import pofol.shop.repository.MemberRepository;
-import pofol.shop.service.CartService;
+import pofol.shop.service.business.CartService;
 import pofol.shop.service.FileService;
-import pofol.shop.service.MemberService;
+import pofol.shop.service.business.MemberService;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.sql.Connection;
 
 @Order(1)
 @Component

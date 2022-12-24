@@ -9,6 +9,14 @@ import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+/**
+ * 개인 신상정보를 나타내는 임베디드 클래스입니다.
+ *
+ * @createdBy : 노민준(nomj18@gmail.com)
+ * @createdDate : 2022-10-21
+ * @lastModifiedBy : 노민준(nomj18@gmail.com)
+ * @lastModifiedDate : 2022-10-23
+ */
 @Embeddable
 @NoArgsConstructor
 @Data

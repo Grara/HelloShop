@@ -89,7 +89,8 @@
                 <div style="margin:10px 10px 10px 10px;">
                     <input id="rating" type="text" value="5" class="form-control"> <!--별점 입력-->
                 </div>
-                <button id="commentSubmit" type="button" th:onclick="addComment()" class="btn btn-primary"
+                <button th:data-username="${userName}" id="commentSubmit" type="button"
+                        th:onclick="addComment(this.getAttribute('data-username'))" class="btn btn-primary"
                         style="margin:10px;">작성
                 </button>
             </div>
@@ -225,7 +226,7 @@ var count = document.getElementById("count").value;
 
 }
 
-function addComment(){ //후기 생성
+function addComment(username){ //후기 생성
 
     if($('#content').val().length <= 10) {
         alert('내용을 10자이상 입력해주세요');
@@ -238,6 +239,7 @@ function addComment(){ //후기 생성
 
     //후기 생성 폼
     var form = {
+        'userName' : username,
         'itemId' : $('#itemId').val(),
         'content' : $('#content').val(),
         'rating' : $('#rating').val()
