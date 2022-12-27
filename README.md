@@ -2,7 +2,7 @@
 - 프로젝트 기간 : 2022.10.21 ~ 2022.12.25
 - 프로젝트의 목적 : 그동안 공부한 스프링부트와 스프링 데이터 JPA에 대한 지식을 실제로 적용시켜보기위해 CRUD게시판을 직접 구현해봤습니다.
 - 실제 배포 서버 링크 : http://ec2-43-200-168-173.ap-northeast-2.compute.amazonaws.com
-- `id : admin / 비밀번호` : 1234 로 로그인하시면 어드민계정으로 로그인 됩니다.
+- `id : admin / 비밀번호 : 1234` 로 로그인하시면 어드민계정으로 로그인 됩니다.
 - HTML과 CSS에 대한 지식이 전무했기때문에 김영한님의 JPA강의에서 실습으로 만들어본 사이트를 토대로 시작했습니다.
 - https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-JPA-%ED%99%9C%EC%9A%A9-1
 - ERD / svg 파일링크 - https://drive.google.com/drive/folders/19c5TbPtjITjNQtt4ZC4njXTSrFERT7w2
