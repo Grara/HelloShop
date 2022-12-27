@@ -51,7 +51,7 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
      */
     @Override
     public Page<ItemDto> searchWithPage(ItemSearchCondition condition, Pageable pageable) {
-        //회원 목록용 쿼리
+        //상품 목록용 쿼리
         List<ItemDto> content = queryFactory
                 .select(new QItemDto(
                         item.id,
@@ -110,11 +110,11 @@ public class ItemQueryRepositoryImpl implements ItemQueryRepository {
     private OrderSpecifier<?> sortOption(ItemSortOption option) { //조건의 정렬기준에 따라 정렬
 
         switch (option) {
-            case NONE:
+            case NONE: //최신 등록순
                 return new OrderSpecifier(Order.DESC, item.id);
-            case TOTAL_SALES:
+            case TOTAL_SALES: //판매량 순
                 return new OrderSpecifier(Order.DESC, item.totalSales);
-            case RATING:
+            case RATING: //평점 순
                 return new OrderSpecifier(Order.DESC, item.ratingAverage);
         }
         return null;

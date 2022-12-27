@@ -115,5 +115,4 @@ public class OAuthAttributes {
                 .role(Role.ROLE_GUEST)
                 .build();
     }
-
 }

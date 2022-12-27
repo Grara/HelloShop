@@ -69,7 +69,7 @@ public class ItemController {
     public String list(@ModelAttribute ItemSearchCondition condition, Model model, Pageable pageable) {
         condition.removeNull();
         Page<ItemDto> results = itemRepository.searchWithPage(condition, pageable);
-        utilService.pagingCommonTask(results, model);
+        utilService.pagingCommonTask(results, model); //페이지네이션 정보를 모델에 넣음
 
         model.addAttribute("search", condition);
         model.addAttribute("items", results.getContent());

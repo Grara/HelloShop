@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 function find_idle_profile(){
+
+  #현재 실행중인 애플리케이션의 프로파일을 받아옴
   RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/profile)
 
   if [ ${RESPONSE_CODE} -ge 400 ]; then

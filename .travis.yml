@@ -18,9 +18,10 @@ notifications:
     recipients:
       - nomj18@gmail.com
 
+#배포전 실행할 명령어들
 before_deploy:
   - mkdir -p before-deploy
-  - chmod +x scripts/*.sh
+  - chmod +x scripts/*.sh #모든 sh파일에 실행 권한을 줌
   - cp scripts/*.sh before-deploy/
   - cp appspec.yml before-deploy/
   - cp build/libs/*.jar before-deploy/
@@ -30,11 +31,11 @@ before_deploy:
 
 
 deploy:
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
+  - provider: s3 #아마존 s3 설정
+    access_key_id: $AWS_ACCESS_KEY #AWS IAM 액세스 키
+    secret_access_key: $AWS_SECRET_KEY #AWS IAM 비밀 키
 
-    bucket: helloshop-build
+    bucket: helloshop-build #s3 버킷이름
     region: ap-northeast-2
     skip_cleanup: true
     acl: private
@@ -42,7 +43,7 @@ deploy:
     wait-until-deployed: true
 
 
-  - provider: codedeploy
+  - provider: codedeploy #아마존 CodeDeploy 설정
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
 

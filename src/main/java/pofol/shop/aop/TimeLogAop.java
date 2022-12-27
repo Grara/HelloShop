@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 public class TimeLogAop {
 
     Logger logger = LoggerFactory.getLogger(TimeLogAop.class);
-    Logger rootLogger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     /**
      * Controller, ApiController, Service, Repository의 모든 메소드 작업 수행시간을 로그로 남겨줍니다.
