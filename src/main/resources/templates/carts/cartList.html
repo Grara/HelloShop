@@ -80,7 +80,7 @@
     $.ajax({
 
     type : 'post',
-    url : "/orderSheet",
+    url : "/order-sheet",
     headers : {
         "Content-Type" : "application/json",
         "X-HTTP-Method-Override" : "POST"
@@ -91,7 +91,7 @@
     //주문시트 생성이 성공하면 해당 주문시트 URL로 이동
     success : function(res){
 
-        window.location.href = '/orderSheet/' + res.data;
+        window.location.href = '/order-sheet/' + res.data;
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");

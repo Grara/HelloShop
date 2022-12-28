@@ -93,7 +93,7 @@ public class CartApiController {
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
      * @lastModifiedDate : 2022-12-23
      */
-    @PostMapping("/cart/delete") //Cart 삭제 요청
+    @PostMapping("/cart/delete") //한번에 여러개를 삭제해야하기때문에 컨트롤 메소드를 만듬
     public ResponseEntity<ApiResponseBody<Boolean>> delete(@RequestBody DeleteCartForm form,
                                                            @AuthenticationPrincipal UserAdapter principal) {
 

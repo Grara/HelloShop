@@ -23,7 +23,7 @@
     <div align="center">
 
         <!--폼 시작-->
-        <form id="form" action="/members/new" th:object="${createMemberForm}" method="post">
+        <form id="form" action="/members" th:object="${createMemberForm}" method="post">
             <div class="form-group sm">
                 <label>회원명</label>
                 <input type="hidden" name="duplCheck" id="duplCheck" value="false">

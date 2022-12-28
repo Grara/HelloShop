@@ -9,7 +9,8 @@
   - CSS
   - JS
 - 사용된 기술 스택
-  - SpringBoot 
+  - SpringBoot
+  - SpringDataJPA
   - SpringSecurity 
   - Thymeleaf 
   - jQuery 

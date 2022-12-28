@@ -169,7 +169,7 @@ function buy(name){ //바로구매
     $.ajax({
 
     type : 'post',
-    url : "/orderSheet",
+    url : "/order-sheet",
     headers : {
         "Content-Type" : "application/json",
         "X-HTTP-Method-Override" : "POST"
@@ -177,7 +177,7 @@ function buy(name){ //바로구매
     dataType : 'json',
     data : JSON.stringify(form),
     success : function(res){ //생성된 주문시트 url로 이동
-        window.location.href = '/orderSheet/' + res.data;
+        window.location.href = '/order-sheet/' + res.data;
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");

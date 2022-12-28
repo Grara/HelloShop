@@ -40,7 +40,7 @@ import static pofol.shop.config.DefaultValue.*;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-21
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-14
+ * @lastModifiedDate : 2022-12-28
  */
 @Controller
 @RequiredArgsConstructor
@@ -181,9 +181,9 @@ public class ItemController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-21
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-23
+     * @lastModifiedDate : 2022-12-28
      */
-    @PostMapping("/items/{id}/edit") //Item 수정 요청
+    @PatchMapping("/items/{id}")
     public String edit(@Valid CreateItemForm form,
                        BindingResult result,
                        @PathVariable("id") Long id,

@@ -35,7 +35,7 @@ input::-webkit-inner-spin-button {
 
     <!--입력 폼-->
     <div>
-    <form action="#" th:action="@{/orders/new}" th:object="${createOrderForm}" method="post">
+    <form action="#" th:action="@{/orders}" th:object="${createOrderForm}" method="post">
         <input type="hidden" name="userName" th:value="${#authentication.name}">
         <input type="hidden" th:field="*{sheetId}">
 

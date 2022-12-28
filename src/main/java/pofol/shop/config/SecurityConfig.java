@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
-import pofol.shop.Handler.AccessDeniedHandlerImpl;
+import pofol.shop.handler.AccessDeniedHandlerImpl;
 import pofol.shop.service.LoginService;
 
 import java.util.Collections;
@@ -86,9 +87,13 @@ public class SecurityConfig{
                         .sameOrigin() //같은 origin에서는 x frame 허용
                 .and()
                     .authorizeRequests() //url별로 접근 가능 권한 설정
-                        .antMatchers("/admin", "/members", "/orders") //정확히 이 url일 경우
+                        .antMatchers(HttpMethod.GET,"/admin", "/orders", "/members") //정확히 이 url이면서 get일 경우
                             .hasRole("ADMIN") //어드민만 접근 가능
-                        .antMatchers("/orders/new", "/cart", "/orderSheet",
+
+                        .antMatchers(HttpMethod.POST, "/orders")//정확히 이 url이면서 post일 경우
+                            .hasAnyRole("ADMIN", "USER")
+
+                        .antMatchers("/orders/new", "/cart", "/order-sheet",
                                 "/items/new", "/mypage") //정확히 이 url일 경우
                             .access("hasAnyRole('ADMIN', 'USER')") //어드민이나 유저일 경우 접근 가능
                         .anyRequest() //나머지는

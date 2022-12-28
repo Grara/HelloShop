@@ -12,8 +12,9 @@
     <div th:replace="~{fragments/bodyheader.html::bodyHeader(~{::body}, 'home')}" />
 
     <!--폼 시작-->
-    <form role="form" th:action="|/items/${itemForm.id}/edit|" th:object="${itemForm}" method="post">
+    <form role="form" th:action="|/items/${itemForm.id}|" th:object="${itemForm}" th:method="PATCH">
         <input type="hidden" th:field="*{id}" />
+        <input type="hidden" name="userName" th:value="${#authentication.name}">
         <div class="form-group">
             <label>상품명</label>
             <input type="text" th:field="*{itemName}" class="form-control" placeholder="상품명을 입력하세요"

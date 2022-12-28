@@ -27,7 +27,7 @@ import pofol.shop.service.business.OrderService;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-11-10
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-13
+ * @lastModifiedDate : 2022-12-28
  */
 @RestController
 @RequiredArgsConstructor
@@ -48,9 +48,9 @@ public class OrderApiController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-11-10
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-07
+     * @lastModifiedDate : 2022-12-28
      */
-    @PostMapping("/orderSheet") //주문시트 생성 요청
+    @PostMapping("/order-sheet") //주문시트 생성 요청
     public ResponseEntity<ApiResponseBody<Long>> createOrderSheet(@RequestBody CreateOrderSheetForm form) {
 
         try {
@@ -102,7 +102,6 @@ public class OrderApiController {
         return ResponseEntity
                 .ok()
                 .body(new ApiResponseBody<>(HttpStatus.OK, "취소 성공", "/orders/cancel-finish"));
-
 
     }
 }

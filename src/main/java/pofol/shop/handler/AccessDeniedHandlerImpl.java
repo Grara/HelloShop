@@ -1,4 +1,4 @@
-package pofol.shop.Handler;
+package pofol.shop.handler;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;

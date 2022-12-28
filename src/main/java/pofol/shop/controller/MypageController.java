@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import pofol.shop.domain.Item;
 import pofol.shop.domain.Member;
@@ -45,7 +46,7 @@ import static pofol.shop.config.DefaultValue.*;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-11-30
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-14
+ * @lastModifiedDate : 2022-12-28
  */
 @Controller
 @RequiredArgsConstructor
@@ -77,7 +78,6 @@ public class MypageController {
         form.setProfileId(member.getProfileImage().getId());
 
         model.addAttribute("form", form);
-        System.out.println("개인정보화면");
         return "mypage/mydetails";
     }
 
@@ -110,11 +110,11 @@ public class MypageController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-11-30
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-14
+     * @lastModifiedDate : 2022-12-28
      */
-    @PostMapping("/mypage/details/edit") //개인정보 수정 요청
+    @PatchMapping("/mypage/details")
     public String EditMyDetail(@Valid UpdateMyDetailForm form, BindingResult result, @AuthenticationPrincipal UserAdapter principal) {
-        System.out.println("진입");
+
         //폼 입력에 문제가 있을 경우 수정하도록 함
         if (result.hasErrors()) {
             return "mypage/updateMydetailForm";
@@ -125,7 +125,6 @@ public class MypageController {
         member.setAddress(address);
         memberRepository.save(member);
 
-        System.out.println("수정완료");
         return "redirect:/mypage/details";
     }
 
@@ -191,9 +190,9 @@ public class MypageController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-11-30
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-11-30
+     * @lastModifiedDate : 2022-12-28
      */
-    @GetMapping("/mypage/details/profile/update") //프로필 변경 폼 화면(팝업창)
+    @GetMapping("/mypage/profile-img-update") //프로필 변경 폼 화면(팝업창)
     public String updateProfileImageForm(Model model) {
 
         //기본이미지의 FileEntity id값
@@ -208,9 +207,9 @@ public class MypageController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-11-30
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-11-30
+     * @lastModifiedDate : 2022-12-28
      */
-    @PostMapping("/mypage/details/profile/update") //프로필 변경 요청
+    @PostMapping("/mypage/profile-img-update") //프로필 변경 요청
     public String updateProfile(UpdateImageForm form, Model model, @AuthenticationPrincipal UserAdapter principal) {
 
         Member member = memberService.findByUserName(principal.getName());

@@ -39,7 +39,7 @@ import java.util.NoSuchElementException;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-21
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-14
+ * @lastModifiedDate : 2022-12-28
  */
 @Controller
 @RequiredArgsConstructor
@@ -96,9 +96,9 @@ public class OrderController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-21
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-11-30
+     * @lastModifiedDate : 2022-12-28
      */
-    @GetMapping("/orderSheet/{id}")//주문 생성폼 화면
+    @GetMapping("/order-sheet/{id}")//주문 생성폼 화면
     public String createForm(@PathVariable("id") Long id,
                              Model model,
                              @AuthenticationPrincipal UserAdapter principal) throws Exception {
@@ -132,9 +132,9 @@ public class OrderController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-11-19
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-13
+     * @lastModifiedDate : 2022-12-28
      */
-    @PostMapping("/orders/new") //인가때문에 /orders 사용안하고 이걸로 사용함
+    @PostMapping("/orders")
     public String order(@Valid CreateOrderForm form, BindingResult result, @AuthenticationPrincipal UserAdapter principal) {
 
         //Form에 입력한 값에 문제가 있다면 다시 폼 화면으로

@@ -3,6 +3,8 @@ package pofol.shop.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,7 +39,7 @@ import java.util.*;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-21
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-21
+ * @lastModifiedDate : 2022-12-28
  */
 @Controller
 @RequiredArgsConstructor
@@ -180,9 +182,9 @@ public class MemberController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-21
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-13
+     * @lastModifiedDate : 2022-12-28
      */
-    @PostMapping("/members/new") //Member 가입 요청
+    @PostMapping("/members") //Member 가입 요청
     public String create(@Valid CreateMemberForm form, BindingResult result) {
 
         if (!form.getPassword().equals(form.getPasswordCheck()))
