@@ -24,7 +24,6 @@
         <input id="data-for-order" type="hidden" th:data-name="${itemDto.name}"
                th:data-price="${itemDto.price}"
                th:data-id="${itemDto.id}">
-
         <div class="item-info" align="center">
             <img th:src="|/images/${fileId}|" width="300" height="450">
         </div>
@@ -134,8 +133,14 @@
     <div th:replace="~{fragments/footer::footer(~{::body}, 'home')}" />
 </div> <!-- /container -->
 </body>
-<script>
+<script th:inline="javascript">
 
+var isLogin = ([[${#authentication.authorities}]][0].authority != 'ROLE_ANONYMOUS');
+
+if(!isLogin) {
+    $('#commentSubmit').attr('disabled', true);
+    $('#content').attr('disabled', true).attr('placeholder', '로그인 이후 이용해주세요.');
+}
 
 jQuery(document).ready(function () { //j쿼리를 이용한 별점 세팅
     $(":input[id='ratingDisplay']").each(function () {
@@ -147,6 +152,11 @@ jQuery(document).ready(function () { //j쿼리를 이용한 별점 세팅
 });
 
 function buy(name){ //바로구매
+
+    if(!isLogin){
+        return moveToLoginForm();
+    }
+
     var orderCount = document.getElementById("count").value;
     var items = new Array();
     var item = {};
@@ -191,7 +201,11 @@ function buy(name){ //바로구매
 
 function addItemToCart(username, itemId) { //장바구니 추가
 
-var count = document.getElementById("count").value;
+    var count = document.getElementById("count").value;
+
+    if(!isLogin){
+        return moveToLoginForm();
+    }
 
     //Cart 생성 폼
     var form = {
@@ -227,6 +241,7 @@ var count = document.getElementById("count").value;
 }
 
 function addComment(username){ //후기 생성
+
 
     if($('#content').val().length <= 10) {
         alert('내용을 10자이상 입력해주세요');
@@ -266,6 +281,13 @@ function addComment(username){ //후기 생성
 
 }
 
+function moveToLoginForm(){
+    if(confirm("로그인을 하신후에 가능합니다. 로그인화면으로 이동하시겠습니까?")){
+        window.location.href = "/login-form"
+    }
+
+    return false;
+}
 
 </script>
 </html>

@@ -9,6 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,7 @@ import java.util.*;
 public class HomeController {
     private final Environment env;
     private final MemberRepository memberRepository;
+    private final HttpSessionRequestCache cache;
     Logger rootLogger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     @Value("${server.port}")
@@ -52,12 +54,19 @@ public class HomeController {
      * @lastModifiedDate : 2022-12-20
      */
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal UserAdapter principal, Model model) {
-
+    public String home(@AuthenticationPrincipal UserAdapter principal, Model model, HttpServletRequest request) {
+        System.out.println(cache);
+        HttpSession session = request.getSession();
+        System.out.println(session);
         //OAuth로그인을 했는데 회원가입은 안한 경우
         if (principal != null && principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_GUEST"))) {
             SecurityContextHolder.getContext().setAuthentication(null);
+
         }
+        if (principal == null) {
+            session.setAttribute("SPRING_SECURITY_SAVED_REQUEST", null);
+        }
+
         return "home";
     }
 

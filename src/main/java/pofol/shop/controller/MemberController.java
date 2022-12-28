@@ -30,6 +30,8 @@ import pofol.shop.repository.MemberRepository;
 import pofol.shop.service.business.MemberService;
 import pofol.shop.service.UtilService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -56,14 +58,29 @@ public class MemberController {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-21
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-21
+     * @lastModifiedDate : 2022-12-28
      */
     @GetMapping("/login-form") //로그인화면
-    public String loginForm(@RequestParam(value = "error", required = false) boolean error, Model model) {
+    public String loginForm(@RequestParam(value = "error", required = false) boolean error,
+                            @RequestParam(value = "back-url", required = false) String backUrl,
+                            HttpServletRequest request,
+                            Model model) {
+
+        HttpSession session = request.getSession();
+        String referer = request.getHeader("Referer"); //이전 위치
+
+        //이전화면이 로그인화면이 아닐경우에만 세션에 이전 위치 저장
+        if(!referer.contains("/login-form")) session.setAttribute("prevPage", referer);
+
+        //이전 화면이 로그인 화면이라면 쿼리파라미터 back-url의 값 저장
+        else session.setAttribute("prevPage", backUrl);
+
+        //로그인정보 관련 세션 정보 초기화
         SecurityContextHolder.getContext().setAuthentication(null);
+
         LoginForm form = new LoginForm();
         model.addAttribute("loginForm", form);
-        model.addAttribute("hasError", error);
+        model.addAttribute("hasError", error); //로그인 실패 시 쿼리마라미터로 받음
         return "loginForm";
     }
 
@@ -78,10 +95,16 @@ public class MemberController {
      * @lastModifiedDate : 2022-12-19
      */
     @GetMapping("/members/new-oauth2") //OAuth2로그인 성공 시
-    public String oauth2LoginSuccess(@AuthenticationPrincipal UserAdapter principal, Model model) {
+    public String oauth2LoginSuccess(@AuthenticationPrincipal UserAdapter principal,
+                                     Model model,
+                                     HttpServletRequest request
+                                     ) {
+
         Optional<Member> member = memberRepository.findByEmail(principal.getAttribute("email"));
 
         if (member.isPresent()) { //이미 존재하는 회원이면 홈페이지로
+            String redirectUrl = (String)request.getSession().getAttribute("prevPage");
+            if(redirectUrl != null) return "redirect:" + redirectUrl;
             return "redirect:/";
         }
 
