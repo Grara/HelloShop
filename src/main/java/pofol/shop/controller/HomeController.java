@@ -29,7 +29,7 @@ import java.util.*;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-21
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-21
+ * @lastModifiedDate : 2022-12-28
  */
 @Controller
 @Slf4j
@@ -48,10 +48,11 @@ public class HomeController {
      * 홈 화면을 반환합니다. 또한 세션의 권한이 게스트일 경우 세션을 없앱니다. (OAuth때문에 추가)
      *
      * @param principal 로그인 세션 정보
+     * @param request 클라이언트로부터의 HTTP요청정보가 담긴 클래스
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-21
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-20
+     * @lastModifiedDate : 2022-12-28
      */
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserAdapter principal, Model model, HttpServletRequest request) {
@@ -60,10 +61,11 @@ public class HomeController {
         System.out.println(session);
         //OAuth로그인을 했는데 회원가입은 안한 경우
         if (principal != null && principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_GUEST"))) {
-            SecurityContextHolder.getContext().setAuthentication(null);
+            SecurityContextHolder.getContext().setAuthentication(null); //로그인 세션을 없애버림
 
         }
         if (principal == null) {
+            //로그인했을 때 엉뚱한곳으로 리다이렉션되는걸 막기 위함
             session.setAttribute("SPRING_SECURITY_SAVED_REQUEST", null);
         }
 

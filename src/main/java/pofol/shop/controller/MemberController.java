@@ -55,6 +55,7 @@ public class MemberController {
      * 로그인 화면을 반환합니다.
      *
      * @param error 로그인 과정에 에러가 있었는지 여부
+     * @param redirectUrl 리다이렉션할 URL
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-21
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
@@ -62,7 +63,7 @@ public class MemberController {
      */
     @GetMapping("/login-form") //로그인화면
     public String loginForm(@RequestParam(value = "error", required = false) boolean error,
-                            @RequestParam(value = "back-url", required = false) String backUrl,
+                            @RequestParam(value = "redirect-url", required = false) String redirectUrl,
                             HttpServletRequest request,
                             Model model) {
 
@@ -70,10 +71,10 @@ public class MemberController {
         String referer = request.getHeader("Referer"); //이전 위치
 
         //이전화면이 로그인화면이 아닐경우에만 세션에 이전 위치 저장
-        if(!referer.contains("/login-form")) session.setAttribute("prevPage", referer);
+        if(!referer.contains("/login-form")) session.setAttribute("redirectUrl", referer);
 
         //이전 화면이 로그인 화면이라면 쿼리파라미터 back-url의 값 저장
-        else session.setAttribute("prevPage", backUrl);
+        else session.setAttribute("redirectUrl", redirectUrl);
 
         //로그인정보 관련 세션 정보 초기화
         SecurityContextHolder.getContext().setAuthentication(null);

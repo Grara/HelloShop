@@ -23,9 +23,9 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
 
-        String redirectUrl = (String)request.getSession().getAttribute("prevPage");
+        String redirectUrl = (String)request.getSession().getAttribute("redirectUrl");
         if (redirectUrl != null) {
-            setDefaultFailureUrl("/login-form?error=true&back-url=" + redirectUrl);
+            setDefaultFailureUrl("/login-form?error=true&redirect-url=" + redirectUrl);
         }
         else{
             setDefaultFailureUrl("/login-form?error=true");
