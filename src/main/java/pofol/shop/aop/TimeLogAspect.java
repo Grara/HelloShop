@@ -1,12 +1,9 @@
 package pofol.shop.aop;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -18,15 +15,15 @@ import org.springframework.stereotype.Component;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-12-20
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-21
+ * @lastModifiedDate : 2022-12-29
  */
 @Aspect
 @Order(0)
 @Slf4j
 @Component
-public class TimeLogAop {
+public class TimeLogAspect {
 
-    Logger logger = LoggerFactory.getLogger(TimeLogAop.class);
+    Logger logger = LoggerFactory.getLogger(TimeLogAspect.class);
 
     /**
      * Controller, ApiController, Service, Repository의 모든 메소드 작업 수행시간을 로그로 남겨줍니다.

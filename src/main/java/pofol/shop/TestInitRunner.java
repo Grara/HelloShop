@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import pofol.shop.aop.TimeLogAop;
+import pofol.shop.aop.TimeLogAspect;
 import pofol.shop.config.DefaultValue;
 import pofol.shop.controller.HomeController;
 import pofol.shop.domain.Cart;
@@ -44,7 +44,7 @@ public class TestInitRunner implements ApplicationRunner, ApplicationListener<Co
 
 
     Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
-    Logger logger2 = LoggerFactory.getLogger(TimeLogAop.class);
+    Logger logger2 = LoggerFactory.getLogger(TimeLogAspect.class);
 
     @Value("${fileDir}")
     private String FILE_DIR;

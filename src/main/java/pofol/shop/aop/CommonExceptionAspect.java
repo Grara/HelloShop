@@ -30,8 +30,8 @@ import java.util.NoSuchElementException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CommonExceptionAop {
-    Logger logger = LoggerFactory.getLogger(TimeLogAop.class);
+public class CommonExceptionAspect {
+    Logger logger = LoggerFactory.getLogger(TimeLogAspect.class);
     private final LogService logService;
 
     /**
@@ -40,7 +40,7 @@ public class CommonExceptionAop {
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-12-24
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-24
+     * @lastModifiedDate : 2022-12-29
      */
     @Around("within(pofol.shop.controller.*) || within(pofol.shop.api.*)")
     public Object controllerExceptionCatch(ProceedingJoinPoint joinPoint) throws Throwable {

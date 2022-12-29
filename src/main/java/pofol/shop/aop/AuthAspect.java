@@ -11,8 +11,6 @@ import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import pofol.shop.dto.ApiResponseBody;
 import pofol.shop.dto.security.UserAdapter;
 import pofol.shop.form.UserNameRequiredForm;
 import pofol.shop.service.LogService;
@@ -34,18 +31,18 @@ import javax.servlet.http.HttpSession;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-12-23
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-23
+ * @lastModifiedDate : 2022-12-29
  */
 @Aspect
 @Order(2)
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AuthAop {
+public class AuthAspect {
 
     private final PasswordEncoder encoder;
     private final LogService logService;
-    Logger logger = LoggerFactory.getLogger(TimeLogAop.class);
+    Logger logger = LoggerFactory.getLogger(TimeLogAspect.class);
 
     /**
      * Controller와 API요청 중 로그인 세션이 필요한 요청을 호출할 때 세션이 null인지 체크합니다.<br/>

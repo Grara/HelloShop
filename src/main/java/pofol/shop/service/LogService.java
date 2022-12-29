@@ -2,11 +2,10 @@ package pofol.shop.service;
 
 
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pofol.shop.aop.TimeLogAop;
+import pofol.shop.aop.TimeLogAspect;
 
 /**
  * 로그와 관련된 복잡한 로직을 처리해주는 Service 클래스입니다.
@@ -20,7 +19,7 @@ import pofol.shop.aop.TimeLogAop;
 public class LogService {
 
     private final Logger rootLogger = LoggerFactory.getLogger(this.getClass().getSimpleName());
-    private final Logger logger = LoggerFactory.getLogger(TimeLogAop.class);
+    private final Logger logger = LoggerFactory.getLogger(TimeLogAspect.class);
 
     /**
      * 예외 발생 시 에러 로그를 남겨줍니다.
