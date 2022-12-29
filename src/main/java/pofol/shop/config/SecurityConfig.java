@@ -4,25 +4,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.PortMapperConfigurer;
 import org.springframework.security.web.PortMapperImpl;
 import org.springframework.security.web.PortResolverImpl;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import pofol.shop.handler.AccessDeniedHandlerImpl;
 import pofol.shop.handler.CustomLoginFailureHandler;
-import pofol.shop.handler.CustomLoginHandler2;
-import pofol.shop.handler.CustomLoginSuccessHandler;
+import pofol.shop.handler.OAuth2LoginSuccessHandler;
+import pofol.shop.handler.FormLoginSuccessHandler;
 import pofol.shop.service.LoginService;
 
 import java.util.Collections;
@@ -33,19 +31,17 @@ import java.util.Collections;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-23
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-21
+ * @lastModifiedDate : 2022-12-29
  */
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig{
     private final LoginService loginService;
-    private final AuthenticationConfiguration authenticationConfiguration;
     private final AccessDeniedHandlerImpl accessDeniedHandlerImpl;
     private final CustomLoginFailureHandler customLoginFailureHandler;
-    private final CustomLoginHandler2 handler2;
-    PortMapperImpl portMapper = new PortMapperImpl();
-    PortResolverImpl portResolver = new PortResolverImpl();
-    LoginUrlAuthenticationEntryPoint entryPoint = new LoginUrlAuthenticationEntryPoint("/login");
+    private PortMapperImpl portMapper = new PortMapperImpl();
+    private PortResolverImpl portResolver = new PortResolverImpl();
+    private LoginUrlAuthenticationEntryPoint entryPoint = new LoginUrlAuthenticationEntryPoint("/login-form");
     @Value("${server.port}")
     private String port; //애플리케이션 포트번호
 
@@ -69,7 +65,7 @@ public class SecurityConfig{
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-23
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-28
+     * @lastModifiedDate : 2022-12-29
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -109,7 +105,7 @@ public class SecurityConfig{
                             .permitAll() //전부가능
                 .and()
                     .formLogin() //시큐리티 기본 폼 로그인 설정
-                        .successHandler(successHandler())
+                        .successHandler(formSuccessHandler())
                         .loginPage("/login-form") //로그인 페이지
                         .loginProcessingUrl("/login") //로그인 요청 url, 스프링시큐리티의 기본 url로 설정
                         .failureHandler(customLoginFailureHandler)
@@ -118,34 +114,25 @@ public class SecurityConfig{
                         .logoutSuccessUrl("/") //로그아웃 성공 시 이동 url
                 .and()
                     .oauth2Login() //OAuth2 로그인 설정
-                        .defaultSuccessUrl("/members/new-oauth2") //OAuth2로그인 성공 시 이동 url
-                        //.successHandler(successHandler())
+                        .successHandler(oauth2SuccessHandler())
                         .loginPage("/login-form") //로그인 페이지
                         .userInfoEndpoint().userService(loginService); //세션 정보 등록 서비스
 
         return http.build();
     }
 
-    /**
-     * AuthenticationManager를 빈으로 등록합니다.
-     *
-     * @createdBy : 노민준(nomj18@gmail.com)
-     * @createdDate : 2022-12-12
-     * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-12
-     */
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception{
-        return authenticationConfiguration.getAuthenticationManager();
-    }
 
     @Bean
-    public AuthenticationSuccessHandler successHandler(){
-        return new CustomLoginSuccessHandler("/");
+    public AuthenticationSuccessHandler formSuccessHandler(){
+        return new FormLoginSuccessHandler("/");
     }
 
     @Bean
     public HttpSessionRequestCache httpSessionRequestCache(){
         return new HttpSessionRequestCache();
     }
+
+    @Bean
+    public AuthenticationSuccessHandler oauth2SuccessHandler() { return new OAuth2LoginSuccessHandler("/"); }
+
 }

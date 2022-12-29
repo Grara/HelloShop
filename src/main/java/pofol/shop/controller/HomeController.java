@@ -64,10 +64,10 @@ public class HomeController {
             SecurityContextHolder.getContext().setAuthentication(null); //로그인 세션을 없애버림
 
         }
-        if (principal == null) {
-            //로그인했을 때 엉뚱한곳으로 리다이렉션되는걸 막기 위함
-            session.setAttribute("SPRING_SECURITY_SAVED_REQUEST", null);
-        }
+//        if (principal == null) {
+//            //로그인했을 때 엉뚱한곳으로 리다이렉션되는걸 막기 위함
+//            session.setAttribute("SPRING_SECURITY_SAVED_REQUEST", null);
+//        }
 
         return "home";
     }
@@ -94,7 +94,7 @@ public class HomeController {
      * @lastModifiedDate : 2022-12-21
      */
     @GetMapping("/login")
-    public String goToLoginForm() {
+    public String loginForm() {
         return "redirect:/login-form";
     }
 

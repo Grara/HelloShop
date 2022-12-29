@@ -3,21 +3,30 @@ package pofol.shop.aop;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import pofol.shop.dto.ApiResponseBody;
 import pofol.shop.dto.security.UserAdapter;
 import pofol.shop.form.UserNameRequiredForm;
 import pofol.shop.service.LogService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Controller, ApiController들의 메소드 중 인증정보가 필요한 메소드들에게 필요한 공통 작업을 처리하는 AOP클래스입니다.
@@ -80,5 +89,26 @@ public class AuthAop {
             };
         }
         return joinPoint.proceed();
+    }
+
+    /**
+     * 스프링 시큐리티로 인해 로그인 후 이상한 리다이렉션이 발생하지 않도록 합니다.
+     *
+     * @createdBy : 노민준(nomj18@gmail.com)
+     * @createdDate : 2022-12-29
+     * @lastModifiedBy : 노민준(nomj18@gmail.com)
+     * @lastModifiedDate : 2022-12-29
+     */
+    @Order(3)
+    @Before("!execution(* pofol.shop.controller.*.*login*(..)) && !execution(* pofol.shop.controller.File*.*(..)) && execution(* pofol.shop.controller..*(..))")
+    public void strangeRedirectionBlock(JoinPoint joinPoint){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = null;
+        if(authentication != null) principal = authentication.getPrincipal();
+        if(principal == null && authentication != null) {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            HttpSession session = request.getSession();
+            session.removeAttribute("SPRING_SECURITY_SAVED_REQUEST");
+        }
     }
 }

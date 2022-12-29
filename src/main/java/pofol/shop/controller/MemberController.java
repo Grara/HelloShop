@@ -41,7 +41,7 @@ import java.util.*;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-21
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-28
+ * @lastModifiedDate : 2022-12-29
  */
 @Controller
 @RequiredArgsConstructor
@@ -54,24 +54,28 @@ public class MemberController {
     /**
      * 로그인 화면을 반환합니다.
      *
-     * @param error 로그인 과정에 에러가 있었는지 여부
+     * @param error       로그인 과정에 에러가 있었는지 여부
      * @param redirectUrl 리다이렉션할 URL
+     * @param signupFinished 방금 회원가입을 마쳤는지 여부
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-21
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-28
+     * @lastModifiedDate : 2022-12-29
      */
     @GetMapping("/login-form") //로그인화면
     public String loginForm(@RequestParam(value = "error", required = false) boolean error,
                             @RequestParam(value = "redirect-url", required = false) String redirectUrl,
+                            @RequestParam(value = "signup-finished", required = false) boolean signupFinished,
                             HttpServletRequest request,
                             Model model) {
 
         HttpSession session = request.getSession();
         String referer = request.getHeader("Referer"); //이전 위치
 
-        //이전화면이 로그인화면이 아닐경우에만 세션에 이전 위치 저장
-        if(!referer.contains("/login-form")) session.setAttribute("redirectUrl", referer);
+        //이전 화면이 로그인화면이나 회원가입 화면이 아닐경우에만 세션에 이전 위치 저장
+        if (!(referer.contains("/login-form")||referer.contains("/members/new-oauth2")||referer.contains("/members/new"))) {
+            session.setAttribute("redirectUrl", referer);
+        }
 
         //이전 화면이 로그인 화면이라면 쿼리파라미터 back-url의 값 저장
         else session.setAttribute("redirectUrl", redirectUrl);
@@ -81,33 +85,23 @@ public class MemberController {
 
         LoginForm form = new LoginForm();
         model.addAttribute("loginForm", form);
-        model.addAttribute("hasError", error); //로그인 실패 시 쿼리마라미터로 받음
+        model.addAttribute("hasError", error); //로그인 실패 시 쿼리파라미터로 받음
+        model.addAttribute("signupFinished", signupFinished); //회원가입 성공 시 쿼리파라미터로 받음
         return "loginForm";
     }
 
     /**
-     * Oauth2로그인 성공 시 회원가입 폼 화면을 반환합니다. <br/>
-     * 이미 회원으가입을 한 상태라면 홈화면으로 이동합니다.
+     * Oauth2유저 회원가입 폼 화면을 반환합니다. <br/>
      *
      * @param principal 현재 로그인 세션 정보
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-12-12
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-12-19
+     * @lastModifiedDate : 2022-12-29
      */
-    @GetMapping("/members/new-oauth2") //OAuth2로그인 성공 시
+    @GetMapping("/members/new-oauth2") //OAuth2유저 회원가입
     public String oauth2LoginSuccess(@AuthenticationPrincipal UserAdapter principal,
-                                     Model model,
-                                     HttpServletRequest request
-                                     ) {
-
-        Optional<Member> member = memberRepository.findByEmail(principal.getAttribute("email"));
-
-        if (member.isPresent()) { //이미 존재하는 회원이면 홈페이지로
-            String redirectUrl = (String)request.getSession().getAttribute("prevPage");
-            if(redirectUrl != null) return "redirect:" + redirectUrl;
-            return "redirect:/";
-        }
+                                     Model model) {
 
         //Oauth2용 회원가입 폼 생성
         CreateOAuth2MemberForm form = CreateOAuth2MemberForm.builder()
@@ -158,7 +152,7 @@ public class MemberController {
 
         memberService.signUp(member);
 
-        return "redirect:/login-form";
+        return "redirect:/login-form?signup-finished=true";
     }
 
 
@@ -234,7 +228,7 @@ public class MemberController {
                     .build();
 
             memberService.signUp(member);
-            return "redirect:/";
+            return "redirect:/login-form?signup-finished=true";
 
         } catch (Exception e) {
             return "errors/unknownError";

@@ -43,6 +43,7 @@
             <!--입력 폼-->
             <form method="post" th:object="${loginForm}" action="/login">
                 <div th:if="${hasError}" class="alert alert-danger">아이디 또는 비밀번호를 잘못 입력했습니다.</div>
+                <div th:if="${signupFinished}" class="alert alert-success">회원가입이 성공했습니다. 로그인 후 이용해주세요.</div>
                 <div class="form-group">
                     <label>회원명</label>
                     <input type="text" th:field="*{username}" class="form-control" placeholder="회원명"
