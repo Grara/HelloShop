@@ -39,7 +39,8 @@
     </table>
 
     <!--주문이동 버튼-->
-    <button type="button" th:data-username="${username}"
+    <button id="order-btn"
+            type="button" th:data-username="${username}"
             class="btn btn-primary"
             th:onClick="javascript:buy(this.getAttribute('data-username'));">주문으로
     </button>
@@ -49,7 +50,12 @@
 </div> <!-- /container -->
 </body>
 <script th:inline="javascript">
-  function buy(userName){ //주문화면으로 이동
+
+window.onload = orderEnableCheck();
+
+
+
+function buy(userName){ //주문화면으로 이동
 
     var items = new Array(); //아이템 배열
 
@@ -109,6 +115,7 @@ function allSelect(chk){ //전체 선택 체크 이벤트
   else {
     $('input:checkbox').prop('checked',false);
   }
+  orderEnableCheck();
 }
 
 function itemSelect(){ //개별 아이템 선택 체크 이벤트
@@ -121,7 +128,7 @@ function itemSelect(){ //개별 아이템 선택 체크 이벤트
   });
 
   if(allSelected) $('#allSelect').prop('checked', true); //모든 아이템을 체크했으면 전체 선택 체크
-
+  orderEnableCheck();
 }
 
 function deleteChecked(){ //선택한 아이템 삭제
@@ -170,14 +177,27 @@ function deleteChecked(){ //선택한 아이템 삭제
         else{
             alert("처리 과정에 문제가 생겼습니다.");
         }
+        orderEnableCheck();
     },
     failure : function(){
         alert("서버와의 통신에 실패했습니다.");
     }
 
     });
+    orderEnableCheck();
     return false;
+}
 
+function orderEnableCheck(){ //주문 가능여부 확인
+
+    let isEnabled = false;
+    $('[id=itemCheck]').each(function(){
+        if($(this).prop('checked')) { //하나라도 체크가 되어있으면
+          $('#order-btn').attr('disabled', false);
+          isEnabled = true;
+        }
+    });
+    if(!isEnabled) $('#order-btn').attr('disabled', true);
 }
 
 
