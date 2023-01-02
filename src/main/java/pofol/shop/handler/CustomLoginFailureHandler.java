@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 /**
- * 로그인 실패 시 핸들링을 설정하는 클래스입니다.
+ * 폼 로그인 실패 시 핸들링을 설정하는 클래스입니다.
  *
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-12-28
@@ -19,6 +19,7 @@ import java.io.IOException;
 @Component
 public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
+    //로그인 실패 시 리다이렉션
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {

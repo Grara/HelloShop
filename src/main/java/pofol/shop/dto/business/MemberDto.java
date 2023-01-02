@@ -7,17 +7,19 @@ import pofol.shop.domain.embedded.Address;
 import pofol.shop.domain.embedded.PersonalInfo;
 import pofol.shop.domain.enums.Role;
 
+import java.io.Serializable;
+
 /**
  * 회원에 대한 DTO클래스입니다.
  *
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-11-20
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-12
+ * @lastModifiedDate : 2023-01-02
  */
 @Data
 @NoArgsConstructor
-public class MemberDto {
+public class MemberDto implements Serializable {
     private Long id;
     private String userName;
     private String password;

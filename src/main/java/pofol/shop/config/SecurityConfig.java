@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -31,7 +33,7 @@ import java.util.Collections;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-23
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-29
+ * @lastModifiedDate : 2023-01-02
  */
 @Configuration
 @RequiredArgsConstructor
@@ -45,19 +47,12 @@ public class SecurityConfig{
     @Value("${server.port}")
     private String port; //애플리케이션 포트번호
 
-    /**
-     * 시큐리티 적용을 제외할 url을 설정합니다.
-     *
-     * @createdBy : 노민준(nomj18@gmail.com)
-     * @createdDate : 2022-10-23
-     * @lastModifiedBy : 노민준(nomj18@gmail.com)
-     * @lastModifiedDate : 2022-10-23
-     */
-    @Bean
-    public WebSecurityCustomizer configure(){
-        //ignoring에 들어간 url은 시큐리티 적용이 안됨, 리소스를 정상적으로 불러들이기위한 코드
-        return web -> web.ignoring().antMatchers("/resources/**");
-    }
+
+//    @Bean
+//    public WebSecurityCustomizer configure(){
+//        //ignoring에 들어간 url은 시큐리티 적용이 안됨, 리소스를 정상적으로 불러들이기위한 코드
+//        return web -> web.ignoring().antMatchers("/resources/**");
+//    }
 
     /**
      * 스프링 시큐리티 설정을 커스텀합니다.
@@ -86,9 +81,9 @@ public class SecurityConfig{
                 .and()
                     .csrf()//csrf토큰 안씀
                         .disable()
-                .headers() //헤더 설정
-                    .frameOptions()
-                        .sameOrigin() //같은 origin에서는 x frame 허용
+                    .headers() //헤더 설정
+                        .frameOptions()
+                            .sameOrigin() //같은 origin에서는 x frame 허용
                 .and()
                     .authorizeRequests() //url별로 접근 가능 권한 설정
                         .antMatchers(HttpMethod.GET,"/admin", "/orders", "/members") //정확히 이 url이면서 get일 경우
@@ -134,5 +129,6 @@ public class SecurityConfig{
 
     @Bean
     public AuthenticationSuccessHandler oauth2SuccessHandler() { return new OAuth2LoginSuccessHandler("/"); }
+
 
 }

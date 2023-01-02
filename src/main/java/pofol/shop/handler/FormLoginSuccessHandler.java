@@ -23,6 +23,7 @@ public class FormLoginSuccessHandler extends SavedRequestAwareAuthenticationSucc
         setDefaultTargetUrl(defaultTargetUrl);
     }
 
+    //로그인 성공 시 리다이렉션
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {

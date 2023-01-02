@@ -6,6 +6,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * 주소정보를 나타내는 임베디드 클래스입니다.
@@ -13,12 +14,12 @@ import javax.persistence.Embeddable;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-21
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-10-23
+ * @lastModifiedDate : 2023-01-02
  */
 @Embeddable
 @Data
 @NoArgsConstructor
-public class Address {
+public class Address implements Serializable {
     private String address1;
     private String address2;
     @Column(nullable = true)

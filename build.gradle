@@ -1,5 +1,4 @@
 import java.text.SimpleDateFormat
-import java.util.TimeZone;
 
 buildscript {
 	ext {
@@ -40,15 +39,19 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-security-oauth2-autoconfigure'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'//타임리프랑 시큐리티 연동
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
-	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok' //롬복
+	implementation "org.springframework.session:spring-session-jdbc" //jdbc세션 사용
+	implementation "org.springframework.session:spring-session-data-redis" //redis세션 사용
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'

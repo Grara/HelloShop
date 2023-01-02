@@ -39,6 +39,7 @@
 
 - OAuth2로그인 구현
   - OAuth2를 이용해서 구글과 네이버 로그인을 구현했습니다.
+  - Oauth
   - 세부구현 - https://github.com/Grara/porfol_shop/issues/3
 
 <br>

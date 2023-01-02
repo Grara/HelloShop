@@ -42,9 +42,7 @@ public class LoginService implements OAuth2UserService, UserDetailsService {
         String userNameAttrName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-
         OAuthAttributes attr = OAuthAttributes.of(registrationId, userNameAttrName, oAuth2User.getAttributes());
-
 
         Member member = memberRepository.findByEmail(attr.getEmail()).orElse(attr.toEntity(encoder));
         MemberDto dto = new MemberDto(member);

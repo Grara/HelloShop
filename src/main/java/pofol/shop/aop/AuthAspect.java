@@ -96,16 +96,16 @@ public class AuthAspect {
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
      * @lastModifiedDate : 2022-12-29
      */
-    @Order(3)
-    @Before("!execution(* pofol.shop.controller.*.*login*(..)) && !execution(* pofol.shop.controller.File*.*(..)) && execution(* pofol.shop.controller..*(..))")
-    public void strangeRedirectionBlock(JoinPoint joinPoint){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = null;
-        if(authentication != null) principal = authentication.getPrincipal();
-        if(principal == null && authentication != null) {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-            HttpSession session = request.getSession();
-            session.removeAttribute("SPRING_SECURITY_SAVED_REQUEST");
-        }
-    }
+//    @Order(3)
+//    @Before("!execution(* pofol.shop.controller.*.*login*(..)) && !execution(* pofol.shop.controller.File*.*(..)) && execution(* pofol.shop.controller..*(..))")
+//    public void strangeRedirectionBlock(JoinPoint joinPoint){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Object principal = null;
+//        if(authentication != null) principal = authentication.getPrincipal();
+//        if(principal == null && authentication != null) {
+//            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+//            HttpSession session = request.getSession();
+//            session.removeAttribute("SPRING_SECURITY_SAVED_REQUEST");
+//        }
+//    }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import pofol.shop.dto.business.MemberDto;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -14,11 +15,12 @@ import java.util.Map;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-12-12
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-12-12
+ * @lastModifiedDate : 2023-01-02
  */
 @Getter
 @ToString
-public class UserAdapter extends CustomUserDetails {
+
+public class UserAdapter extends CustomUserDetails implements Serializable {
     private MemberDto member;
     private Map<String,Object> attributes;
 

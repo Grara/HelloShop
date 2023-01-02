@@ -14,9 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pofol.shop.domain.Member;
+import pofol.shop.domain.TestEntity;
 import pofol.shop.dto.security.TestDto;
 import pofol.shop.dto.security.UserAdapter;
 import pofol.shop.repository.MemberRepository;
+import pofol.shop.repository.RedisRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -38,6 +40,8 @@ public class HomeController {
     private final Environment env;
     private final MemberRepository memberRepository;
     private final HttpSessionRequestCache cache;
+    private final HttpSession session;
+
     Logger rootLogger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     @Value("${server.port}")
@@ -48,27 +52,19 @@ public class HomeController {
      * 홈 화면을 반환합니다. 또한 세션의 권한이 게스트일 경우 세션을 없앱니다. (OAuth때문에 추가)
      *
      * @param principal 로그인 세션 정보
-     * @param request 클라이언트로부터의 HTTP요청정보가 담긴 클래스
      * @createdBy : 노민준(nomj18@gmail.com)
      * @createdDate : 2022-10-21
      * @lastModifiedBy : 노민준(nomj18@gmail.com)
      * @lastModifiedDate : 2022-12-28
      */
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal UserAdapter principal, Model model, HttpServletRequest request) {
-        System.out.println(cache);
-        HttpSession session = request.getSession();
-        System.out.println(session);
+    public String home(@AuthenticationPrincipal UserAdapter principal, Model model) {
+
         //OAuth로그인을 했는데 회원가입은 안한 경우
         if (principal != null && principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_GUEST"))) {
             SecurityContextHolder.getContext().setAuthentication(null); //로그인 세션을 없애버림
 
         }
-//        if (principal == null) {
-//            //로그인했을 때 엉뚱한곳으로 리다이렉션되는걸 막기 위함
-//            session.setAttribute("SPRING_SECURITY_SAVED_REQUEST", null);
-//        }
-
         return "home";
     }
 
@@ -140,13 +136,6 @@ public class HomeController {
 
     }
 
-    /**
-     * 테스트용 화면입니다.
-     */
-    @GetMapping("/test")
-    public String test(Model model, @AuthenticationPrincipal UserAdapter principal) {
 
-        return "test";
-    }
 
 }

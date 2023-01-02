@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.io.Serializable;
 
 /**
  * 개인 신상정보를 나타내는 임베디드 클래스입니다.
@@ -15,12 +16,12 @@ import javax.persistence.Enumerated;
  * @createdBy : 노민준(nomj18@gmail.com)
  * @createdDate : 2022-10-21
  * @lastModifiedBy : 노민준(nomj18@gmail.com)
- * @lastModifiedDate : 2022-10-23
+ * @lastModifiedDate : 2023-01-02
  */
 @Embeddable
 @NoArgsConstructor
 @Data
-public class PersonalInfo {
+public class PersonalInfo implements Serializable {
     private String realName;
     @Column(nullable = true)
     private int age;
