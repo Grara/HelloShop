@@ -2,6 +2,7 @@ package pofol.shop.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -48,11 +49,11 @@ public class SecurityConfig{
     private String port; //애플리케이션 포트번호
 
 
-//    @Bean
-//    public WebSecurityCustomizer configure(){
-//        //ignoring에 들어간 url은 시큐리티 적용이 안됨, 리소스를 정상적으로 불러들이기위한 코드
-//        return web -> web.ignoring().antMatchers("/resources/**");
-//    }
+    @Bean
+    public WebSecurityCustomizer configure(){
+        //ignoring에 들어간 url은 시큐리티 적용이 안됨, 리소스를 정상적으로 불러들이기위한 코드
+        return web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
 
     /**
      * 스프링 시큐리티 설정을 커스텀합니다.

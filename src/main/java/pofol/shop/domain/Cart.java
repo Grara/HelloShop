@@ -18,6 +18,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart extends BaseEntity {
+
     @Id
     @GeneratedValue
     @Column(name = "cartitem_id")

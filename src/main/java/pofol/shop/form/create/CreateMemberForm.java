@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import pofol.shop.domain.enums.Sex;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  * 일반 회원 가입 시 필요한 데이터 폼 클래스입니다.

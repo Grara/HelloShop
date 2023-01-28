@@ -2,6 +2,7 @@ package pofol.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.core.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.DispatcherServlet;
 import pofol.shop.domain.Member;
 import pofol.shop.domain.TestEntity;
 import pofol.shop.dto.security.TestDto;
@@ -41,6 +43,7 @@ public class HomeController {
     private final MemberRepository memberRepository;
     private final HttpSessionRequestCache cache;
     private final HttpSession session;
+    private final DispatcherServlet ds;
 
     Logger rootLogger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
@@ -60,6 +63,7 @@ public class HomeController {
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserAdapter principal, Model model) {
 
+        ds.getClass();
         //OAuth로그인을 했는데 회원가입은 안한 경우
         if (principal != null && principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_GUEST"))) {
             SecurityContextHolder.getContext().setAuthentication(null); //로그인 세션을 없애버림
