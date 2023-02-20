@@ -2,7 +2,6 @@ package pofol.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.core.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,14 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.DispatcherServlet;
-import pofol.shop.domain.Member;
-import pofol.shop.domain.TestEntity;
-import pofol.shop.dto.security.TestDto;
 import pofol.shop.dto.security.UserAdapter;
 import pofol.shop.repository.MemberRepository;
-import pofol.shop.repository.RedisRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
